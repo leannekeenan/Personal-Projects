@@ -1,8 +1,10 @@
 # Personal-Projects 
 
-  
+  <p align="center">
+  <img src="https://imgur.com/a/RmiFPYY.jpg" alt="Learning Materials">
+</p>
 
-This repository showcases a variety of personal web development projects, built using both **vanilla coding** (HTML, CSS, JavaScript) and the **MERN stack** (MongoDB, Express.js, React, Node.js). The project aims to solve real-world problems with functional, responsive, and user-friendly websites. 
+This repository showcases a variety of personal web development projects built using both vanilla coding (HTML, CSS, JavaScript) and the MERN stack (MongoDB, Express.js, React, Node.js). The projects aim to solve real-world problems with functional, responsive, and user-friendly websites. 
 
   
 

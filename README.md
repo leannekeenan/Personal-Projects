@@ -36,7 +36,7 @@ To clone this repository and run the projects locally:
 
    ```bash 
 
-   git clone https://github.com/your-username/personal-projects.git 
+   git clone https://github.com/leannekeenan/personal-projects.git 
 
  
 

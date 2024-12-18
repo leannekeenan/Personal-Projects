@@ -1,4 +1,4 @@
-# Personal-Projects 
+# Personal Projects 
 
   <p align="center">
   <img src="https://imgur.com/knjEMQc.jpg" alt="Personal Projects">

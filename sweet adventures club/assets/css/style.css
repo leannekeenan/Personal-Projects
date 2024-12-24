@@ -24,16 +24,29 @@ body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
     background: linear-gradient(135deg, #FDF3E3, #C8A074);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    height: 100%;
+  }
+
+  h2 {
+    font-size: 3.25rem;
+  }
+
+  th {
+    font-size: 3rem;
+  }
+  td, p, h3 {
+    font-size: 2rem;
   }
   
   /* Hero Section */
   .hero {
     text-align: center;
+    background: var(--text);
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   
   /* Title Styling */
@@ -42,7 +55,7 @@ body {
     font-size: 10rem;
     font-weight: 800;
     letter-spacing: 0.1rem;
-    color: #4D2B1F; /* Base color */
+    color: var(--base); /* Base color */
     position: relative;
     display: inline-block;
     overflow: hidden;
@@ -59,12 +72,12 @@ body {
     height: 100%;
     background: linear-gradient(90deg, 
       rgba(255, 255, 255, 0) 0%, 
-      rgba(212, 164, 111, 0.8) 50%, 
+      rgb(255, 215, 0, 0.35) 50%, 
       rgba(255, 255, 255, 0) 100%);
     background-size: 200% 100%;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: glow-move 3s linear infinite;
+    animation: glow-move 5s linear infinite;
   }
   
   /* Tagline */
@@ -72,7 +85,7 @@ body {
     font-size: 3rem;
     font-family: 'Merriweather', serif; /* Google Font */
     margin-top: 1rem;
-    color: #6A4C3A; /* Mocha */
+    color: var(--base); /* Mocha */
     opacity: 0;
     animation: fade-in 2s ease-in forwards;
   }
@@ -104,16 +117,59 @@ body {
 /*Layout styles*/
 header , nav{
     display: flex;
+    width: 100%;
+
 }
 
-header {
-    width: 80%;
-    justify-content: space-between;
-    position: fixed;
+nav {
+  position: sticky;
+  top: 35vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--base);
+}
+
+nav a {
+  padding: 2rem 5rem;
+  font-size: 2rem;
+  text-decoration: none;
+  color: var(--text
+);
+}
+
+.menu table  {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 
-/*Component styles*/
-.header-image {
-    width: 75px
+.menu table th {
+  font-size: 1.6rem;
+}
+
+.menu table tr  {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem auto;
+}
+
+.menu table tr td h2 {
+  font-size: 1.8rem;
+}
+
+.menu table tr td {
+  line-height: 3rem;
+  font-size: 1.6rem;
+}
+
+.menu table tr td:nth-child(1) {
+  width: 25%
+}
+
+.menu table tr td:nth-child(2) {
+  width: 75%
 }

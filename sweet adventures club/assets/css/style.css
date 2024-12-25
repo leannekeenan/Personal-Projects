@@ -1,12 +1,11 @@
 /* Base styles */
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+PE:wght@100..400&family=Poiret+One&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+PE:wght@100..400&family=Poiret+One&display=swap');
 
 * {
     margin: 0;
     padding: 0;
-    box-sizing: 0;
+    box-sizing: border-box;
     font-family: "Montserrat", serif;
     font-size: 62.5%;
 }
@@ -25,33 +24,39 @@ body {
     font-family: 'Montserrat', sans-serif;
     background: linear-gradient(135deg, #FDF3E3, #C8A074);
     height: 100%;
-  }
+}
 
-  h2 {
+h2 {
     font-size: 3.25rem;
-  }
+}
 
-  th {
+th {
     font-size: 3rem;
-  }
-  td, p, h3 {
+}
+
+td, p, h3 {
     font-size: 2rem;
-  }
-  
-  /* Hero Section */
-  .hero {
+}
+
+/* Hero Section */
+.hero {
     text-align: center;
-    background: var(--text);
-    height: 40vh;
+    background: var(--text); /* Fallback color */
+    background-image: url('/sweet adventures club/assets/images/hero-background.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    height: 45vh;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-  
-  /* Title Styling */
-  .title {
-    font-family:  "Poiret One", sans-serif;
+}
+
+/* Title Styling */
+.title {
+    font-family: "Poiret One", sans-serif;
     font-size: 10rem;
     font-weight: 800;
     letter-spacing: 0.1rem;
@@ -60,10 +65,10 @@ body {
     display: inline-block;
     overflow: hidden;
     text-transform: uppercase;
-  }
-  
-  /* Glow Effect on Text */
-  .title::before {
+}
+
+/* Glow Effect on Text */
+.title::before {
     content: 'Sweet Adventures'; /* Replicate text for glow */
     position: absolute;
     top: 0;
@@ -71,105 +76,115 @@ body {
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, 
-      rgba(255, 255, 255, 0) 0%, 
-      rgb(255, 215, 0, 0.35) 50%, 
-      rgba(255, 255, 255, 0) 100%);
+        rgba(255, 255, 255, 0) 0%, 
+        rgb(255, 215, 0, 0.35) 50%, 
+        rgba(255, 255, 255, 0) 100%);
     background-size: 200% 100%;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: glow-move 5s linear infinite;
-  }
-  
-  /* Tagline */
-  .tagline {
+}
+
+/* Tagline */
+.tagline {
     font-size: 3rem;
     font-family: 'Merriweather', serif; /* Google Font */
     margin-top: 1rem;
     color: var(--base); /* Mocha */
     opacity: 0;
     animation: fade-in 2s ease-in forwards;
-  }
-  
-  /* Keyframe for Traveling Glow */
-  @keyframes glow-move {
-    0% {
-      background-position: 0% 0%;
-    }
-    100% {
-      background-position: 200% 0%;
-    }
-  }
-  
-  /* Fade-In Animation */
-  @keyframes fade-in {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-
-
-/*Layout styles*/
-header , nav{
-    display: flex;
-    width: 100%;
-
 }
 
+/* Keyframe for Traveling Glow */
+@keyframes glow-move {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 200% 0%;
+    }
+}
+
+/* Fade-In Animation */
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Layout Styles */
+
+
+/* Nav Styles */
+
 nav {
-  position: sticky;
-  top: 35vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   background: var(--base);
 }
 
+
+nav a:hover {
+  background: var(--secondary);
+  color: var(--base)
+}
+
+
+/* Navbar Links */
 nav a {
-  padding: 2rem 5rem;
+    padding: 3rem;
+    font-size: 2.2rem;
+    text-decoration: none;
+    color: var(--text);
+    width: 100%;
+    text-align: center;
+}
+
+.pitch {
+  padding: 10rem
+}
+
+.pitch div p {
+  font-size: 2.5rem;
+  text-align: center;
+  line-height: 5rem;
+}
+
+
+
+/*Menu Tables*/
+
+/* Table Styling */
+table.menu-table {
+  width: 55%;
+  margin-bottom: 30px;
+  border-collapse: collapse;
+  margin: 0 auto
+}
+
+table.menu-table td { 
+padding: 2rem 0
+}
+
+
+table.menu-table td h3 {
+  margin: 0;
   font-size: 2rem;
-  text-decoration: none;
-  color: var(--text
-);
 }
 
-.menu table  {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+table.menu-table td:nth-child(2) {
+  width: 80%;
+}
+
+thead tr th {
+  width: 100%
 }
 
 
-.menu table th {
-  font-size: 1.6rem;
-}
 
-.menu table tr  {
-  display: flex;
-  justify-content: space-around;
-  margin: 1rem auto;
-}
-
-.menu table tr td h2 {
-  font-size: 1.8rem;
-}
-
-.menu table tr td {
-  line-height: 3rem;
-  font-size: 1.6rem;
-}
-
-.menu table tr td:nth-child(1) {
-  width: 25%
-}
-
-.menu table tr td:nth-child(2) {
-  width: 75%
-}

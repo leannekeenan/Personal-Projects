@@ -26,6 +26,7 @@ body {
     height: 100%;
 }
 
+
 h2 {
     font-size: 3.25rem;
 }
@@ -57,7 +58,8 @@ td, p, h3 {
 /* Title Styling */
 .title {
     font-family: "Poiret One", sans-serif;
-    font-size: 10rem;
+    font-size: 7vw;
+    min-width: 80vw;
     font-weight: 800;
     letter-spacing: 0.1rem;
     color: var(--base); /* Base color */

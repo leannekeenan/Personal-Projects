@@ -47,7 +47,7 @@ td, p, h3 {
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
-    height: 45vh;
+    height: 55vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -84,7 +84,7 @@ td, p, h3 {
     background-size: 200% 100%;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: glow-move 5s linear infinite;
+    animation: glow-move 3s linear infinite;
 }
 
 /* Tagline */
@@ -157,6 +157,30 @@ nav a {
   text-align: center;
   line-height: 5rem;
 }
+
+.pitch-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pitch-nav a {
+    font-size: 2.2rem;
+    text-decoration: none;
+    color: var(--base);
+    background: var(--text);
+    margin: 5rem 3rem;
+    padding: 2rem 8rem;
+    border-radius: 5px;
+}
+
+.pitch-nav a:hover {
+    background: var(--inneractive);
+}
+
+
+/*Story*/
+
 
 
 

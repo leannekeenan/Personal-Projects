@@ -90,7 +90,7 @@ td, p, h3 {
 
 /* Tagline */
 .tagline {
-    font-size: 3rem;
+    font-size: 4rem;
     font-family: 'Merriweather', serif; /* Google Font */
     margin-top: 1rem;
     color: var(--base); /* Mocha */
@@ -169,6 +169,7 @@ nav a {
     color: var(--base);
     background: var(--text);
     margin: 5rem 3rem;
+    margin-bottom: 0;
     padding: 2rem 8rem;
     border-radius: 5px;
 }

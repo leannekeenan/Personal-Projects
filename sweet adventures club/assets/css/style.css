@@ -1,6 +1,7 @@
 /* Base styles */
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+PE:wght@100..400&family=Poiret+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+PE:wght@100..400&family=Poiret+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+PE:wght@100..400&family=Poiret+One&display=swap');
 
 * {
     margin: 0;
@@ -8,7 +9,6 @@
     box-sizing: border-box;
     font-family: "Montserrat", serif;
     font-size: 62.5%;
-    scroll-behavior: smooth;
 }
 
 :root {
@@ -25,6 +25,8 @@ body {
     font-family: 'Montserrat', sans-serif;
     background: linear-gradient(135deg, #FDF3E3, #C8A074);
     height: 100%;
+    line-height: 1.6;
+    letter-spacing: 0.05rem;
 }
 
 
@@ -48,12 +50,22 @@ td, p, h3 {
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
-    height: 52.5vh;
+    height: 50vh;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: 60vh;
+        padding: 2rem;
+    }
+    .title {
+        font-size: 10vw;
+    }
 }
 
 /* Title Styling */
@@ -147,8 +159,22 @@ nav a {
     text-align: center;
 }
 
+nav a.active {
+    border-bottom: 2px solid var(--accent);
+}
+
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+    }
+    nav a {
+        padding: 1.5rem;
+        font-size: 1.8rem;
+    }
+}
+
 .pitch {
-  padding: 10rem
+  padding: 6rem 10rem
 }
 
 .pitch div p {
@@ -172,27 +198,181 @@ nav a {
     margin-bottom: 0;
     padding: 2rem 8rem;
     border-radius: 5px;
+    text-align: center;
 }
 
 .pitch-nav a:hover {
     background: var(--inneractive);
 }
 
+@media screen and (max-width: 1078px) {
+    .pitch-nav {
+        flex-direction: column;
+    }
+
+    .pitch-nav a {
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .pitch-nav a {
+        font-size: 1.75rem;
+       
+    }
+}
+
 
 /*Story*/
 
+/* Story Section Styles */
+.story {
+    background: url('/sweet adventures club/assets/images/story-background.jpg') no-repeat center center/cover; /* Background image */
+    color: var(--base); /* Light text color */
+    text-shadow: 0 0 5px var(--text);
+    padding: 6rem 2rem;
+    text-align: center;
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.story::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* Dark overlay for text contrast */
+    z-index: 0;
+}
 
+.story-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h2 {
+    font-family: 'Poiret One', sans-serif;
+    font-size: 4rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeInUp 1.5s ease-out forwards;
+}
+
+p {
+    font-size: 1.8rem;
+    line-height: 1.6;
+    margin-top: 1.5rem;
+    font-family: 'Merriweather', serif;
+    opacity: 0;
+    animation: fadeInUp 2s ease-out 0.5s forwards;
+}
+
+.story p {
+    width: 75%;
+    margin: 0 10rem;
+    font-size: 2.5rem;
+}
+
+.story h2 {
+    color: var(--text);
+    text-shadow: 0 0 5px var(--base);
+}
+
+/* Animation for Fade In and Slide Up */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover Effects for the Section */
+.story:hover h2 {
+    color: var(--base); /* Change title color on hover */
+    text-shadow: 0 0 5px var(--inneractive);
+    transition: 0.3s;
+}
+
+.story:hover p {
+    color: var(--text); /* Change text color on hover */
+    text-shadow: 0 0 5px var(--secondary);
+    transition: 0.3s;
+}
+
+/* Responsive Design */
+
+@media screen and (max-width: 1078px) {
+    .story {
+        flex-direction: column;
+    }
+}
+@media screen and (max-width: 768px) {
+    .story {
+        padding: 4rem 1rem;
+    }
+
+    h2 {
+        font-size: 3rem;
+    }
+
+    p {
+        font-size: 1.6rem;
+    }
+}
+
+.affiliates {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.affiliates span {
+    font-size: 3rem;
+}
+
+.sacrilege span {
+    font-family: "David Libre", serif;
+}
 
 
 /*Menu Tables*/
 
 /* Table Styling */
 table.menu-table {
-  width: 55%;
+  width: 75%;
+  max-width: 100%;
   margin-bottom: 30px;
   border-collapse: collapse;
   margin: 0 auto
+}
+
+@media (max-width: 768px) {
+    table.menu-table td {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 1rem 0;
+    }
+
+    table.menu-table td:nth-child(2) {
+        width: auto;
+    }
+}
+
+caption {
+    font-size: 3rem;
 }
 
 table.menu-table td { 
@@ -213,5 +393,197 @@ thead tr th {
   width: 100%
 }
 
+/*Ordering*/
+.order-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #FFF;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .cheesecake-options, .topping-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .cheesecake-selection span, .topping-selection span {
+    font-size: 1.2rem;
+  }
+  
+  input[type="number"] {
+    width: 50px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  label {
+    display: flex;
+  
+    font-size: 2rem;
+  }
+  
+  label span {
+    margin-left: 10px;
+    font-size: 1rem;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #DDD;
+    border-radius: 8px;
+    font-size: 2rem;
+  }
+  
+  #order-preview {
+    display: flex;
+    flex-direction: column;
+    background: #FAE3D9;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.5rem; /* Adjust the value as needed */
+    line-height: 1.6;
+  }
+  
+  button.cta {
+    background-color: var(--text);
+    color: var(--base);
+    padding: 2rem 4rem;
+    border: none;
+    font-size: 1.4rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    margin: 0 auto;
+  }
+  
+  button.cta:hover {
+    background-color: var(--inneractive);
+  }
+
+/*Why Choose Us*/
+
+/* Why Choose Us Section */
+.why-choose-us {
+    background: var(--); /* Light background color */
+    color: var(--text);
+    padding: 6rem 2rem;
+    text-align: center;
+}
+
+.why-choose-us h2 {
+    font-family: 'Poiret One', sans-serif;
+    font-size: 3.5rem;
+    letter-spacing: 0.1rem;
+    color: var(--text);
+    margin-bottom: 3rem;
+}
+
+.why-choose-us .benefits {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
+.why-choose-us .benefit {
+    background: var(--text); /* Subtle accent background */
+    color: var(--base);
+    padding: 2rem;
+    border-radius: 8px;
+    width: 250px;
+    box-shadow: 0 4px 8px var(--accent);
+    transition: transform 0.3s ease;
+}
+
+.why-choose-us .benefit:hover {
+    transform: translateY(-10px); /* Elevates the box on hover */
+}
+
+.why-choose-us .benefit h3 {
+    font-family: 'Poiret One', sans-serif;
+    font-size: 2.5rem;
+    color: var(--base);
+    margin-bottom: 1rem;
+}
+
+.why-choose-us .benefit p {
+    font-size: 1.8rem;
+    line-height: 1.6;
+}
+
+@media screen and (max-width: 768px) {
+    .why-choose-us .benefits {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .why-choose-us .benefit {
+        width: 100%;
+    }
+}
 
 
+/*Footer Section*/
+
+footer {
+    background-color: var(--text);
+    color: var(--base);
+    padding: 3rem 0;
+    text-align: center;
+  }
+  
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .social-links a {
+    text-decoration: none;
+    color: var(--base);
+    font-size: 2rem;
+  }
+  
+  .social-links a:hover {
+    color: var(--accent);
+  }
+  
+  .email-link a {
+    text-decoration: none;
+    color: var(--base);
+    font-size: 1.8rem;
+  }
+  
+  .email-link a:hover {
+    color: var(--accent);
+  }
+  
+  .quick-links {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .quick-links a {
+    text-decoration: none;
+    color: var(--base);
+    font-size: 1.8rem;
+  }
+  
+  .quick-links a:hover {
+    color: var(--accent);
+  }
+  

@@ -60,11 +60,7 @@ td, p, h3 {
 
 @media (max-width: 768px) {
     .hero {
-        height: 60vh;
-        padding: 2rem;
-    }
-    .title {
-        font-size: 10vw;
+        height: 30vh
     }
 }
 
@@ -99,6 +95,29 @@ td, p, h3 {
     -webkit-text-fill-color: transparent;
     animation: glow-move 3s linear infinite;
 }
+@media (max-width: 1200px) {
+    .hero {
+        height: 60vh;
+        padding: 2rem;
+    }
+    .title {
+        font-size: 10vw;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: 40vh;
+    
+    }
+    .title {
+        font-size: 12vw;
+    }
+
+}
+
+
 
 /* Tagline */
 .tagline {
@@ -132,6 +151,11 @@ td, p, h3 {
     }
 }
 
+@media (max-width: 1200px) {
+    .tagline {
+        font-size: 5vw;
+}
+}
 
 /* Nav Styles */
 
@@ -164,12 +188,10 @@ nav a.active {
 }
 
 @media (max-width: 768px) {
-    nav {
-        flex-direction: column;
-    }
+   
     nav a {
         padding: 1.5rem;
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 }
 
@@ -216,6 +238,10 @@ nav a.active {
 }
 
 @media (max-width: 768px) {
+    .pitch {
+        padding: 3rem;
+    }
+
     .pitch-nav a {
         font-size: 1.75rem;
        

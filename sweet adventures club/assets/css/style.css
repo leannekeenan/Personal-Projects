@@ -515,22 +515,22 @@ p {
 
   .cheesecake-events {
     padding: 40px;
-    background-color: #fff6f2;
+    background-color: var(--base);
     text-align: center;
-    border: 2px solid #e6d0c4;
+    border: 2px solid var(--accent);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cheesecake-events h2 {
     font-size: 2rem;
-    color: #5a2d0c;
+    color: var(--text);
     margin-bottom: 20px;
 }
 
 .events-intro {
-    font-size: 1.2rem;
-    color: #8a5d39;
+    font-size: 2rem;
+    color: var(--text);
     line-height: 1.6;
     margin-bottom: 40px;
 }

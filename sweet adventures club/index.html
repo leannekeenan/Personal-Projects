@@ -172,7 +172,7 @@
                     <td>Tart cherries cooked down to a luscious, syrupy compote bring a delightful balance of tanginess and sweetness.</td>
                 </tr>
                 <tr>
-                    <td><h3>Raspberry <br>Compote</h3></td>
+                    <td><h3>Raspberry Compote</h3></td>
                     <td>Bold, tart raspberries transformed into a smooth, luxurious compote add a sophisticated and refreshing contrast.</td>
                 </tr>
                 <tr>
@@ -283,36 +283,60 @@
               </section>
             
               <section class="order-summary">
-                <h2>Your Order</h2>
+                <h2>Order Review</h2>
                 <div id="order-preview" class="preview">
                   <p>Your cheesecake preview will appear here...</p>
                 </div>
                 <p id="total-price">Total: $0.00</p>
-                <button id="submit-order" class="cta">Proceed to Checkout</button>
+                <h2 class="purchase-title">Purchase Your Order</h2>
+                <h3>Personal Information</h3>
+                <form id="purchase-form">
+                  <label for="customer-name">Name:</label>
+                  <input type="text" id="customer-name" name="customer-name" placeholder="John Doe" required>
+                  
+                  <label for="email">Email Address:</label>
+                  <input type="email" id="email" name="email" placeholder="johndoe@example.com" required>
+                  
+                  <label for="phone">Phone Number:</label>
+                  <input type="tel" id="phone" name="phone" placeholder="123-456-7890">
+              
+                  <!-- Shipping Address -->
+                  <h3>Shipping Address</h3>
+                  <label for="street-address">Street Address:</label>
+                  <input type="text" id="street-address" name="street-address" placeholder="123 Main St" required>
+                  
+                  <label for="city">City:</label>
+                  <input type="text" id="city" name="city" placeholder="Your City" required>
+                  
+                  <label for="state">State:</label>
+                  <input type="text" id="state" name="state" placeholder="Your State" required>
+                  
+                  <label for="zip">ZIP/Postal Code:</label>
+                  <input type="text" id="zip" name="zip" placeholder="12345" required>
+                  
+                  <!-- Payment Information -->
+                  <h3>Payment Information</h3>
+                  <label for="card-number">Card Number:</label>
+                  <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456" required>
+                  
+                  <label for="expiry-date">Expiry Date:</label>
+                  <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY" required>
+                  
+                  <label for="cvv">CVV:</label>
+                  <input type="text" id="cvv" name="cvv" placeholder="123" required>
+              
+                  <!-- Terms and Conditions -->
+                  <div>
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
+                  </div>
+                  
+                  <!-- Submit Button -->
+                  <button type="submit" id="submit-order" class="cta">Proceed to Checkout</button>
+                </form>
               </section>
 
-              <!-- Purchase Order Information Section -->
-        <section class="purchase-info">
-          <h2>Purchase Information</h2>
-          <div class="purchase-details">
-              <label for="client-name">
-                  Name:
-                  <input type="text" id="client-name" name="client-name" placeholder="Your Full Name" required>
-              </label>
-              <label for="order-date">
-                  Order Date:
-                  <input type="date" id="order-date" name="order-date" required>
-              </label>
-              <label for="credit-card">
-                  Credit Card:
-                  <input type="text" id="credit-card" name="credit-card" placeholder="1234-5678-9012-3456" required>
-              </label>
-              <label for="delivery-address">
-                  Delivery Address:
-                  <textarea id="delivery-address" name="delivery-address" placeholder="Your Delivery Address" required></textarea>
-              </label>
-          </div>
-      </section>
+              
         </div>
     </section>
 
@@ -367,5 +391,7 @@
   
 <script src="/sweet adventures club/assets/js/script.js"></script>
 <script src="/sweet adventures club/assets/js/order.js"></script>
+<script src="/sweet adventures club/assets/js/purchasing.js"></script>
+<script src="/sweet adventures club/assets/js/nodemailer.js"></script>
 </body>
 </html>

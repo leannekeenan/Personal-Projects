@@ -638,6 +638,14 @@ p {
     position: relative;
   }
 
+  .menu-table th:nth-child(1) {
+    text-align: center;
+  }
+
+ 
+
+  
+
   .menu-table h3 {
     margin: 0;
     color: #880e4f;
@@ -647,6 +655,7 @@ p {
   .menu-table tr:hover {
     background-color: rgba(255, 220, 240, 0.3);
   }
+  
 
   .menu-table tr:hover h3 {
     transform: scale(1.05);
@@ -742,6 +751,83 @@ p {
   button.cta:hover {
     background-color: var(--inneractive);
   }
+
+  /* Added styles for new elements */
+
+/* Section Titles */
+.order-summary h2, .order-summary h3 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.order-summary h2 {
+    font-size: 4rem;
+}
+
+
+
+/* Checkbox and Terms */
+input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+    vertical-align: middle;
+}
+
+label[for="terms"] {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    margin-top: 15px;
+}
+
+label[for="terms"] a {
+    color: var(--text);
+    text-decoration: underline;
+    margin-left: 5px;
+}
+
+/* Address Fields */
+input[type="text"], input[type="email"], input[type="tel"] {
+    width: calc(100% - 20px);
+    margin-bottom: 15px;
+}
+
+input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="tel"]::placeholder {
+    color: #aaa;
+}
+
+/* Payment Fields */
+#card-number, #expiry-date, #cvv {
+    width: calc(100% - 20px);
+    margin-bottom: 15px;
+}
+
+/* Align Submit Button */
+#submit-order {
+    margin-top: 20px;
+    font-size: 1.4rem;
+    padding: 15px 30px;
+    background-color: var(--text);
+    color: var(--base);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#submit-order:hover {
+    background-color: var(--inneractive);
+}
+
+#purchase-form {
+    font-size: 2rem;
+}
+
+#purchase-form input, #purchase-form label, #purchase-form h3, #purchase-form button, #purchase-form a {
+    font-size: inherit;
+}
+
 
 /*Why Choose Us*/
 

@@ -34,8 +34,8 @@
             <p>At Sweet Adventures, we specialize in handcrafted, small-batch cheesecakes that are perfectly portioned for any occasion. Our cheesecakes, the size of a cupcake, are made with the finest ingredients to ensure every bite is a creamy, indulgent experience. Whether you're treating yourself, celebrating with loved ones, or searching for the perfect gift, our single-serve cheesecakes offer a delightful twist on a classic favorite. It's cheesecake, reimagined—just the right size to enjoy and savor.</p>
         </div>
         <div class="pitch-nav">
-            <a href="">View Our Menu</a>
-            <a href="">Place An Order</a>
+            <a href="#menu">View Our Menu</a>
+            <a href="#ordering">Place An Order</a>
         </div>
     </section>
 
@@ -55,8 +55,8 @@
 
         <div class="studio-cake">
             <p>We are proud to be leasing a commercial kitchen space at</p>
-            <!-- Image of the kitchen facility -->
-            <img src="/sweet adventures club/assets/images/studio cake.png" alt="Kitchen Facility Logo" style="max-width: 100%; height: auto;">
+            <!-- Image of the kitchen facility logo -->
+            <img src="/sweet adventures club/assets/images/studio cake.png" alt="Kitchen Facility Logo">
             <p> where we craft our delicious cheesecakes in a fully certified, professional environment, ensuring the highest standards of quality and safety.</p>
         </div>
         
@@ -67,8 +67,17 @@
                 SACRILEGE BREWERY + KITCHEN
             </span>
             <p>where our cheesecakes perfectly complement their craft beers. We are proud to be part of this exceptional local establishment.</p>
-          </div>
+        </div>
 
+
+        <div class="interested">
+          <p>Interested in hosting our cakes in your establishment?</p>
+      
+          <a href="mailto:sweetadventuresclub@outlook.com">Contact Us Today</a>
+      
+          <p>We would be honored to have our delicious cakes featured in your store. Let&apos;s work together to bring a touch of sweetness to your customers!</p>
+      </div>
+      
           
         
     </section>
@@ -205,7 +214,7 @@
         <div class="order-form">
 
           <section class="order-fulfillment">
-            <h2>Choose Your Date & Time</h2>
+            <h2>Set Your Delivery Details</h2>
             <p>Please select the desired date and time for your order.</p>
             
             <label for="order-date">Order Date:</label>
@@ -225,10 +234,12 @@
               <option value="04:00">04:00 PM</option>
               <option value="05:00">05:00 PM</option>
             </select>
+            <div class="message">
+              <p id="unavailable-msg">
+                The selected time is unavailable. Please choose another.
+              </p>
+            </div>
             
-            <p id="unavailable-msg">
-              The selected time is unavailable. Please choose another.
-            </p>
           </section>
 
           <section class="delivery-address" id="delivery-address">
@@ -421,7 +432,7 @@
       
       <!-- Email Link -->
       <div class="email-link">
-        <a href="mailto:info@example.com">Email Us</a>
+        <a href="mailto:sweetadventuresclub@outlook.com">Email Us</a>
       </div>
       
       <!-- Quick Links to Sections -->

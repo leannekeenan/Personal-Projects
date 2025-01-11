@@ -51,7 +51,7 @@
     
     </section>
 
-    <section class="affiliates">
+    <section class="affiliates" id="affiliates">
 
         <div class="studio-cake">
             <p>We are proud to be leasing a commercial kitchen space at</p>
@@ -203,7 +203,55 @@
 
     <section class="ordering" id="ordering">
         <div class="order-form">
-            <section class="cheesecake-selection">
+
+          <section class="order-fulfillment">
+            <h2>Choose Your Date & Time</h2>
+            <p>Please select the desired date and time for your order.</p>
+            
+            <label for="order-date">Order Date:</label>
+            <input type="date" id="order-date" name="order-date" required>
+            
+            <label for="order-time">Order Time:</label>
+            <select id="order-time" name="order-time" required>
+              <option value="">Select a Time</option>
+              <option value="08:00">08:00 AM</option>
+              <option value="09:00">09:00 AM</option>
+              <option value="10:00">10:00 AM</option>
+              <option value="11:00">11:00 AM</option>
+              <option value="12:00">12:00 PM</option>
+              <option value="01:00">01:00 PM</option>
+              <option value="02:00">02:00 PM</option>
+              <option value="03:00">03:00 PM</option>
+              <option value="04:00">04:00 PM</option>
+              <option value="05:00">05:00 PM</option>
+            </select>
+            
+            <p id="unavailable-msg">
+              The selected time is unavailable. Please choose another.
+            </p>
+          </section>
+
+          <section class="delivery-address" id="delivery-address">
+                              <!-- Delivery Address -->
+                              <h3>Delivery Address</h3>
+                              <label for="street-address">Street Address:</label>
+                              <input type="text" id="street-address" name="street-address" placeholder="123 Main St" required>
+                              
+                              <label for="unit">Unit #</label>
+                              <input type="text" id="unit" name="unit" placeholder="Unit #">
+
+                              <label for="city">City:</label>
+                              <input type="text" id="city" name="city" placeholder="Your City" required>
+                              
+                              <label for="state">State:</label>
+                              <input type="text" id="state" name="state" placeholder="Your State" required>
+                              
+                              <label for="zip">ZIP/Postal Code:</label>
+                              <input type="text" id="zip" name="zip" placeholder="12345" required>
+                              
+          </section>
+          
+          <section class="cheesecake-selection">
                 <h2>Choose Your Cheesecakes</h2>
                 <span>Each order includes one dozen (12) cheesecakes</span>
                 <div class="cheesecake-options">
@@ -236,9 +284,9 @@
                     Ginger Snap
                   </label>
                 </div>
-              </section>
+          </section>
             
-              <section class="topping-selection">
+          <section class="topping-selection">
                 <h2>Choose Your Toppings</h2>
                 <span>Each topping holds 12 ounces</span>
                 <div class="topping-options">
@@ -275,42 +323,14 @@
                     Dark Chocolate Sauce
                   </label>
                 </div>
-              </section>
+          </section>
             
-              <section class="customization">
+          <section class="customization">
                 <h2>Any Special Requests?</h2>
                 <textarea id="special-requests" placeholder="Tell us how to make your cheesecake even sweeter!"></textarea>
-              </section>
-
-              <section class="order-fulfillment">
-                <h2>Choose Your Fulfillment Date & Time</h2>
-                <p>Please select the desired date and time for your order.</p>
-                
-                <label for="order-date">Order Date:</label>
-                <input type="date" id="order-date" name="order-date" required>
-                
-                <label for="order-time">Order Time:</label>
-                <select id="order-time" name="order-time" required>
-                  <option value="">Select a Time</option>
-                  <option value="08:00">08:00 AM</option>
-                  <option value="09:00">09:00 AM</option>
-                  <option value="10:00">10:00 AM</option>
-                  <option value="11:00">11:00 AM</option>
-                  <option value="12:00">12:00 PM</option>
-                  <option value="01:00">01:00 PM</option>
-                  <option value="02:00">02:00 PM</option>
-                  <option value="03:00">03:00 PM</option>
-                  <option value="04:00">04:00 PM</option>
-                  <option value="05:00">05:00 PM</option>
-                </select>
-                
-                <p id="unavailable-msg" style="color: red; display: none;">
-                  The selected time is unavailable. Please choose another.
-                </p>
-              </section>
-              
+          </section>
             
-              <section class="order-summary">
+          <section class="order-summary">
                 <h2>Order Review</h2>
                 <div id="order-preview" class="preview">
                   <p>Your cheesecake preview will appear here...</p>
@@ -328,20 +348,21 @@
                   <label for="phone">Phone Number:</label>
                   <input type="tel" id="phone" name="phone" placeholder="123-456-7890">
               
-                  <!-- Shipping Address -->
-                  <h3>Shipping Address</h3>
-                  <label for="street-address">Street Address:</label>
-                  <input type="text" id="street-address" name="street-address" placeholder="123 Main St" required>
-                  
-                  <label for="city">City:</label>
-                  <input type="text" id="city" name="city" placeholder="Your City" required>
-                  
-                  <label for="state">State:</label>
-                  <input type="text" id="state" name="state" placeholder="Your State" required>
-                  
-                  <label for="zip">ZIP/Postal Code:</label>
-                  <input type="text" id="zip" name="zip" placeholder="12345" required>
-                  
+
+                   <!-- Billing Address -->
+                   <h3>Billing Address</h3>
+                   <label for="street-address">Street Address:</label>
+                   <input type="text" id="street-address" name="street-address" placeholder="123 Main St" required>
+                   
+                   <label for="city">City:</label>
+                   <input type="text" id="city" name="city" placeholder="Your City" required>
+                   
+                   <label for="state">State:</label>
+                   <input type="text" id="state" name="state" placeholder="Your State" required>
+                   
+                   <label for="zip">ZIP/Postal Code:</label>
+                   <input type="text" id="zip" name="zip" placeholder="12345" required>
+ 
                   <!-- Payment Information -->
                   <h3>Payment Information</h3>
                   <label for="card-number">Card Number:</label>
@@ -353,6 +374,7 @@
                   <label for="cvv">CVV:</label>
                   <input type="text" id="cvv" name="cvv" placeholder="123" required>
               
+                 
                   <!-- Terms and Conditions -->
                   <div>
                     <input type="checkbox" id="terms" name="terms" required>
@@ -362,13 +384,12 @@
                   <!-- Submit Button -->
                   <button type="submit" id="submit-order" class="cta">Proceed to Checkout</button>
                 </form>
-              </section>
-
+           </section>
               
         </div>
     </section>
 
-    <section class="why-choose-us">
+    <section class="why-choose-us" id="why-choose-us">
         <div class="why-choose-content">
           <h2>Why Choose Us?</h2>
           <div class="benefits">
@@ -390,7 +411,7 @@
 </main>
 
 <footer>
-    <div class="footer-content">
+    <div class="footer-content" id="footer-content">
       <!-- Social Media Links -->
       <div class="social-links">
         <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a>

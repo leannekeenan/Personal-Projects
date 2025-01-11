@@ -281,6 +281,34 @@
                 <h2>Any Special Requests?</h2>
                 <textarea id="special-requests" placeholder="Tell us how to make your cheesecake even sweeter!"></textarea>
               </section>
+
+              <section class="order-fulfillment">
+                <h2>Choose Your Fulfillment Date & Time</h2>
+                <p>Please select the desired date and time for your order.</p>
+                
+                <label for="order-date">Order Date:</label>
+                <input type="date" id="order-date" name="order-date" required>
+                
+                <label for="order-time">Order Time:</label>
+                <select id="order-time" name="order-time" required>
+                  <option value="">Select a Time</option>
+                  <option value="08:00">08:00 AM</option>
+                  <option value="09:00">09:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="01:00">01:00 PM</option>
+                  <option value="02:00">02:00 PM</option>
+                  <option value="03:00">03:00 PM</option>
+                  <option value="04:00">04:00 PM</option>
+                  <option value="05:00">05:00 PM</option>
+                </select>
+                
+                <p id="unavailable-msg" style="color: red; display: none;">
+                  The selected time is unavailable. Please choose another.
+                </p>
+              </section>
+              
             
               <section class="order-summary">
                 <h2>Order Review</h2>
@@ -393,5 +421,7 @@
 <script src="/sweet adventures club/assets/js/order.js"></script>
 <script src="/sweet adventures club/assets/js/purchasing.js"></script>
 <script src="/sweet adventures club/assets/js/nodemailer.js"></script>
+<script src="/sweet adventures club/assets/js/calendar logic.js"></script>
+<script type="module" src="/sweet adventures club/assets/js/server.js"></script>
 </body>
 </html>

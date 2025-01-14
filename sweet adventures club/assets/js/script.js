@@ -7,16 +7,3 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-
-// Sticky navbar toggle on scroll
-window.onscroll = function() {
-    var navbar = document.querySelector('nav');
-    var body = document.body;
-    if (window.scrollY > 0) {
-        navbar.classList.add('sticky');
-        body.classList.add('sticky-nav-active');
-    } else {
-        navbar.classList.remove('sticky');
-        body.classList.remove('sticky-nav-active');
-    }
-};

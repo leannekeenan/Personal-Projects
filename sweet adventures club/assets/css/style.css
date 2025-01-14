@@ -27,7 +27,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Poiret One";
+  font-family: "Poiret One", serif;
 }
 
 h2, th {
@@ -84,7 +84,7 @@ td, p, h3 {
 }
 
 .title::before {
-    content: 'Sweet Adventures';
+    content: 'Sweet Adventures Club';
     position: absolute;
     top: 0;
     left: 0;
@@ -466,7 +466,7 @@ nav a.active {
 
 .event-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid columns */
+    grid-template-columns: repeat(3, 1fr); /* Responsive grid columns */
     gap: 20px;
     margin: 0 auto;
     width: 75%;

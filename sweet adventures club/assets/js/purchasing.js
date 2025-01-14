@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const totalPrice = document.getElementById("total-price");
     const submitButton = document.getElementById("submit-order");
 
+    const clientEmail = document.getElementById("clientEmail").value
     // Prices for cheesecakes and toppings
     const cheesecakePrices = {
       "Classic": 80,
@@ -137,12 +138,12 @@ document.addEventListener("DOMContentLoaded", function () {
       // Send receipt to company and client (assuming an email-sending backend)
       const emailPayload = {
         toClient: {
-          email: "client@example.com",  // Replace with actual client email
+          email: {clientEmail},  // Replace with actual client email
           subject: "Your Cheesecake Order Confirmation",
           body: receiptText
         },
         toCompany: {
-          email: "company@example.com",  // Replace with actual company email
+          email: "sweetadventuresclub@example.com",  // Replace with actual company email
           subject: "New Cheesecake Order Received",
           body: receiptText
         }

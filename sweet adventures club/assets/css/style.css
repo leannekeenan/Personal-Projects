@@ -26,12 +26,17 @@ body {
     letter-spacing: 0.05rem;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h3, h4, h5, h6, a {
   font-family: 'Playfair Display', serif;
 }
 
+
 h2, th {
-    font-size: clamp(1rem, 5vw, 3rem); /* Font size between 2rem and 3rem */
+   font-family: 'Great Vibes', cursive;
+}
+
+h2 {
+  font-size: clamp(2rem, 5vw, 4rem); /* Adjust font size for h2 on smaller screens */
 }
 
 td, p, h3 {
@@ -257,9 +262,9 @@ nav a.active {
   .story h2 {
     text-align: center; /* Center the header */
     margin-bottom: 1.5rem; /* Add space below the header */
-    font-size: clamp(2rem, 4vw, 4rem); /* Responsive font size for h2 */
     color: var(--text);
     text-shadow: 0 0 5px var(--accent);
+    font-family: 'Great Vibes', cursive;
   }
   
   .story p {
@@ -298,7 +303,7 @@ nav a.active {
   
   /* Responsive Design */
   
-  @media screen and (max-width: 1078px) {
+  @media screen and (max-width: 1600px) {
     .story {
       flex-direction: column;
     }
@@ -307,10 +312,6 @@ nav a.active {
   @media screen and (max-width: 768px) {
     .story {
       padding: 4rem 1rem;
-    }
-  
-    h2 {
-      font-size: clamp(2rem, 5vw, 3rem); /* Adjust font size for h2 on smaller screens */
     }
   
     p {
@@ -453,9 +454,7 @@ nav a.active {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.cheesecake-events h2 {
-    font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive font size for h2 */
-    color: var(--text);
+.cheesecake-events h2 {color: var(--text);
     margin-bottom: clamp(10px, 2vw, 20px); /* Responsive margin-bottom */
 }
 
@@ -537,7 +536,6 @@ nav a.active {
  
 
   .menu h2 {
-    font-size: 2.5rem;
     color: var(--text);
     margin-bottom: 2rem;
   }
@@ -797,7 +795,6 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="t
 }
 
 .why-choose-us h2 {
-    font-size: 3.5rem;
     letter-spacing: 0.1rem;
     color: var(--text);
     margin-bottom: 3rem;

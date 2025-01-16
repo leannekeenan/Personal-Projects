@@ -37,10 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateOrder() {
       let previewText = "";
       currentBases.forEach(base => {
-        previewText += `<br>${base.name} (x${base.quantity})`;
+        previewText += `1 dozen ${base.name} (x${base.quantity})<br>`;
       });
 
-      let toppingsText = currentToppings.length ? ` ${currentToppings.map(topping => `${topping.name} (x${topping.quantity})`).join(", ")}` : "No toppings selected";
+      let toppingsText = currentToppings.length ? ` ${currentToppings.map(topping => `${topping.name} (x${topping.quantity})<br>`).join(" ")}` : "";
       
       // Reset total to cheesecake price
       let total = currentPrice;
@@ -122,10 +122,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const receiptText = `
         Order Details:
         Cheesecakes:
-        ${orderDetails.bases.map(base => `${base.name} (x${base.quantity})`).join('\n')}
+        ${orderDetails.bases.map(base => `1 dozen ${base.name} (x${base.quantity})`).join('\n')}
         
         Toppings:
-        ${orderDetails.toppings.length ? orderDetails.toppings.map(topping => `${topping.name} (x${topping.quantity})`).join('\n') : "No toppings selected"}
+        ${orderDetails.toppings.length ? orderDetails.toppings.map(topping => `${topping.name} (x${topping.quantity})`).join('\n') : ""}
         
         Special Requests: ${specialRequests.value ? specialRequests.value : "None"}
         

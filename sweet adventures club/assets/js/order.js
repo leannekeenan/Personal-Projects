@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
         previewText += `<br>${base.name} (x${base.quantity})`;
       });
   
-      let toppingsText = currentToppings.length ? ` ${currentToppings.map(topping => `${topping.name} (x${topping.quantity})`).join(", ")}` : "No toppings selected";
+      let toppingsText = currentToppings.length ? ` ${currentToppings.map(topping => `${topping.name} (x${topping.quantity})`).join(", ")}` : "";
       
       // Reset total to cheesecake price
       let total = currentPrice;

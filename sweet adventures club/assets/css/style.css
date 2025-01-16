@@ -1,11 +1,11 @@
 /* Base styles */
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+PE:wght@100..400&family=Poiret+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=David+Libre:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Cinzel:wght@400;500;700&family=Marck+Script&family=Raleway:wght@400;500;700&family=Lora:wght@400;500;700&family=Quicksand:wght@400;500;700&family=Great+Vibes&family=Pacifico&family=Baskerville&display=swap');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Montserrat", serif;
     font-size: 62.5%;
 }
 
@@ -21,13 +21,13 @@
 body {
     background: linear-gradient(135deg, var(--base), var(--secondary));
     height: 100%;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Raleway', sans-serif;
     line-height: 1.6;
     letter-spacing: 0.05rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Poiret One", serif;
+  font-family: 'Playfair Display', serif;
 }
 
 h2, th {
@@ -71,7 +71,7 @@ td, p, h3 {
 
 /* Title Styling */
 .title {
-    font-family: "Poiret One", sans-serif;
+  font-family: 'Playfair Display', serif;
     font-size: 7vw;
     min-width: 80vw;
     font-weight: 800;
@@ -99,13 +99,16 @@ td, p, h3 {
 
 /* Tagline */
 .tagline {
-    font-family: "Merriweather", serif;
+  font-family: 'Great Vibes', cursive;
     font-size: 4rem;
     margin-top: 1rem;
     color: var(--base);
     opacity: 0;
     animation: fade-in 2s ease-in forwards;
 }
+
+
+
 
 @media (max-width: 1200px) {
     .tagline {
@@ -221,8 +224,7 @@ nav a.active {
     justify-content: center;
     background-color: var(--base); /* Default background color */
     padding: clamp(3rem, 5vw, 8rem) clamp(1rem, 3vw, 5rem); /* Responsive padding */
-    border-radius: 10px; /* Round the corners */
-    font-size: clamp(1rem, 2vw, 1.2rem); /* Responsive font size */
+   font-size: clamp(1rem, 2vw, 1.2rem); /* Responsive font size */
     line-height: 1.8; /* Maintain line height */
     position: relative; /* Ensure positioning for pseudo-elements */
     overflow: hidden; /* Ensure the pseudo-element stays within bounds */
@@ -447,7 +449,7 @@ nav a.active {
     background-color: var(--base);
     text-align: center;
     border: 2px solid var(--accent);
-    border-radius: 10px;
+
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -795,7 +797,6 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="t
 }
 
 .why-choose-us h2 {
-    font-family: 'Poiret One', sans-serif;
     font-size: 3.5rem;
     letter-spacing: 0.1rem;
     color: var(--text);
@@ -824,7 +825,6 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="t
 }
 
 .why-choose-us .benefit h3 {
-    font-family: 'Poiret One', sans-serif;
     font-size: 2.5rem;
     color: var(--base);
     margin-bottom: 1rem;

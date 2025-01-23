@@ -34,6 +34,9 @@ h1, h3, h4, h5, h6, a {
 h2, th {
    font-family: 'Great Vibes', cursive;
 }
+th {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
 
 h2 {
   font-size: clamp(2rem, 5vw, 4rem); /* Adjust font size for h2 on smaller screens */
@@ -560,7 +563,6 @@ nav a.active {
   .menu-table td {
     text-align: left;
     padding: 1.2rem;
-    font-size: 1.5rem;
     color: var(--text);
     border-bottom: 2px solid #e0e0e0;
     position: relative;

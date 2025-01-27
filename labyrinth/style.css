@@ -1,0 +1,243 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 62.5%;
+    text-shadow: 0 0 5px black;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-size: cover; /* Ensures the background image covers the entire viewport */
+    background-position: center; /* Centers the background image */
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    background-attachment: fixed;
+    height: 100vh; /* Ensures body height covers the viewport */
+    width: 100%; /* Ensures body width covers the viewport */
+   
+}
+
+header {
+    height: 100px;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+}
+
+header span img {
+    height: 120px;
+    border: none
+}
+
+
+main {
+    margin: 0 auto;
+   
+}
+
+section {
+    width: 70%;
+    margin: 5rem auto;
+}
+
+#deck, #discard-pile, #river {
+    margin-bottom: 10px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+}
+strong {
+    font-size: inherit;
+    font-weight: 800;
+}
+
+.about ul, .about ol, .howTo ul, .howTo ol {
+    width: 80%;
+    margin-left: 5%;
+}
+
+/* Flex container for the river */
+#river, #actions {
+    display: flex;
+    flex-wrap: wrap; /* Allows cards to wrap to the next line if needed */
+    justify-content: center; /* Center cards horizontally */
+    align-items: center; /* Center cards vertically */
+    gap: 10px; /* Optional: space between cards */
+}
+
+
+.card {
+    width: 200px; /* Adjust size as needed */
+    height: 300px; /* Adjust size as needed */
+    background-color: #333; /* Dark background for face-down cards */
+    color: transparent; /* Hide text */
+    border: 1px solid #000; /* Optional: border for visibility */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em; /* Adjust icon size */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.card img {
+    width: 100%; /* Makes the image fit the card's width */
+    height: 100%; /* Makes the image fit the card's height */
+    object-fit: cover; /* Ensures the image covers the card area */
+}
+
+.card.flipped {
+   background-color: white; /* Or any other color for face-up cards */
+    color: black; /* Show text or icons */
+}
+
+.card-icon {
+    display: inline-block;
+    font-size: 300px; /* Adjust this value to control the height */
+    line-height: 1; /* Ensure the height is exactly the font-size */
+}
+
+.details div {
+    width: 100%;
+    margin: 5rem 2.5rem
+}
+
+.details div ul li {
+    margin: 2rem 0;
+}
+
+.details, .gameDetails {
+    display: flex;
+    justify-content: center;
+}
+
+.gameDetails {
+    align-items: center;
+    flex-direction: column;
+    margin: 1rem;
+}
+
+.gameDetails div, .gameDetails div span {
+    font-size: 2rem;
+}
+
+.welcome {
+    display: flex;
+    flex-direction: column;
+}
+
+.welcome span {
+    font-size: 2rem;
+}
+
+option, header .dungeon-types select {
+    font-size: 1.5rem;
+}
+
+select, button {text-shadow: none;}
+
+h1 {
+    font-size: 6rem;
+}
+
+h1 span {
+    text-align: center;
+}
+
+h2 {
+    font-size: 3.5rem;
+}
+
+h3 {
+    font-size: 3rem;
+}
+
+p, li, li p, span{
+    font-size: 3rem;
+}
+
+li h4 {
+    font-size: 2.5rem;
+}
+
+.actions button {
+    font-size: 2rem;
+}
+
+.banner {
+    padding-top: 100px;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner h1 {
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+}
+
+.banner p {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 4rem;
+    background: none
+}
+
+.about div  {
+    margin: 5rem 0
+}
+
+.thanks, .thanks div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.thanks img {
+    height: 100%;
+    width: 400px;
+    padding: 3rem;
+}
+
+footer {
+    width: 80%;
+    margin: 0 auto;
+}
+
+footer div {
+    margin: 2rem;
+}
+
+footer div span {
+    display: flex;
+    justify-content: space-between;
+}
+
+.coffee, .visit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background: rgb(224, 224, 22);
+    color: black;
+    text-shadow: none;
+    text-decoration: none;
+
+}
+
+.visit {
+    background: white;
+}

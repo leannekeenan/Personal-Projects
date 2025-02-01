@@ -17,3 +17,15 @@ This game was built using modern **front-end development** techniques, including
 ## 📂 Cloning the Repository  
 
 To clone and run this project locally, follow these steps:  
+
+1. Clone the repository: 
+
+   ```bash 
+
+   git clone https://github.com/leannekeenan/personal-projects.git 
+
+2. cd personal-projects/labyrinth
+
+3. npm install
+
+4. npm run

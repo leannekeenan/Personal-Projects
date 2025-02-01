@@ -1,6 +1,6 @@
 # 🌟 Leanne Keenan - Software Engineer Portfolio
 
-![Portfolio Screenshot](https://imgur.com/pGl3W9n.png)  
+![Portfolio Screenshot](https://imgur.com/TnMCD8l.png)  
 
 ## 🚀 About the Project  
 Welcome to my personal portfolio! This website showcases my journey as a **full-stack software engineer**, highlighting my **skills, projects, and collaborations**. Here, you can explore my **design philosophy, development expertise, and creative endeavors** while also getting in touch for potential collaborations.

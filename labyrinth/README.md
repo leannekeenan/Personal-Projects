@@ -1,4 +1,4 @@
-# 🏹 LTrials & Treasures - *Inspired by Tales from the Stinky Dragon*  
+# 🏹 Trials & Treasures - *Inspired by Tales from the Stinky Dragon*  
 
 ![Trials & Treasures](https://imgur.com/cUPG4G6.png)  
 

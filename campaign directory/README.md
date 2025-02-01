@@ -1,7 +1,7 @@
 # Personal Projects 
 
 <p align="center">
-  <img src="https://imgur.com/1vr5YL1.jpg" alt="Crest of Sevynashyuns">
+  <img src="https://imgur.com/1vr5YL1.png" alt="Crest of Sevynashyuns">
 </p>
 
 <p>

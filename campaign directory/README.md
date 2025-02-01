@@ -35,9 +35,7 @@ To clone this repository and run the projects locally:
 
 1. Clone the repository: 
 
-   ```bash 
-
- -  git clone https://github.com/leannekeenan/personal-projects.git
+   ```bash git clone https://github.com/leannekeenan/personal-projects.git
  -  cd personal-projects/campaign-directory
  -  npm install
  - npm run dev

@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+PE:wght@100..400&family=Poiret+One&family=Quicksand:wght@300..700&display=swap');
 
 body {
   margin: 0 auto;
@@ -7,22 +7,47 @@ body {
   width: 100%;
   min-height: 100vh;
   font-size: 62.5%;
+  font-family: "Quicksand", serif;
+  background: url('./assets/images/parchment full screen.png') no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 h1 {
   font-size: 5.2em;
-  line-height: 1.1;
+  line-height: auto;
+  font-weight: 800;
+}
+
+
+h2 {
+  font-size: 1.8rem;
+  line-height: auto;
+  margin: .5rem 0;
+  font-weight: 800;
+}
+
+h3 {
+  font-size: 1.6rem;
+  line-height: 1rem;
+  margin: .5rem 0;
+  font-weight: 600;
+}
+
+.card-content p {
+  font-size: 1.4rem;
+  line-height: auto;
 }
 
 .text-container {
-  max-width: 70vw;
-  margin: 0 auto;
+  width: 80%;
+  margin: 0 auto
 }
 
-p {
+.text-container p {
   font-size: 1.6rem;
   line-height: 2rem;
-
 }
 
 
@@ -36,8 +61,7 @@ p {
 }
 
 .search-bar-container input {
-  width: 100%;
-  max-width: 50vw;
+  width: 70%;
   padding: 10px;
   font-size: 16px;
   border-radius: 20px;
@@ -56,7 +80,8 @@ p {
 
 .chatacter-container img {
   width: 300px;
-  box-shadow: 0 0 5px grey;
+  box-shadow: 0 0 25px black;
+  border-radius: 5px;
 }
 .chatacter-container div {
   display: flex;

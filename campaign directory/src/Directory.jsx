@@ -11,7 +11,12 @@ import Jellusari from './assets/images/Jellusari.png';
 import PaigeTurnner from './assets/images/Paige Turner.png';
 import SquidWyrd from './assets/images/Squid Wyrd.png';
 import ApathianRelic from './assets/images/Apathian Relic w background.png';
-import RowanBlack from './assets/images/Rowan Blalck.png'
+import RowanBlack from './assets/images/Rowan Blalck.png';
+import TessaJorne from './assets/images/Tessa Jorne.png';
+import KeldorStonefist from './assets/images/Keldor Stonefist.png';
+import LiaThornfield from './assets/images/Lia Thornfield.png';
+import JasperWren from './assets/images/Jasper Wren.png';
+import ValeriaQuickstep from './assets/images/Valeria Quickstep.png'
 
 
 /*NPC Card Content*/
@@ -24,13 +29,14 @@ const npcData = [
   { id: 6, name: "Jellusari", image: Jellusari, title:"", description: "" },
   { id: 7, name: "Paige Turner", image: PaigeTurnner, title:"", description: "" },
   { id: 8, name: "Squid Wyrd", image: SquidWyrd, title:"", description: "" },
-  { id: 9, name: "Apathian Relic", title:"Relic of Apathian Sloth", image: ApathianRelic,  description:"a pocketwatch that glows faintly with arcane magic, leading those who tinker with it to take exaustion damage unless the riddle on the back is solved"},
+  { id: 9, name: "Apathian Relic", image: ApathianRelic, title:"Relic of Apathian Sloth", description:"a pocketwatch that glows faintly with arcane magic, leading those who tinker with it to take exaustion damage unless the riddle on the back is solved"},
   { id: 10, name: "Rowan Black", image: RowanBlack, title:"", description: "half elf with a quiet demeanor and an heir of superiority searching for his lost love. Hope the fame from winnig the Unity Festival will provide resources to help solve the mystery of their disappearance" },
-  { id: 11, name: "Tessa Jorne", image: "", title:"", description: "a young tiefling looking for adventure and on a quest to find a legendary artifact" },
-  { id: 12, name: "Keldor Stonefist", image: "", title:"", description: "a gruff dwarf with a heart of gold and a missing arm seking redemption after failing a mission in his hometown. He believes becoming the next hero of the nation will absolve him of his failures" },
-  { id: 13, name: "Lia Thornfield", image: "", title:"", description: "A human looking for revenge for the death of a mentor. They believe one of the leaders of the factrions is responsible and is using the opportunity to become a hero to solve the mystery" },
-  { id: 14, name: "Jasper Wren", image: "", title:"", description: "An affable and adventurous halfling searching for a lost treasure tied to their family" },
-  { id: 15, name: "Valeria Quickstep", image: " ", title:"", description: "A quick witted, short tempered gnome fleeing from an aranged marriage hoping that winning a place as a hero of the nation will" },
+  { id: 11, name: "Tessa Jorne", image: TessaJorne, title:"", description: "a young tiefling looking for adventure and on a quest to find a legendary artifact" },
+  { id: 12, name: "Keldor Stonefist", image: KeldorStonefist, title:"", description: "a gruff dwarf with a heart of gold and a missing arm seeking redemption after failing a mission in his hometown. He believes becoming the next hero of the nation will absolve him of his failures" },
+  { id: 13, name: "Lia Thornfield", image: LiaThornfield, title:"", description: "A human looking for revenge for the death of a mentor. They believe one of the leaders of the factrions is responsible and is using the opportunity to become a hero to solve the mystery" },
+  { id: 14, name: "Jasper Wren", image: JasperWren, title:"", description: "An affable and adventurous halfling searching for a lost treasure tied to their family" },
+  { id: 15, name: "Valeria Quickstep", image: ValeriaQuickstep, title:"", description: "A quick witted, short tempered gnome fleeing from an aranged marriage hoping that winning a place as a hero of the nation will" },
+
 ];
 
 /*NPC rendering functionality*/

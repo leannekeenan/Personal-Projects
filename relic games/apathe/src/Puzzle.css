@@ -1,0 +1,85 @@
+.puzzle-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .puzzle-grid {
+    background: white;
+    position: relative;
+    width: 100%; /* Diameter of the circle */
+    height: 425px; /* Diameter of the circle */
+    margin: 0 auto; /* Centers the grid */
+    border-radius: 50%; /* Makes the container circular */
+  }
+  
+  .puzzle-slot {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 1px solid red;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    transition: transform 0.3s ease;
+  }
+  
+  .puzzle-slot.filled {
+    background-color: #ddd; /* Change background when filled */
+  }
+  
+  .placed-piece {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+  }
+  
+  .puzzle-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  /* Positioning each slot in a circle */
+  .puzzle-slot:nth-child(1) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg) translateY(-120px);
+  }
+  
+  .puzzle-slot:nth-child(2) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(51.43deg) translateY(-120px);
+  }
+  
+  .puzzle-slot:nth-child(3) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(102.86deg) translateY(-120px);
+  }
+  
+  .puzzle-slot:nth-child(4) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(154.29deg) translateY(-120px);
+  }
+  
+  .puzzle-slot:nth-child(5) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(205.71deg) translateY(-120px);
+  }
+  
+  .puzzle-slot:nth-child(6) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(257.14deg) translateY(-120px);
+  }
+  
+  .puzzle-slot:nth-child(7) {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(308.57deg) translateY(-120px);
+  }
+  

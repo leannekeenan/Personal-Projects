@@ -1,0 +1,13 @@
+.pieces-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .puzzle-piece {
+    width: 60px;
+    height: 60px;
+    cursor: grab;
+  }
+  

@@ -22,15 +22,45 @@ import CompleteBlack from "./assets/images/finish black.png";
 
 // Define puzzle pieces
 export const puzzlePieces = [
-  { id: 3, whiteSrc: ResourceWhite, blackSrc: ResourceBlack, label: "Resource" },
-  { id: 1, whiteSrc: IdeaWhite, blackSrc: IdeaBlack, label: "Idea" },
-  { id: 8, whiteSrc: CompleteWhite, blackSrc: CompleteBlack, label: "Complete" },
-  { id: 2, whiteSrc: ConceptualizeWhite, blackSrc: ConceptualizeBlack, label: "Conceptualize" },
-  { id: 5, whiteSrc: TestWhite, blackSrc: TestBlack, label: "Test" },
-  { id: 7, whiteSrc: PolishWhite, blackSrc: PolishBlack, label: "Polish" },
-  { id: 4, whiteSrc: BuildWhite, blackSrc: BuildBlack, label: "Build" },
-  { id: 6, whiteSrc: TuneWhite, blackSrc: TuneBlack, label: "Tune" },
-   
+  { id: 3, 
+    whiteSrc: ResourceWhite, 
+    blackSrc: ResourceBlack, 
+    label: "Resource" },
+    
+  { id: 1, whiteSrc: IdeaWhite, 
+    blackSrc: IdeaBlack, 
+    label: "Idea" },
+    
+  { id: 8, 
+    whiteSrc: CompleteWhite, 
+    blackSrc: CompleteBlack, 
+    label: "Complete" },
+    
+  { id: 2, 
+    whiteSrc: ConceptualizeWhite, 
+    blackSrc: ConceptualizeBlack, 
+    label: "Conceptualize" },
+    
+  { id: 5, 
+    whiteSrc: TestWhite, 
+    blackSrc: TestBlack, 
+    label: "Test" },
+    
+  { id: 7, 
+    whiteSrc: PolishWhite, 
+    blackSrc: PolishBlack, 
+    label: "Polish" },
+    
+  { id: 4, 
+    whiteSrc: BuildWhite, 
+    blackSrc: BuildBlack, 
+    label: "Build" },
+    
+  { id: 6, 
+    whiteSrc: TuneWhite, 
+    blackSrc: TuneBlack, 
+    label: "Tune" },
+  
 ];
 
 function Pieces({ onDragStart }) {

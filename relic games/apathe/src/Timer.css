@@ -1,7 +1,7 @@
 
 
 .timer-container {
-    margin: 1.8rem
+    margin: 1.8rem auto;
 }
 
 .timer-container h2 {

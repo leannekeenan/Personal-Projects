@@ -1,5 +1,5 @@
 .puzzle-container {
-    width: 90vw; /* Adjusts to screen width */
+    width: 80vw; /* Adjusts to screen width */
     max-width: 825px; /* Keeps it from getting too large */
     margin: 0 auto;
     display: flex;
@@ -7,7 +7,6 @@
     justify-content: center;
     flex-direction: column;
     text-align: center;
-    padding: 20px;
     position: relative;
 }
 

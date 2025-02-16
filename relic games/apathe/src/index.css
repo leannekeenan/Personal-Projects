@@ -6,8 +6,17 @@ body {
   height: 100vh; /* Ensure it takes up the full height of the viewport */
   position: relative; /* Ensure the content is layered above the background */
 } 
-.aboutthegame {
+
+
+h1, p {
+  color: #fff
+}
+
+h1 {
+  font-size: 6rem;
+}
+
+p {
   font-size: 2rem;
-  color: #eee
 }
 

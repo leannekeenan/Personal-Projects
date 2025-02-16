@@ -2,18 +2,18 @@ import PropTypes from "prop-types";
 import "./Pieces.css";
 
 // Import images
-import ImagineWhite from "./assets/images/imagine white.png";
-import DesignWhite from "./assets/images/design white.png";
-import CraftWhite from "./assets/images/craft white.png";
+import IdeaWhite from "./assets/images/idea white.png";
+import ConceptualizeWhite from "./assets/images/conceptualize white.png";
+import ResourceWhite from "./assets/images/craft white.png";
 import BuildWhite from "./assets/images/build white.png";
 import TestWhite from "./assets/images/test white.png";
 import TuneWhite from "./assets/images/tune white.png";
 import PolishWhite from "./assets/images/polish white.png";
 import CompleteWhite from "./assets/images/finish white.png";
 
-import ImagineBlack from "./assets/images/imagine black (1).png";
-import DesignBlack from "./assets/images/design black.png";
-import CraftBlack from "./assets/images/craft black.png";
+import IdeaBlack from "./assets/images/idea black.png";
+import ConceptualizeBlack from "./assets/images/conceptualize black.png";
+import ResourceBlack from "./assets/images/craft black.png";
 import BuildBlack from "./assets/images/build black.png";
 import TestBlack from "./assets/images/test black.png";
 import TuneBlack from "./assets/images/tune black.png";
@@ -22,10 +22,10 @@ import CompleteBlack from "./assets/images/finish black.png";
 
 // Define puzzle pieces
 export const puzzlePieces = [
-  { id: 3, whiteSrc: CraftWhite, blackSrc: CraftBlack, label: "Craft" },
-  { id: 1, whiteSrc: ImagineWhite, blackSrc: ImagineBlack, label: "Imagine" },
+  { id: 3, whiteSrc: ResourceWhite, blackSrc: ResourceBlack, label: "Resource" },
+  { id: 1, whiteSrc: IdeaWhite, blackSrc: IdeaBlack, label: "Idea" },
   { id: 8, whiteSrc: CompleteWhite, blackSrc: CompleteBlack, label: "Complete" },
-  { id: 2, whiteSrc: DesignWhite, blackSrc: DesignBlack, label: "Design" },
+  { id: 2, whiteSrc: ConceptualizeWhite, blackSrc: ConceptualizeBlack, label: "Conceptualize" },
   { id: 5, whiteSrc: TestWhite, blackSrc: TestBlack, label: "Test" },
   { id: 7, whiteSrc: PolishWhite, blackSrc: PolishBlack, label: "Polish" },
   { id: 4, whiteSrc: BuildWhite, blackSrc: BuildBlack, label: "Build" },

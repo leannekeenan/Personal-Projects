@@ -1,8 +1,25 @@
-# React + Vite
+# 🧩 Apathe Puzzle Challenge  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Apathe Puzzle Challenge](https://imgur.com/cUPG4G6.png)  
 
-Currently, two official plugins are available:
+## 🎲 About the Game  
+**Apathe Puzzle Challenge** is a **drag-and-drop puzzle game** where players must strategically place puzzle pieces in the correct slots to complete the puzzle. Each puzzle piece represents a stage in the game design process, and players will need to match them to the correct locations to succeed.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Inspired by *Tales from the Stinky Dragon*, this game brings the excitement of a brain-teasing puzzle to life with engaging interactions and a dynamic timer that tracks your progress.
+
+## ✨ Features  
+This game was built using modern **front-end development** techniques, including:
+
+- 🎮 **Drag-and-Drop Mechanics** – Interact with draggable pieces to solve the puzzle
+- ⏱️ **Timer** – Keep track of your puzzle-solving time with start, stop, and reset controls
+- 🧩 **Puzzle Slots** – Place puzzle pieces in corresponding slots for a rewarding completion
+- 🎨 **Interactive Design** – White and black puzzle pieces provide visual feedback
+
+## 📂 Cloning the Repository  
+
+To clone and run this project locally, follow these steps:  
+
+1. Clone the repository: 
+
+   ```bash
+   git clone https://github.com/leannekeenan/apathe-puzzle-challenge.git

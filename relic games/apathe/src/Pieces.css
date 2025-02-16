@@ -8,13 +8,29 @@
 .puzzle-piece-container {
   position: relative;
   display: inline-block;
-  margin: 1.5rem;
+  margin: 0.5rem;
+  border-radius: 50%;
 }
 
 .puzzle-piece {
-  width: 60px;
-  height: 60px;
+  width: 10vw;
+  max-width: 85px;
+  height: auto;
+  padding: 2.25rem 2.5rem;
+
 }
+
+.puzzle-piece img {
+  width: 100%; /* Ensure image fills the parent container */
+  height: 100%;
+ 
+  object-fit: contain; /* Ensure image covers the container without distortion */
+}
+
+.puzzle-piece-container:hover {
+  box-shadow: 0 0 10px yellow; /* Hover effect */
+}
+
 
 .tooltip {
   visibility: hidden; /* Initially hidden */
@@ -27,7 +43,7 @@
   text-align: center;
   padding: 5px;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 1.5rem;
   white-space: nowrap;
   z-index: 1;
   opacity: 0;

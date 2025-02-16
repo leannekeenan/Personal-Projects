@@ -1,6 +1,6 @@
 # 🧩 Apathe Puzzle Challenge  
 
-![Apathe Puzzle Challenge](https://imgur.com/cUPG4G6.png)  
+![Apathe Puzzle Challenge](https://imgur.com/flVl9O5.png)  
 
 ## 🎲 About the Game  
 **Apathe Puzzle Challenge** is a **drag-and-drop puzzle game** where players must strategically place puzzle pieces in the correct slots to complete the puzzle. Each puzzle piece represents a stage in the game design process, and players will need to match them to the correct locations to succeed.

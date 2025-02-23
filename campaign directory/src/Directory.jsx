@@ -17,7 +17,8 @@ import KeldorStonefist from './assets/images/Keldor Stonefist.png';
 import LiaThornfield from './assets/images/Lia Thornfield.png';
 import JasperWren from './assets/images/Jasper Wren.png';
 import ValeriaQuickstep from './assets/images/Valeria Quickstep II.png';
-import Equinorite from './assets/images/EquinoriteII.png'
+import Equinorite from './assets/images/EquinoriteII.png';
+import GenePoole from './assets/images/Gene Poole.png';
 
 
 /*NPC Card Content*/
@@ -38,6 +39,7 @@ const npcData = [
   { id: 14, name: "Jasper Wren", image: JasperWren, title:"", description: "An affable and adventurous halfling searching for a lost treasure tied to their family" },
   { id: 15, name: "Valeria Quickstep", image: ValeriaQuickstep, title:"", description: "A quick witted, short tempered gnome fleeing from an aranged marriage hoping that winning a place as a hero of the nation will" },
   { id: 16, name: "Equinorite", image: Equinorite, title:"", description:""},
+  { id: 17, name: "Gene Poole", image: GenePoole, title:"Head Brureaucrat of Apathe", description:"not a leader by choice, nor by effort. He simply remains—a fixture of Apathe’s labyrinthine government, drifting along its currents like a leaf in a vast, slow-moving river. He rarely makes direct decisions, instead allowing policies to 'sort themselves out' through an exhausting series of approvals, delays, and endless committee votes."},
 ];
 
 /*NPC rendering functionality*/

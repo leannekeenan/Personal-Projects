@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import './index.css';
+import Message from './Message';
 
 // Hero Section Component
 const HeroSection = () => (
@@ -110,6 +111,19 @@ const StorySection = () => (
   </section>
 );
 
+const MessageSection = () => (  
+  <div>
+    <h1>Contact Us</h1>
+    <p>
+      <strong>Have a Special Request or Question?</strong>
+    </p>
+    <p>
+      We’d love to hear from you! Whether you're looking for a custom cheesecake creation, have a question about our flavors, or just want to learn more about what makes Sweet Adventures Club so special, feel free to reach out. Our team is here to help make your cheesecake experience unforgettable!
+    </p>
+    <Message />
+  </div>
+);
+
 const SocialSection = () => (
   <section className="social" id="social">
   <h2>Follow Our Journey</h2>
@@ -160,6 +174,7 @@ const App = () => (
       <ProcessSection />
       <OccasionSection />
       <StorySection />
+      <MessageSection />
       <SocialSection />
     </main>
 

@@ -55,6 +55,40 @@ const ProcessSection = () => (
   </section>
 );
 
+const OccasionSection = () => (
+  <section class="occasion" id="occasion">
+        <h2>Perfect for Every Occasion</h2>
+        <p class="events-intro">
+            Our handcrafted cheesecakes are a versatile dessert that can add sweetness and elegance to any gathering. Whether it's a casual get-together or a grand celebration, our cheesecakes are the ideal treat.
+        </p>
+        <div class="event-cards">
+            <div class="event-card">
+                <h3>Weddings</h3>
+                <p>Delight your guests with an assortment of flavors, perfect for dessert tables or wedding favors.</p>
+            </div>
+            <div class="event-card">
+                <h3>Corporate Events</h3>
+                <p>Impress your clients and colleagues with an indulgent dessert that adds a touch of sophistication.</p>
+            </div>
+            <div class="event-card">
+                <h3>Birthday Parties</h3>
+                <p>Make every birthday extra special with personalized cheesecake cups in your favorite flavors.</p>
+            </div>
+            <div class="event-card">
+                <h3>Holiday Gatherings</h3>
+                <p>From Thanksgiving to New Year&#39;s, our cheesecakes are a festive addition to your holiday feast.</p>
+            </div>
+            <div class="event-card">
+                <h3>Baby Showers</h3>
+                <p>Add sweetness to your celebration with cheesecakes tailored to your theme or color scheme.</p>
+            </div>
+            <div class="event-card">
+                <h3>Everyday Indulgence</h3>
+                <p>Sometimes, you don&#39;t need an event—treat yourself to a moment of pure joy with our cheesecakes.</p>
+            </div>
+        </div>
+    </section>
+);
 
 // Story Section Component
 const StorySection = () => (
@@ -124,9 +158,12 @@ const App = () => (
     <main>
       <PitchSection />
       <ProcessSection />
+      <OccasionSection />
       <StorySection />
       <SocialSection />
     </main>
+
+    
   </div>
 );
 

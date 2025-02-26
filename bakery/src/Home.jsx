@@ -113,7 +113,7 @@ const StorySection = () => (
 
 const MessageSection = () => (  
   <div>
-    <h1>Contact Us</h1>
+    <h2>Contact Us</h2>
     <p>
       <strong>Have a Special Request or Question?</strong>
     </p>

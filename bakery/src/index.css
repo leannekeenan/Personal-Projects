@@ -36,3 +36,7 @@
   width: 25dvw;
   height: 100%;
 }
+
+.add-remove {
+  display: flex;
+}

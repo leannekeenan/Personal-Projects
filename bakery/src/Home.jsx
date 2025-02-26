@@ -1,16 +1,18 @@
 import React from 'react';
+import './App.css';
+import './index.css';
 
 // Hero Section Component
 const HeroSection = () => (
   <section className="hero">
-  <div className='logo-container'>
-    <img className='logo' src="/images/Sweet Adventures Club Logo V1.png" alt="Sweet Adventures Club Logo" />
-  </div>
+    <div className='logo-container'>
+      <img className='logo' src="../images/Sweet Adventures Club Logo V1.png" alt="Sweet Adventures Club Logo" />
+    </div>
 
-   <div>
-    <h1 className="title">Sweet Adventures Club</h1>
-    <p className="tagline">A Journey of Flavor</p>
-   </div>
+    <div>
+      <h1 className="title">Sweet Adventures Club</h1>
+      <p className="tagline">A Journey of Flavor</p>
+    </div>
   </section>
 );
 

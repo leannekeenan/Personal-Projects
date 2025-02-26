@@ -34,6 +34,28 @@ const PitchSection = () => (
   </section>
 );
 
+//Process Section
+const ProcessSection = () => (
+  <section className="process" id="process">
+    <h2>How It Works</h2>
+    <div className="process-step">
+      <img src="../images/Step 1.png" alt="Step 1" />
+      <p>Choose your favorite flavors and toppings from our rotating selection of cheesecakes.</p>
+    </div>
+
+    <div className="process-step">
+      <img src="../images/Step 2.png" alt="Step 2" />
+      <p>Place your order online and select a delivery date that works for you.</p>
+    </div>
+
+    <div className="process-step">
+      <img src="../images/Step 3.png" alt="Step 3" />
+      <p>Enjoy your cheesecake! Each order comes with a set of four delicious flavors.</p>
+    </div>
+  </section>
+);
+
+
 // Story Section Component
 const StorySection = () => (
   <section className="story" id="story">
@@ -54,6 +76,45 @@ const StorySection = () => (
   </section>
 );
 
+const SocialSection = () => (
+  <section className="social" id="social">
+  <h2>Follow Our Journey</h2>
+  <ul className="social-links">
+    <li>
+      <a href="https://www.instagram.com/sweetadventuresclub/" target="_blank" rel="noreferrer">
+        <img src="../images/instagram-icon.png" alt="Follow us on Instagram" />
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter
+      .com/SweetAdventures" target="_blank" rel="noreferrer">
+        <img src="../images/twitter-icon.png" alt="Follow us on Twitter" /> 
+      </a>
+    </li>
+    <li>
+      <a href="https://www.facebook.com/SweetAdventuresClub" target="_blank" rel="noreferrer">
+        <img src="../images/facebook-icon.png" alt="Follow us on Facebook" /> 
+      </a>
+    </li>
+    
+  </ul>
+
+  <div className="discord">
+    <h2>Or Join Our Sweet Community on Discord!</h2>
+    <p>
+      Chat with fellow cheesecake lovers, get sneak peeks at new flavors, and share your own creations!  
+    </p>
+    <p>
+      We&rsquo;d love to see where and how you enjoy your cheesecakes—snap a pic and tell us your story in the community!
+    </p>
+    <a href="YOUR_DISCORD_LINK" target="_blank" rel="noopener noreferrer" className="discord-button">
+      Join Now
+    </a>
+  </div>
+</section>
+
+);
+
 const App = () => (
   <div>
     <header>
@@ -62,7 +123,9 @@ const App = () => (
 
     <main>
       <PitchSection />
+      <ProcessSection />
       <StorySection />
+      <SocialSection />
     </main>
   </div>
 );

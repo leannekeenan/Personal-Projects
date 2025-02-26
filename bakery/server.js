@@ -1,8 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
-import nodemailer from "nodemailer";
 import sendEmail from "./email.js"; // Import the sendEmail function
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express(); // Initialize 'app' here before using it
 
@@ -14,13 +15,18 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 
 // POST route for handling contact form submissions
-app.post("/send-email", (req, res) => {
-  const { recipient, subject, message } = req.body;  // Extract data from the request body
-  console.log(req.body); // Add this line to see the data being sent
+app.post("/send-email", async (req, res) => {
+  const { senderEmail, recipient, subject, message } = req.body;  // Extract data from the request body
+  console.log("Received email data:", req.body); // Log the data to verify what's being received
 
-  sendEmail(recipient, subject, message); // Call sendEmail function
-  
-  res.status(200).json({ message: "Email sent successfully!" });
+  try {
+    // Call sendEmail function and wait for its result
+    await sendEmail(senderEmail, recipient, subject, message);
+    res.status(200).json({ message: "Email sent successfully!" });
+  } catch (error) {
+    console.log("Error in email sending:", error);
+    res.status(500).json({ message: "There was an error sending the email." });
+  }
 });
 
 app.listen(port, () => {

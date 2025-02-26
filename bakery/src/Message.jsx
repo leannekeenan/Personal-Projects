@@ -10,6 +10,7 @@ const Message = () => {
 
     // Create the email data to send
     const emailData = {
+      senderEmail: email,  // Adding the sender's email
       recipient: "sweetadventuresclub@gmail.com",  // The email address you want to receive the messages at
       subject: subject,
       message: message,

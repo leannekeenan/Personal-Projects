@@ -40,3 +40,185 @@
 .add-remove {
   display: flex;
 }
+
+
+.pitch {
+  padding: 1rem
+}
+
+.pitch div p {
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.pitch-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pitch-nav a {
+    font-size: 2.2rem;
+    text-decoration: none;
+    color: var(--base);
+    background: var(--text);
+    margin: 5rem 3rem;
+    margin-bottom: 0;
+    padding: 2rem 8rem;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.pitch-nav a:hover {
+    background: var(--inneractive);
+}
+
+@media screen and (max-width: 1078px) {
+    .pitch-nav {
+        flex-direction: column;
+    }
+
+    .pitch-nav a {
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .pitch {
+        padding: 3rem;
+    }
+
+    .pitch-nav a {
+        font-size: 1.75rem;
+       
+    }
+}
+
+.process {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.process-steps {
+    display: flex;
+    margin: 5rem 0;
+}
+@media screen and (max-width: 1078px) {
+    .process-steps {
+        flex-direction: column;
+    }
+  
+}
+
+.process-step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    width:25dvw
+}
+
+.message-container {
+    display: flex;
+    align-items: center;
+    margin: 5rem 0; 
+  display: flex;
+}
+
+.stylistic-images {
+    width: 25dvw;
+    min-width: 250px;
+    height: 100%;
+}
+
+.cheesecake-events {
+  padding: clamp(20px, 5vw, 40px); /* Responsive padding */
+  background-color: var(--base);
+  text-align: center;
+  border: 2px solid var(--accent);
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cheesecake-events h2 {color: var(--text);
+  margin-bottom: clamp(10px, 2vw, 20px); /* Responsive margin-bottom */
+}
+
+.events-intro {
+  font-size: clamp(1.2rem, 3vw, 1.5rem); /* Responsive font size for intro */
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: clamp(20px, 4vw, 40px); /* Responsive margin-bottom */
+}
+
+.event-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Responsive grid columns */
+  gap: 20px;
+  margin: 0 auto;
+  width: 75%;
+}
+
+.event-card {
+  background-color: #fdf1e8;
+  padding: clamp(15px, 3vw, 20px); /* Responsive padding for event card */
+  border: 1px solid #e6d0c4;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-card h3 {
+  color: #5a2d0c;
+  margin-bottom: clamp(5px, 1vw, 10px); /* Responsive margin-bottom */
+}
+
+.event-card p {
+  font-size: clamp(1.5rem, 3vw, 1.75rem); /* Responsive font size for event card text */
+  color: #8a5d39;
+  line-height: 1.5;
+}
+
+/* Media query for tablet screens */
+
+@media (max-width: 1200px) {
+  .event-cards {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  }
+}
+@media (max-width: 768px) {
+  .event-cards {
+      grid-template-columns: repeat(1, 1fr); /* 2 columns */
+  }
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.social-links li {
+  list-style: none;
+  margin: 0 1rem;
+}
+
+.social img {
+  width: 5dvw;
+}
+
+.discord-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+}

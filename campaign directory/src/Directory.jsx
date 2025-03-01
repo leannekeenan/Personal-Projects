@@ -2,23 +2,26 @@ import { useState } from 'react';
 import './index.css'; // Import the CSS file
 
 /*Image values imported from assets.images folder*/
-import KyuImage from './assets/images/Kyu Osmodius Underwood Gailwind Higglsbee.png';
-import AlchemicalSlime from './assets/images/alchemical slime.png';
-import BaylorQuick from './assets/images/Baylor Quick v4.png';
-import CarriLetters from'./assets/images/Carri Letters v3.png';
-import ScarlettLetters from'./assets/images/Scarlett Letters v3.png';
-import Jellusari from './assets/images/Jellusari.png';
-import PaigeTurnner from './assets/images/Paige Turner v2.png';
-import SquidWyrd from './assets/images/Squid Wyrd.png';
-import ApathianRelic from './assets/images/Apathian Relic w background.png';
-import RowanBlack from './assets/images/Rowan Blalck.png';
-import TessaJorne from './assets/images/Tessa Jorne.png';
-import KeldorStonefist from './assets/images/Keldor Stonefist.png';
-import LiaThornfield from './assets/images/Lia Thornfield.png';
-import JasperWren from './assets/images/Jasper Wren.png';
-import ValeriaQuickstep from './assets/images/Valeria Quickstep II.png';
-import Equinorite from './assets/images/EquinoriteII.png';
-import GenePoole from './assets/images/Gene Poole.png';
+import KyuImage from './images/Kyu Osmodius Underwood Gailwind Higglsbee.png';
+import AlchemicalSlime from './images/alchemical slime.png';
+import BaylorQuick from './images/Baylor Quick v4.png';
+import CarriLetters from'./images/Carri Letters v3.png';
+import ScarlettLetters from'./images/Scarlett Letters v3.png';
+import Jellusari from './images/Jellusari.png';
+import PaigeTurnner from './images/Paige Turner v2.png';
+import SquidWyrd from './images/Squid Wyrd.png';
+import ApathianRelic from './images/Apathian Relic w background.png';
+import RowanBlack from './images/Rowan Blalck.png';
+import TessaJorne from './images/Tessa Jorne.png';
+import KeldorStonefist from './images/Keldor Stonefist.png';
+import LiaThornfield from './images/Lia Thornfield.png';
+import JasperWren from './images/Jasper Wren.png';
+import ValeriaQuickstep from './images/Valeria Quickstep II.png';
+import RickOShea from "./images/Rick O'Shea.png";
+import SewerHag from './images/Sewer Hag.png';
+import Githzerai from './images/Githzerai.png';
+import Myconid from './images/Myconid.png';
+
 
 
 /*NPC Card Content*/
@@ -38,8 +41,10 @@ const npcData = [
   { id: 13, name: "Lia Thornfield", image: LiaThornfield, title:"", description: "A human looking for revenge for the death of a mentor. They believe one of the leaders of the factrions is responsible and is using the opportunity to become a hero to solve the mystery" },
   { id: 14, name: "Jasper Wren", image: JasperWren, title:"", description: "An affable and adventurous halfling searching for a lost treasure tied to their family" },
   { id: 15, name: "Valeria Quickstep", image: ValeriaQuickstep, title:"", description: "A quick witted, short tempered gnome fleeing from an aranged marriage hoping that winning a place as a hero of the nation will" },
-  { id: 16, name: "Equinorite", image: Equinorite, title:"", description:""},
-  { id: 17, name: "Gene Poole", image: GenePoole, title:"Head Brureaucrat of Apathe", description:"not a leader by choice, nor by effort. He simply remains—a fixture of Apathe’s labyrinthine government, drifting along its currents like a leaf in a vast, slow-moving river. He rarely makes direct decisions, instead allowing policies to 'sort themselves out' through an exhausting series of approvals, delays, and endless committee votes."},
+  { id: 16, name: "Rick O'Shea", image: RickOShea, title:"", description: "" },
+  { id: 17, name: "Sewer Hag", image: SewerHag, title:"", description: "" },
+  { id: 18, name: "Myconid", image: Myconid, title:"", description: "" },
+  { id: 19, name: "Zhenk’tal, the Silent Sage", image: Githzerai, title:"", description: "" },
 ];
 
 /*NPC rendering functionality*/

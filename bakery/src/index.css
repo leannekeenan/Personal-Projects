@@ -1,9 +1,12 @@
+/*Universal Elements*/
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+} 
+
+/*Navbar Section*/
 
 .navbar {
   display: flex;
@@ -19,6 +22,8 @@
   list-style: none;
   margin: .25rem 1rem
 }
+
+/*Hero Section*/
 
 .hero {
   display: flex;
@@ -41,58 +46,51 @@
   display: flex;
 }
 
+/*Product Pitch Section*/
 
 .pitch {
-  padding: 1rem
+  background: var(--base);
+  color: var(--text);
+  text-align: center;
+  margin: 5rem 0;
+  border: 2px solid var(--accent);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 
 .pitch div p {
-  font-size: 1.6rem;
+  width: 80dvw;
   text-align: center;
+  margin: 0 auto;
+  line-height: clamp(2rem, 5vw, 2.5rem); /* Line height adjusts with screen size */
+  padding: 2rem 0;
 }
 
+
 .pitch-nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pitch-nav a {
-    font-size: 2.2rem;
-    text-decoration: none;
-    color: var(--base);
-    background: var(--text);
-    margin: 5rem 3rem;
-    margin-bottom: 0;
-    padding: 2rem 8rem;
-    border-radius: 5px;
-    text-align: center;
+  font-size: clamp(1rem, 4vw, 2.2rem); /* Responsive font size for nav links */
+  text-decoration: none;
+  color: var(--base);
+  background: var(--text);
+  margin: 5rem 3rem;
+  margin-bottom: 0;
+  padding: 2rem 8rem;
+  border-radius: 5px;
+  text-align: center;
 }
 
 .pitch-nav a:hover {
-    background: var(--inneractive);
+  background: var(--inneractive);
 }
 
-@media screen and (max-width: 1078px) {
-    .pitch-nav {
-        flex-direction: column;
-    }
 
-    .pitch-nav a {
-        margin: 1rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .pitch {
-        padding: 3rem;
-    }
-
-    .pitch-nav a {
-        font-size: 1.75rem;
-       
-    }
-}
+/*Ordering Process Section*/
 
 .process {
   display: flex;
@@ -102,7 +100,6 @@
 
 .process-steps {
     display: flex;
-    margin: 5rem 0;
 }
 @media screen and (max-width: 1078px) {
     .process-steps {
@@ -116,9 +113,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 2rem;
+    margin: 2rem 0.5rem;
     width:25dvw;
-    padding: 2rem;
+    min-width: 250px;
 }
 
 .process-step:hover {
@@ -126,18 +123,43 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.process-step p {
+    margin-top: 1rem;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    text-align: center;
+}
+
+.process-step img {
+    padding: 3rem
+}
+
 .message-container {
     display: flex;
     align-items: center;
+    justify-content: space-evenly;
     margin: 5rem 0; 
+    display: flex;
+}
+
+.message-container div {
+  width: 100%;
+}
+
+.message-container .message-image {
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .stylistic-images {
-    width: 25dvw;
+    width: 30dvw;
     min-width: 250px;
     height: 100%;
 }
+
+/*Events Section*/
+
+
 
 .cheesecake-events {
   padding: clamp(20px, 5vw, 40px); /* Responsive padding */
@@ -153,7 +175,6 @@
 }
 
 .events-intro {
-  font-size: clamp(1.2rem, 3vw, 1.5rem); /* Responsive font size for intro */
   color: var(--text);
   line-height: 1.6;
   margin-bottom: clamp(20px, 4vw, 40px); /* Responsive margin-bottom */
@@ -188,12 +209,9 @@
 }
 
 .event-card p {
-  font-size: clamp(1.5rem, 3vw, 1.75rem); /* Responsive font size for event card text */
-  color: #8a5d39;
+ color: #8a5d39;
   line-height: 1.5;
 }
-
-/* Media query for tablet screens */
 
 @media (max-width: 1200px) {
   .event-cards {
@@ -206,6 +224,8 @@
   }
 }
 
+/**Social Connection Section**/
+
 .social-links {
   display: flex;
   align-items: center;
@@ -215,16 +235,32 @@
 
 .social-links li {
   list-style: none;
-  margin: 0 1rem;
+  margin: 0 .5rem;
 }
 
 .social img {
   width: 5dvw;
+  min-width: 40px;
 }
 
 .discord-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 2rem 0;
+  margin: 2rem auto;
+  background-color: #7289da;
+  width: 15dvw;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+
+.discord-btn a {
+  color: white;
+  text-decoration: none;
+}
+
+.discord-btn a:hover {
+  color: white;
 }

@@ -42,17 +42,17 @@ const ProcessSection = () => (
     <div className="process-steps">
     <div className="process-step">
       <img className="stylistic-images" src="../images/2811147 v1.png" alt="Step 1" />
-      <p>Choose your favorite flavors and toppings from our rotating selection of cheesecakes.</p>
+      <p>Choose your cheesecakes & Toppings.</p>
     </div>
 
     <div className="process-step">
       <img className="stylistic-images" src="../images/3312014 v1.png" alt="Step 2" />
-      <p>Place your order online and select a delivery date that works for you.</p>
+      <p>Select a delivery date and time that works for you.</p>
     </div>
 
     <div className="process-step">
       <img className="stylistic-images" src="../images/3905230 v1.png" alt="Step 3" />
-      <p>Enjoy your cheesecake! Each order comes with a set of four delicious flavors.</p>
+      <p>Relax & enjoy your cheesecake upon delivery!</p>
     </div>
     </div>
   </section>
@@ -116,19 +116,19 @@ const StorySection = () => (
 const MessageSection = () => (  
   <section className='message' id='message'>
     <h2>Contact Us</h2>
+    <p>
+          We’d love to hear from you! Whether you're looking for a custom cheesecake creation, have a question about our flavors, or just want to learn more about what makes Sweet Adventures Club so special, feel free to reach out. Our team is here to help make your cheesecake experience unforgettable!
+    </p>
     <div className="message-container">
+
       <div className="message-image">
         <img className="stylistic-images" src="../images/3084948 v1.png" alt="" />
       </div>
       <div className="message-message">
-        <p>
-          <strong>Have a Special Request or Question?</strong>
-        </p>
-        <p>
-          We’d love to hear from you! Whether you're looking for a custom cheesecake creation, have a question about our flavors, or just want to learn more about what makes Sweet Adventures Club so special, feel free to reach out. Our team is here to help make your cheesecake experience unforgettable!
-        </p>
+        <h3>Send Us a Message</h3>
         <Message />
       </div>
+
     </div>
   </section>
 );
@@ -164,12 +164,13 @@ const SocialSection = () => (
     <p>
       We&rsquo;d love to see where and how you enjoy your cheesecakes—snap a pic and tell us your story in the community!
     </p>
-    <div className="discord-btn">
-      <img className='social-link' src="../images/SkillIconsDiscord.png" alt="" />
-      <a href="YOUR_DISCORD_LINK" target="_blank" rel="noopener noreferrer" className="discord-button">
-      Join Now
+    <a href="YOUR_DISCORD_LINK" target="_blank" rel="noopener noreferrer" className="discord-btn">
+      <div className="discord-content">
+        <img className='social-link' src="../images/SkillIconsDiscord.png" alt="Discord Icon" />
+        <span className="discord-text">Join Now</span>
+      </div>
     </a>
-    </div>
+
     
   </div>
 </section>

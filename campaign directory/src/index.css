@@ -8,7 +8,7 @@ body {
   min-height: 100vh;
   font-size: 62.5%;
   font-family: "Quicksand", serif;
-  background: url('./assets/images/parchment full screen.png') no-repeat;
+  background: url('./images/parchment full screen.png') no-repeat;
   background-size: cover;
   background-attachment: fixed;
   background-position: center;

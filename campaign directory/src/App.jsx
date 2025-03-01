@@ -1,7 +1,7 @@
 import './App.css'
 import Directory from './Directory.jsx'
 
-import crestImage from './assets/images/sevynashyuns crest.png';
+import crestImage from './images/crest.png';
 
 function App() {
 

@@ -67,7 +67,7 @@ const Message = () => {
           required
         />
       </div>
-      <button type="submit">Send Message</button>
+      <button className='submit' type="submit">Send Message</button>
     </form>
   );
 };

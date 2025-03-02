@@ -13,10 +13,14 @@ h1, p {
 }
 
 h1 {
-  font-size: 6rem;
+  font-size: clamp(2rem, 10vw, 4rem);
+  text-align: center;
 }
 
 p {
-  font-size: 2rem;
+  font-size: clamp(1rem, 5vw, 1.6rem);
+  text-align: center; 
+  width: 60dvw;
+  margin: 0 auto;  
 }
 

@@ -1,7 +1,7 @@
 
 
 .timer-container {
-    margin: 1.8rem auto;
+    margin: 1.4rem auto;
 }
 
 .timer-container h2 {
@@ -11,7 +11,7 @@
 
 button {
     padding: 1rem;
-    font-size: 1.6rem;
+    font-size: 1rem;
 }
 
 button:nth-child(2) {

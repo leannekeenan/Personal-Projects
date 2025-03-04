@@ -35,29 +35,30 @@ const PitchSection = () => (
   </section>
 );
 
-//Process Section
+//Process Section Component
 const ProcessSection = () => (
   <section className="process" id="process">
     <h2>How It Works</h2>
     <div className="process-steps">
-    <div className="process-step">
-      <img className="stylistic-images" src="../images/2811147 v1.png" alt="Step 1" />
-      <p>Choose your cheesecakes & Toppings.</p>
-    </div>
+      <div className="process-step">
+        <img className="stylistic-images" src="../images/2811147 v1.png" alt="Step 1" />
+        <p>Choose your cheesecakes & Toppings.</p>
+      </div>
 
-    <div className="process-step">
-      <img className="stylistic-images" src="../images/3312014 v1.png" alt="Step 2" />
-      <p>Select a delivery date and time that works for you.</p>
-    </div>
+      <div className="process-step">
+        <img className="stylistic-images" src="../images/3312014 v1.png" alt="Step 2" />
+        <p>Select a delivery date and time that works for you.</p>
+      </div>
 
-    <div className="process-step">
-      <img className="stylistic-images" src="../images/3905230 v1.png" alt="Step 3" />
-      <p>Relax & enjoy your cheesecake upon delivery!</p>
-    </div>
+      <div className="process-step">
+        <img className="stylistic-images" src="../images/3905230 v1.png" alt="Step 3" />
+        <p>Relax & enjoy your cheesecake upon delivery!</p>
+      </div>
     </div>
   </section>
 );
 
+//Occasion Section Component
 const OccasionSection = () => (
   <section class="occasion" id="occasion">
         <h2>Perfect for Every Occasion</h2>
@@ -113,6 +114,7 @@ const StorySection = () => (
   </section>
 );
 
+//Message Section Component
 const MessageSection = () => (  
   <section className='message' id='message'>
     <h2>Contact Us</h2>
@@ -133,6 +135,7 @@ const MessageSection = () => (
   </section>
 );
 
+//Social Section Component
 const SocialSection = () => (
   <section className="social" id="social">
   <h2>Follow Our Journey</h2>

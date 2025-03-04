@@ -35,6 +35,10 @@ label {
 input, textarea {
     width: 30dvw;
 }
+
+input {
+    height: 2rem;
+}
   
 textarea {
     height: 20dvh;

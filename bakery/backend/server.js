@@ -1,9 +1,14 @@
+require('dotenv').config();  // Move this to the top
 const express = require('express');
 const nodemailer = require('nodemailer');
-const cors = require('cors');  // To handle cross-origin requests
+const cors = require('cors');  
 
 const app = express();
 const port = 5000;
+
+app.use(express.json());
+app.use(cors());
+
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
@@ -25,27 +30,27 @@ const transporter = nodemailer.createTransport({
 });
 
 // Route to handle sending emails
-app.post('/send-email', (req, res) => {
-  const { senderEmail, recipient, subject, message } = req.body;
 
-  const mailOptions = {
-    from: senderEmail,
-    to: recipient,
-    subject: subject,
-    text: message,
-  };
+app.post("/send-email", async (req, res) => {
+  console.log("📩 Incoming email request:", req.body);
 
-  // Send the email using nodemailer
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).json({ error: 'Failed to send email' });
-    } else {
-      console.log('Email sent: ' + info.response);
-      return res.status(200).json({ message: 'Email sent successfully' });
-    }
-  });
+  try {
+    let info = await transporter.sendMail({
+      from: req.body.senderEmail,
+      to: req.body.recipient,
+      subject: req.body.subject,
+      text: req.body.message,
+    });
+
+    console.log("✅ Email sent:", info);
+    res.status(200).json({ success: true, message: "Email sent successfully!" });
+  } catch (error) {
+    console.error("❌ Email error:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
+
+
 
 // Start the server
 app.listen(port, () => {

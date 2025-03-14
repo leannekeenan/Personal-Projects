@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './index.css'; // Import the CSS file
 
+
 /*Image values imported from assets.images folder*/
 import KyuImage from './images/Kyu Osmodius Underwood Gailwind Higglsbee.png';
 import AlchemicalSlime from './images/alchemical slime.png';
@@ -21,12 +22,17 @@ import RickOShea from "./images/Rick O'Shea.png";
 import SewerHag from './images/Sewer Hag.png';
 import Githzerai from './images/Githzerai.png';
 import Myconid from './images/Myconid.png';
+import VinnyCrystals from './images/Vinny Crystals.png';
+import Vespera from './images/Vespera.png';
+import Cray from './images/Cray.png';
+import Bert from './images/Bert.png';
+
 
 
 
 /*NPC Card Content*/
 const npcData = [
-  { id: 1, name: "Kyu Osmodius Underwood Gailwind Higglsbee", image: KyuImage, title:"Inventor / Team Quartermaster", description: ["Kyu is the party quartermaster and inventor"] },
+  { id: 1, name: "Kyu Osmodius Underwood Gailwind Higglsbee", image: KyuImage, title:"Inventor / Team Quartermaster", description: ["Kyu is the party quartermaster and inventor"]},
   { id: 2, name: "Alchemical Slime", image: AlchemicalSlime, title:"", description: "" },
   { id: 3, name: "Baylor Quick", image: BaylorQuick, title:"Pop Star", description: "" },
   { id: 4, name: "Carri Letters", image: CarriLetters, title:"", description: "" },
@@ -65,14 +71,21 @@ export default function NPCDirectory() {
         onChange={(e) => setSearch(e.target.value)}
         className="w-full p-2 mb-4 border rounded"
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="character-container grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filteredNPCs.map((npc) => (
-          <div key={npc.id} className="border p-4 rounded shadow-md chatacter-container">
-            <img src={npc.image} alt={npc.name} className="w-full h-32 object-cover rounded" />
-            <div className='card-content'>
-              <h2 className="text-lg font-bold mt-2">{npc.name}</h2>
-              <h3 className='text-lg font-bold mt-2'>{npc.title}</h3>
-              <p className="text-sm text-gray-600">{npc.description}</p>
+          <div key={npc.id} className="character border p-4 rounded shadow-md chatacter-container">
+            <div className="content">
+              
+              <div className="character-image">
+                <img src={npc.image} alt={npc.name} className="character-image w-full h-32 object-cover rounded" />
+              </div>
+
+              <div className='card-content'>
+                <h2 className="character-name text-lg font-bold mt-2">{npc.name}</h2>
+                <h3 className='character-title text-lg font-bold mt-2'>{npc.title}</h3>
+                <p className="character-description text-sm text-gray-600">{npc.description}</p>
+              </div>
+              
             </div>
           </div>
         ))}

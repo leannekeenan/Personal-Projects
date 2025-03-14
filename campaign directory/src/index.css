@@ -1,8 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+PE:wght@100..400&family=Poiret+One&family=Quicksand:wght@300..700&display=swap');
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   margin: 0 auto;
   display: flex;
+  align-items: center;
+  justify-content: center;
   place-items: space-between;
   width: 100%;
   min-height: 100vh;
@@ -14,80 +21,49 @@ body {
   background-position: center;
 }
 
-h1 {
-  font-size: 5.2em;
-  line-height: auto;
-  font-weight: 800;
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Poiret One", cursive;
 }
 
+h1 {
+  font-size: 2.6rem;
+  line-height: 1.2;
+  margin: 1rem 0;
+}
 
 h2 {
   font-size: 1.8rem;
-  line-height: auto;
-  margin: .5rem 0;
-  font-weight: 800;
+  line-height: 1.2;
+  margin: 1rem 0;
 }
 
 h3 {
-  font-size: 1.6rem;
-  line-height: 1rem;
-  margin: .5rem 0;
-  font-weight: 600;
-}
-
-.card-content p {
   font-size: 1.4rem;
-  line-height: auto;
+  line-height: 1.2;
+  margin: 1rem 0;
 }
 
-.text-container {
-  width: 80%;
-  margin: 0 auto
+h4 {
+  font-size: 1rem;
+  line-height: 1.2;
+  margin: 1rem 0;
 }
 
-.text-container p {
+h5 {
+  font-size: .8rem;
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+h6 {
+  font-size: .6rem;
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+p {
   font-size: 1.6rem;
-  line-height: 2rem;
+  line-height: 1.2;
+  font-family: 'David Libre', serif;
 }
 
-
-/*SEARCHBAR STYLING*/
-
-.search-bar-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.search-bar-container input {
-  width: 70%;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 20px;
-  background-color: #f4f4f4; /* Off-white background */
-  color: #333; /* Dark grey text */
-  border: 1px solid #ccc; /* Light border */
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
-}
-
-/*DIRECTORY STYLING*/
-
-.chatacter-container {
-  display: flex;
-  margin: 2rem
-}
-
-
-.chatacter-container img {
-  width: 300px;
-  height: 100%;
-  box-shadow: 0 0 25px black;
-  border-radius: 5px;
-}
-.chatacter-container div {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 2rem
-}

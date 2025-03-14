@@ -51,7 +51,10 @@ const npcData = [
   { id: 17, name: "Sewer Hag", image: SewerHag, title:"", description: "" },
   { id: 18, name: "Myconid", image: Myconid, title:"", description: "" },
   { id: 19, name: "Zhenk’tal, the Silent Sage", image: Githzerai, title:"Leader of the Unclaimed Lands", description: "Zhenk'tal is calm, composed, and reasoned, never seeking conflict but firmly capable of defending both themself and their people. They uses non-lethal methods to incapacitate or disarm enemies, often with their psychic powers rather than physical force. Zhenk’tal's telepathy and control over psychic energy allow them to subdue rather than kill, ensuring that anyone who challenges them will lose with minimal harm. Their legendary resistance and psionic defense abilities ensure that the party cannot easily defeat them through conventional means. Their telekinetic and psychic powers make them a formidable opponent that the party will realize quickly is far beyond their capabilities. Even in combat, Zhenk'tal avoids direct aggression, preferring to disable or disarm those who pose a threat, keeping the peace while ensuring the party understands that their role as protector and guide is not to be challenged lightly." },
-  { id: 20, name: "Vinny 'The Stone' Crystals", image: Myconid, title:"Leader of the Fungal Forest", description: "" },
+  { id: 20, name: "Bert, The Bullheaded Brawler", image: Bert, title:"", description: "" },
+  { id: 21, name: "Cray, The Shadowblade Slayer", image: Cray, title:"", description: "" },
+  { id: 22, name: "Vinny 'The Stone' Crystals", image: VinnyCrystals, title:"", description: "" },
+  { id: 23, name: "Vespera, The Crystal Weaver", image: Vespera, title:"", description: "" },
 ];
 
 /*NPC rendering functionality*/

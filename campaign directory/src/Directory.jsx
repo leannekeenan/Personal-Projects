@@ -6,8 +6,8 @@ import './index.css'; // Import the CSS file
 import KyuImage from './images/Kyu Osmodius Underwood Gailwind Higglsbee.png';
 import AlchemicalSlime from './images/alchemical slime.png';
 import BaylorQuick from './images/Baylor Quick v4.png';
-import CarriLetters from'./images/Carri Letters v3.png';
-import ScarlettLetters from'./images/Scarlett Letters v3.png';
+import CarriLetters from'./images/Carri Letters II.png';
+import ScarlettLetters from'./images/Scarlett Letters III.png';
 import Jellusari from './images/Jellusari.png';
 import PaigeTurnner from './images/Paige Turner v2.png';
 import SquidWyrd from './images/Squid Wyrd.png';
@@ -18,12 +18,12 @@ import KeldorStonefist from './images/Keldor Stonefist.png';
 import LiaThornfield from './images/Lia Thornfield.png';
 import JasperWren from './images/Jasper Wren.png';
 import ValeriaQuickstep from './images/Valeria Quickstep II.png';
-import RickOShea from "./images/Rick O'Shea.png";
+import RickOShea from "./images/Rick O'Shea II.png";
 import SewerHag from './images/Sewer Hag.png';
 import Githzerai from './images/Githzerai.png';
 import Myconid from './images/Myconid.png';
 import VinnyCrystals from './images/Vinny Crystals.png';
-import Vespera from './images/Vespera.png';
+import Vespera from './images/Vespera III.png';
 import Cray from './images/Cray.png';
 import Bert from './images/Bert.png';
 
@@ -32,14 +32,14 @@ import Bert from './images/Bert.png';
 
 /*NPC Card Content*/
 const npcData = [
-  { id: 1, name: "Kyu Osmodius Underwood Gailwind Higglsbee", image: KyuImage, title:"Inventor / Team Quartermaster", description: ["Kyu is the party quartermaster and inventor"]},
+  { id: 1, name: "Kyu Osmodius Underwood Gailwind Higglsbee", image: KyuImage, title:"Inventor / Team Quartermaster", description: ["Kyu is the party quartermaster and inventor. Kyu grew up among the resilient and fiercely proud artisans of Arrogan, a city-state where craftsmanship is revered as the highest form of expression. As a dwarf from Arrogan, Kyu's early life was rooted in tradition, working tirelessly to hone his skills in forging, building, and crafting. But Kyu’s curiosity extended beyond physical creation; he was drawn to the allure of knowledge itself, which led him to Adoreon’s archives. There, he became an Archivist, poring over volumes of texts, maps, and forgotten lore that deepened his knowledge of ancient mechanisms, arcane relics, and powerful artifacts. Years later, Kyu was recruited by the Apathian government to join an elite team as the quartermaster, overseeing supplies, logistics, and the equipment that would keep his party running. His background as an archivist gave him an edge, allowing him to recognize useful relics and their potential tactical applications, while his Arrogan roots made him a keen judge of quality and durability. Part-time inventor and skilled in retrofitting and improving equipment, Kyu tinkers with gear, adapting it for use in unexpected situations. His gruff humor and meticulous eye for detail make him both the party’s invaluable support and a stalwart ally, keeping them outfitted, informed, and always a step ahead in the field."]},
   { id: 2, name: "Alchemical Slime", image: AlchemicalSlime, title:"", description: "" },
   { id: 3, name: "Baylor Quick", image: BaylorQuick, title:"Pop Star", description: "" },
-  { id: 4, name: "Carri Letters", image: CarriLetters, title:"", description: "" },
+  { id: 4, name: "Carri Letters", image: CarriLetters, title:"", description: "Carri Letters is a seasoned messenger for the Apathian government, known for her sharp wit and unrivaled efficiency. She has spent years navigating the intricacies of Apathian bureaucracy, learning to thrive in the sluggish, politically charged environment where others might falter. Raised in the heart of Apathe, Carri was surrounded by scholars, diplomats, and bureaucrats, molding her into someone who could outthink and outmaneuver even the most cunning statesmen. Her impeccable memory and attention to detail have made her invaluable to the upper echelons of Apathian leadership. Though Carri's role may seem mundane, it is far from it. She is privy to some of the most sensitive information exchanged between the city-states, carrying not just letters but the weight of political secrets, diplomatic offers, and even veiled threats. Her reputation for discretion has made her the trusted courier of Apathian officials, and many speculate that her knowledge of the city’s inner workings rivals that of the highest-ranking officials. Despite her polished demeanor, Carri is resourceful and quick on her feet, often finding creative solutions when messages must be delivered in dangerous or challenging situations. Though she presents herself as nothing more than a messenger, her insight and connections suggest she could play a much larger role in shaping the future of Sevynashyuns." },
   { id: 5, name: "Scarlett Letters", image: ScarlettLetters, title:"", description: "" },
   { id: 6, name: "Jellusari", image: Jellusari, title:"", description: "" },
   { id: 7, name: "Paige Turner", image: PaigeTurnner, title:"", description: "" },
-  { id: 8, name: "Squid Wyrd", image: SquidWyrd, title:"", description: "" },
+  { id: 8, name: "Squid Wyrd", image: SquidWyrd, title:"", description: "Paige Turner grew up amid the vibrant intellectual circles of Adoreon, where their natural curiosity and affinity for the arcane led them to a position as an Arcane Research Assistant. In this role, Paige honed a meticulous approach to studying ancient spells and artifacts, often working late into the night, deciphering complex texts, and testing obscure incantations. Paige’s growing knowledge eventually attracted the attention of Apathian scholars, and they were offered a coveted position in Apathe as an Academic Librarian—an opportunity to broaden their horizons and delve even deeper into magical lore. Now in the heart of Apathian scholarship, Paige finds themselves surrounded by volumes of forbidden knowledge, lost magic, and forgotten histories. Their journey from Adoreon’s lively arcane labs to the quiet, candle-lit corners of Apathe’s restricted libraries has imbued them with both a love for magic and a quiet intensity. Paige’s warlock abilities, honed through years of study and practice, are often employed not in battle, but in pursuit of forgotten spells and the mysteries they’ve sworn to protect." },
   { id: 9, name: "Apathian Relic", image: ApathianRelic, title:"Relic of Apathian Sloth", description:"a pocketwatch that glows faintly with arcane magic, leading those who tinker with it to take exaustion damage unless the riddle on the back is solved"},
   { id: 10, name: "Rowan Black", image: RowanBlack, title:"", description: "half elf with a quiet demeanor and an heir of superiority searching for his lost love. Hope the fame from winnig the Unity Festival will provide resources to help solve the mystery of their disappearance" },
   { id: 11, name: "Tessa Jorne", image: TessaJorne, title:"", description: "a young tiefling looking for adventure and on a quest to find a legendary artifact" },

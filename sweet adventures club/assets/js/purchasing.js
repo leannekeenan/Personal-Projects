@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
           body: receiptText
         },
         toCompany: {
-          email: "sweetadventuresclub@example.com",  // Replace with actual company email
+          email: "sweetadventuresclub@gmail.com",  // Replace with actual company email
           subject: "New Cheesecake Order Received",
           body: receiptText
         }

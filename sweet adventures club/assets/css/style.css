@@ -27,24 +27,43 @@ body {
     letter-spacing: 0.05rem;
 }
 
+div > * {
+    margin: 1rem 0;
+  line-height: 1.8; /* Maintain line height */
+}
+
 h1, h3, h4, h5, h6, a {
-  font-family: 'clicker', serif;
+  font-family: "Poiret One", sans-serif;
+}
+
+h1 {
+  font-size: clamp(3rem, 6vw, 8rem); /* Adjust font size for h1 on smaller screens */
 }
 
 
 h2, th {
    font-family: 'Great Vibes', cursive;
-}
-th {
-  font-size: clamp(2rem, 5vw, 4rem);
+   font-size: clamp(2rem, 5vw, 4rem); /* Adjust font size for h2 on smaller screens */
 }
 
-h2 {
-  font-size: clamp(2rem, 5vw, 4rem); /* Adjust font size for h2 on smaller screens */
+h3 {
+  font-size: clamp(1.5rem, 4vw, 3rem); /* Adjust font size for h3 on smaller screens */
 }
 
-td, p, h3 {
-    font-size: clamp(.75rem, 4vw, 2rem); /* Font size between 1.5rem and 2rem */
+h4 {
+  font-size: clamp(1.25rem, 4vw, 2.5rem); /* Adjust font size for h4 on smaller screens */
+}
+
+h5 {
+  font-size: clamp(1rem, 4vw, 2rem); /* Adjust font size for h5 on smaller screens */
+}
+
+h6 {
+  font-size: clamp(0.875rem, 4vw, 1.75rem); /* Adjust font size for h6 on smaller screens */
+}
+
+p, a, input, label, button, textarea, td, span, caption {
+  font-size: clamp(1rem, 4vw, 2.5rem);  /* Font size adjusts responsively */
 }
 
 
@@ -65,24 +84,20 @@ td, p, h3 {
         height: 60vh;
         padding: 2rem;
     }
-    .title {
-        font-size: 10vw;
-    }
+   
 }
 @media (max-width: 768px) {
     .hero {
         height: 40vh;
     }
-    .title {
-        font-size: 12vw;
-    }
+    
 }
 
 /* Title Styling */
 .title {
-    font-family: "Clicker Script", serif;
+    font-family:  "Poiret One", sans-serif;
     font-style: normal;
-    font-size: 5vw;
+
     min-width: 80vw;
     font-weight: 800;
     letter-spacing: 0.1rem;
@@ -110,7 +125,7 @@ td, p, h3 {
 /* Tagline */
 .tagline {
   font-family: 'Great Vibes', cursive;
-    font-size: 4rem;
+
     margin-top: 1rem;
     color: var(--base);
     opacity: 0;
@@ -120,11 +135,6 @@ td, p, h3 {
 
 
 
-@media (max-width: 1200px) {
-    .tagline {
-        font-size: 5vw;
-    }
-}
 
 /* Keyframes */
 @keyframes glow-move {
@@ -147,7 +157,7 @@ nav {
 
 nav a {
     padding: 3rem;
-    font-size: 2.2rem;
+    font-weight: 800;
     text-align: center;
     color: var(--text);
     text-decoration: none;
@@ -166,7 +176,6 @@ nav a.active {
 @media (max-width: 768px) {
     nav a {
         padding: 1.5rem;
-        font-size: 1.5rem;
     }
 }
 
@@ -177,7 +186,6 @@ nav a.active {
   }
   
   .pitch div p {
-    font-size: clamp(1rem, 4vw, 2.5rem);  /* Font size adjusts responsively */
     text-align: center;
     line-height: clamp(2rem, 5vw, 5rem); /* Line height adjusts with screen size */
   }
@@ -189,7 +197,6 @@ nav a.active {
   }
   
   .pitch-nav a {
-    font-size: clamp(1rem, 4vw, 2.2rem); /* Responsive font size for nav links */
     text-decoration: none;
     color: var(--base);
     background: var(--text);
@@ -211,7 +218,6 @@ nav a.active {
   
     .pitch-nav a {
       margin: 1rem;
-      font-size: clamp(1rem, 5vw, 2rem); /* Responsive font size for medium screens */
     }
   }
   
@@ -220,9 +226,7 @@ nav a.active {
       padding: 3rem;
     }
   
-    .pitch-nav a {
-      font-size: clamp(1rem, 5vw, 1.75rem); /* Smaller font for mobile screens */
-    }
+    
   }
   
 
@@ -234,8 +238,6 @@ nav a.active {
     justify-content: center;
     background-color: var(--base); /* Default background color */
     padding: clamp(3rem, 5vw, 8rem) clamp(1rem, 3vw, 5rem); /* Responsive padding */
-   font-size: clamp(1rem, 2vw, 1.2rem); /* Responsive font size */
-    line-height: 1.8; /* Maintain line height */
     position: relative; /* Ensure positioning for pseudo-elements */
     overflow: hidden; /* Ensure the pseudo-element stays within bounds */
     transition: background-color 0.3s ease; /* Smooth transition for background color */
@@ -274,10 +276,9 @@ nav a.active {
   
   .story p {
     text-align: center;
-    width: 75%;
+    width: 85%;
     margin: 0 clamp(1rem, 2vw, 10rem); /* Responsive margin for p */
-    font-size: clamp(1rem, 3vw, 2.5rem); /* Responsive font size for p */
-    color: var(--text);
+   color: var(--text);
     text-shadow: 0 0 3px var(--accent);
   }
   
@@ -319,9 +320,7 @@ nav a.active {
       padding: 4rem 1rem;
     }
   
-    p {
-      font-size: clamp(1rem, 4vw, 1.6rem); /* Adjust font size for p on smaller screens */
-    }
+    
   }
   
 
@@ -359,7 +358,6 @@ nav a.active {
 .affiliates div p, .sacrilege div p {
     width: 50vw;
     text-align: center;
-    font-size: clamp(.75rem, 4vw, 2rem);
     line-height: 1.6;
     color: var(--text);
     margin: 0.5rem 0;
@@ -373,7 +371,6 @@ nav a.active {
 
 
 .affiliates span {
-    font-size: clamp(.75rem, 4vw, 2rem);
     font-weight: bold;
     margin: 2rem 7rem;
     text-transform: uppercase;
@@ -382,9 +379,7 @@ nav a.active {
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-.affiliates div span {
-    font-size: clamp(.75rem, 4vw, 2rem);
-}
+
 
 .affiliates div:hover span {
     color: var(--text);
@@ -399,13 +394,11 @@ nav a.active {
 .sacrilege span {
     font-family: "David Libre", serif;
     font-style: italic;
-    font-size: clamp(.75rem, 4vw, 2rem);
     max-width: 600px;
     text-align: center;
 }
 
 .interested a {
-    font-size: clamp(1rem, 4vw, 1.5rem); /* Responsive font size for nav links */
     text-decoration: none;
     color: var(--base);
     background: var(--text);
@@ -464,7 +457,6 @@ nav a.active {
 }
 
 .events-intro {
-    font-size: clamp(1.5rem, 3vw, 2rem); /* Responsive font size for intro */
     color: var(--text);
     line-height: 1.6;
     margin-bottom: clamp(20px, 4vw, 40px); /* Responsive margin-bottom */
@@ -494,13 +486,11 @@ nav a.active {
 }
 
 .event-card h3 {
-    font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive font size for event card heading */
     color: #5a2d0c;
     margin-bottom: clamp(5px, 1vw, 10px); /* Responsive margin-bottom */
 }
 
 .event-card p {
-    font-size: clamp(1.5rem, 3vw, 1.75rem); /* Responsive font size for event card text */
     color: #8a5d39;
     line-height: 1.5;
 }
@@ -556,7 +546,6 @@ nav a.active {
   }
 
   .menu-table caption {
-    font-size: 1.5rem;
     color: var(--accent);
     margin-bottom: 1rem;
   }
@@ -619,18 +608,8 @@ nav a.active {
     border-radius: 10px;
   }
 
-  #order-date {
-    font-size: 2rem;
-}
 
-#order-date input, #order-date label, #order-date h3 {
-    font-size: inherit;
-}
 
-#order-time {
-    font-size: 2rem;
-    
-}
 .message {
     height: 15px;
     margin: 2rem 0
@@ -641,16 +620,7 @@ nav a.active {
     display: none;
 }
 
-#order-time input, #order-time label, #order-time h3 {
-    font-size: inherit;
-}
-#delivery-address input, #delivery-address label, #delivery-address h3 {
-    font-size: inherit;
-}
 
-#delivery-address {
-    font-size: clamp(.75rem, 4vw, 2rem);
-}
   
   .cheesecake-options, .topping-options {
     display: grid;
@@ -658,9 +628,7 @@ nav a.active {
     gap: 20px;
   }
 
-  .cheesecake-selection span, .topping-selection span {
-    font-size: 1.2rem;
-  }
+ 
   
   input[type="number"] {
     width: 50px;
@@ -672,12 +640,10 @@ nav a.active {
   
   label {
     display: flex;
-    font-size: clamp(.75rem, 4vw, 2rem);
   }
   
   label span {
     margin-left: 10px;
-    font-size: 1rem;
   }
   
   textarea {
@@ -686,7 +652,6 @@ nav a.active {
     padding: 10px;
     border: 1px solid #DDD;
     border-radius: 8px;
-    font-size: 2rem;
   }
   
   #order-preview {
@@ -696,7 +661,6 @@ nav a.active {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    font-size: 1.5rem; /* Adjust the value as needed */
     line-height: 1.6;
   }
   
@@ -705,7 +669,6 @@ nav a.active {
     color: var(--base);
     padding: 2rem 4rem;
     border: none;
-    font-size: 1.4rem;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
@@ -736,7 +699,6 @@ input[type="checkbox"] {
 label[for="terms"] {
     display: flex;
     align-items: center;
-    font-size: 1rem;
     margin-top: 15px;
 }
 
@@ -765,7 +727,6 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="t
 /* Align Submit Button */
 #submit-order {
     margin-top: 20px;
-    font-size: 1.4rem;
     padding: 15px 30px;
     background-color: var(--text);
     color: var(--base);
@@ -779,13 +740,6 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="t
     background-color: var(--inneractive);
 }
 
-#purchase-form {
-    font-size: 2rem;
-}
-
-#purchase-form input, #purchase-form label, #purchase-form h3, #purchase-form button, #purchase-form a {
-    font-size: inherit;
-}
 
 
 /*Why Choose Us*/
@@ -826,13 +780,11 @@ input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="t
 }
 
 .why-choose-us .benefit h3 {
-    font-size: 2.5rem;
     color: var(--base);
     margin-bottom: 1rem;
 }
 
 .why-choose-us .benefit p {
-    font-size: 1.8rem;
     line-height: 1.6;
 }
 
@@ -872,7 +824,6 @@ footer {
   .social-links a {
     text-decoration: none;
     color: var(--base);
-    font-size: 2rem;
   }
   
   .social-links a:hover {
@@ -882,7 +833,6 @@ footer {
   .email-link a {
     text-decoration: none;
     color: var(--base);
-    font-size: 1.8rem;
   }
   
   .email-link a:hover {
@@ -897,7 +847,6 @@ footer {
   .quick-links a {
     text-decoration: none;
     color: var(--base);
-    font-size: 1.8rem;
   }
   
   .quick-links a:hover {

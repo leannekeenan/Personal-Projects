@@ -5,6 +5,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const orderPreview = document.getElementById("order-preview");
     const totalPrice = document.getElementById("total-price");
     const submitButton = document.getElementById("submit-order");
+    const streetAddress = document.getElementById("customer-street-address");
+    const unit = document.getElementById("customer-street-unit");
+    const city = document.getElementById("customer-city");
+    const state = document.getElementById("customer-state");
+    const zip = document.getElementById("customer-zip");
+    const deliveryInstructions = document.getElementById("special-instructions");
+    const customerName = document.getElementById("customer-name");
+    const mail = document.getElementById("customer-email");
+    const date = document.getElementById("order-date")
+    const time = document.getElementById("order-time")
   
     // Prices for cheesecakes and toppings
     const cheesecakePrices = {
@@ -39,8 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
         previewText += `<br>${base.name} (x${base.quantity})`;
       });
   
-      let toppingsText = currentToppings.length ? ` ${currentToppings.map(topping => `${topping.name} (x${topping.quantity})`).join(", ")}` : "";
-      
+      let toppingsText = currentToppings.length ? `<br>${currentToppings.map(topping => `${topping.name} (x${topping.quantity})`).join("<br>")}` : "";
+
       // Reset total to cheesecake price
       let total = currentPrice;
   
@@ -50,7 +60,16 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   
       // Update the order preview and total price
-      orderPreview.innerHTML = `${previewText}<br>${toppingsText}`;
+      orderPreview.innerHTML = `
+      <br>${date.value} at ${time.value}
+      <br>${customerName.value}
+      <br>${mail.value}
+      <br>${streetAddress.value} ${unit.value}
+      <br>${city.value}, ${state.value} ${zip.value}
+      <br>${previewText}
+      <br>${toppingsText}
+      <br>Special Instructions: ${specialRequests.value}
+      `;
       totalPrice.innerText = `Total: $${total.toFixed(2)}`;
     }
   

@@ -59,21 +59,13 @@
             <img src="/sweet adventures club/assets/images/studio cake.png" alt="Kitchen Facility Logo">
             <p> where we craft our delicious cheesecakes in a fully certified, professional environment, ensuring the highest standards of quality and safety.</p>
         </div>
-        
-        <div class="sacrilege">
-            <p>We are honored to serve our delicious cheesecakes at</p>
-
-            <span>
-                SACRILEGE BREWERY + KITCHEN
-            </span>
-            <p>where our cheesecakes perfectly complement their craft beers. We are proud to be part of this exceptional local establishment.</p>
-        </div>
+       
 
 
         <div class="interested">
           <p>Interested in hosting our cakes in your establishment?</p>
       
-          <a href="mailto:sweetadventuresclub@outlook.com">Contact Us Today</a>
+          <a href="mailto:sweetadventuresclub@gmail.com">Contact Us Today</a>
       
           <p>We would be honored to have our delicious cakes featured in your store. Let&apos;s work together to bring a touch of sweetness to your customers!</p>
       </div>
@@ -211,195 +203,157 @@
     </section>
 
     <section class="ordering" id="ordering">
-        <div class="order-form">
+      <div class="order-form">
+    
+        <section class="order-fulfillment">
+          <h2>Set Your Delivery Details</h2>
+          <p>Please select the desired date and time for your order.</p>
+    
+          <label for="order-date">Order Date:</label>
+          <input type="date" id="order-date" name="order-date" required>
+    
+          <label for="order-time">Order Time:</label>
+          <select id="order-time" name="order-time" required>
+            <option value="">Select a Time</option>
+            <option value="08:00">08:00 AM</option>
+            <option value="09:00">09:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="12:00">12:00 PM</option>
+            <option value="01:00">01:00 PM</option>
+            <option value="02:00">02:00 PM</option>
+            <option value="03:00">03:00 PM</option>
+            <option value="04:00">04:00 PM</option>
+            <option value="05:00">05:00 PM</option>
+          </select>
+          <div class="message">
+            <p id="unavailable-msg">
+              The selected time is unavailable. Please choose another.
+            </p>
+          </div>
+    
+        </section>
+    
+        <section class="delivery-address" id="delivery-address">
+          <h3>Delivery Address</h3>
 
-          <section class="order-fulfillment">
-            <h2>Set Your Delivery Details</h2>
-            <p>Please select the desired date and time for your order.</p>
-            
-            <label for="order-date">Order Date:</label>
-            <input type="date" id="order-date" name="order-date" required>
-            
-            <label for="order-time">Order Time:</label>
-            <select id="order-time" name="order-time" required>
-              <option value="">Select a Time</option>
-              <option value="08:00">08:00 AM</option>
-              <option value="09:00">09:00 AM</option>
-              <option value="10:00">10:00 AM</option>
-              <option value="11:00">11:00 AM</option>
-              <option value="12:00">12:00 PM</option>
-              <option value="01:00">01:00 PM</option>
-              <option value="02:00">02:00 PM</option>
-              <option value="03:00">03:00 PM</option>
-              <option value="04:00">04:00 PM</option>
-              <option value="05:00">05:00 PM</option>
-            </select>
-            <div class="message">
-              <p id="unavailable-msg">
-                The selected time is unavailable. Please choose another.
-              </p>
-            </div>
-            
-          </section>
+          <label for="name">Full Name:</label>
+          <input type="text" id="customer-name" name="name" placeholder="Your Name" required>
 
-          <section class="delivery-address" id="delivery-address">
-                              <!-- Delivery Address -->
-                              <h3>Delivery Address</h3>
-                              <label for="street-address">Street Address:</label>
-                              <input type="text" id="street-address" name="street-address" placeholder="123 Main St" required>
-                              
-                              <label for="unit">Unit #</label>
-                              <input type="text" id="unit" name="unit" placeholder="Unit #">
+          <label for="email">Email:</label>
+          <input type="email" id="customer-email" name="email" placeholder="Your Email" required>
 
-                              <label for="city">City:</label>
-                              <input type="text" id="city" name="city" placeholder="Your City" required>
-                              
-                              <label for="state">State:</label>
-                              <input type="text" id="state" name="state" placeholder="Your State" required>
-                              
-                              <label for="zip">ZIP/Postal Code:</label>
-                              <input type="text" id="zip" name="zip" placeholder="12345" required>
-                              
-          </section>
-          
-          <section class="cheesecake-selection">
-                <h2>Choose Your Cheesecakes</h2>
-                <span>Each order includes one dozen (12) cheesecakes</span>
-                <div class="cheesecake-options">
-                  <label for="classic">
-                    <input type="number" id="classic" name="base" value="0" min="0">
-                    Classic
-                  </label>
-                  <label for="chocolate">
-                    <input type="number" id="chocolate" name="base" value="0" min="0">
-                    Chocolate
-                  </label>
-                  <label for="pumpkin">
-                    <input type="number" id="pumpkin" name="base" value="0" min="0">
-                    Pumpkin
-                  </label>
-                  <label for="cookies_cream">
-                    <input type="number" id="cookies_cream" name="base" value="0" min="0">
-                    Cookies & Cream
-                  </label>
-                  <label for="speculoos_cream">
-                    <input type="number" id="speculoos_cream" name="base" value="0" min="0">
-                    Speculoos & Cream
-                  </label>
-                  <label for="nilla_cream">
-                    <input type="number" id="nilla_cream" name="base" value="0" min="0">
-                    Nilla & Cream
-                  </label>
-                  <label for="ginger_snap">
-                    <input type="number" id="ginger_snap" name="base" value="0" min="0">
-                    Ginger Snap
-                  </label>
-                </div>
-          </section>
-            
-          <section class="topping-selection">
-                <h2>Choose Your Toppings</h2>
-                <span>Each topping holds 12 ounces</span>
-                <div class="topping-options">
-                  <label for="strawberry">
-                    <input type="number" id="strawberry" name="topping" value="0" min="0">
-                    Strawberry Compote
-                  </label>
-                  <label for="cherry">
-                    <input type="number" id="cherry" name="topping" value="0" min="0">
-                    Cherry Compote
-                  </label>
-                  <label for="raspberry">
-                    <input type="number" id="raspberry" name="topping" value="0" min="0">
-                    Raspberry Compote
-                  </label>
-                  <label for="lemon">
-                    <input type="number" id="lemon" name="topping" value="0" min="0">
-                    Lemon Icing
-                  </label>
-                  <label for="apple">
-                    <input type="number" id="apple" name="topping" value="0" min="0">
-                    Apple Compote
-                  </label>
-                  <label for="caramel">
-                    <input type="number" id="caramel" name="topping" value="0" min="0">
-                    Salted Caramel Sauce
-                  </label>
-                  <label for="white_chocolate">
-                    <input type="number" id="white_chocolate" name="topping" value="0" min="0">
-                    White Chocolate Sauce
-                  </label>
-                  <label for="dark_chocolate">
-                    <input type="number" id="dark_chocolate" name="topping" value="0" min="0">
-                    Dark Chocolate Sauce
-                  </label>
-                </div>
-          </section>
-            
-          <section class="customization">
-                <h2>Any Special Requests?</h2>
-                <textarea id="special-requests" placeholder="Tell us how to make your cheesecake even sweeter!"></textarea>
-          </section>
-            
-          <section class="order-summary">
-                <h2>Order Review</h2>
-                <div id="order-preview" class="preview">
-                  <p>Your cheesecake preview will appear here...</p>
-                </div>
-                <p id="total-price">Total: $0.00</p>
-                <h2 class="purchase-title">Purchase Your Order</h2>
-                <h3>Personal Information</h3>
-                <form id="purchase-form">
-                  <label for="customer-name">Name:</label>
-                  <input type="text" id="customer-name" name="customer-name" placeholder="John Doe" required>
-                  
-                  <label for="email">Email Address:</label>
-                  <input type="email" id="clientEmail" name="email" placeholder="johndoe@example.com" required>
-                  
-                  <label for="phone">Phone Number:</label>
-                  <input type="tel" id="phone" name="phone" placeholder="123-456-7890">
-              
+          <label for="street-address">Street Address:</label>
+          <input type="text" id="customer-street-address" name="street-address" placeholder="123 Main St" required>
+    
+          <label for="unit">Unit #</label>
+          <input type="text" id="customer-street-unit" name="unit" placeholder="Unit #">
+    
+          <label for="city">City:</label>
+          <input type="text" id="customer-city" name="city" placeholder="Your City" required>
+    
+          <label for="state">State:</label>
+          <input type="text" id="customer-state" name="state" placeholder="Your State" required>
+    
+          <label for="zip">ZIP/Postal Code:</label>
+          <input type="text" id="customer-zip" name="zip" placeholder="12345" required>
+    
+          <label for="phone">Phone:</label>
+          <input type="tel" id="customer-phone" name="phone" placeholder="123-456-7890" required>
+        </section>
+    
+        <section class="cheesecake-selection">
+          <h2>Choose Your Cheesecakes</h2>
+          <span>Each order includes one dozen (12) cheesecakes</span>
+          <div class="cheesecake-options">
+            <label for="classic">
+              <input type="number" id="classic" name="base" value="0" min="0">
+              Classic
+            </label>
+            <label for="chocolate">
+              <input type="number" id="chocolate" name="base" value="0" min="0">
+              Chocolate
+            </label>
+            <label for="pumpkin">
+              <input type="number" id="pumpkin" name="base" value="0" min="0">
+              Pumpkin
+            </label>
+            <label for="cookies_cream">
+              <input type="number" id="cookies_cream" name="base" value="0" min="0">
+              Cookies & Cream
+            </label>
+            <label for="speculoos_cream">
+              <input type="number" id="speculoos_cream" name="base" value="0" min="0">
+              Speculoos & Cream
+            </label>
+            <label for="nilla_cream">
+              <input type="number" id="nilla_cream" name="base" value="0" min="0">
+              Nilla & Cream
+            </label>
+            <label for="ginger_snap">
+              <input type="number" id="ginger_snap" name="base" value="0" min="0">
+              Ginger Snap
+            </label>
+          </div>
+        </section>
+    
+        <section class="topping-selection">
+          <h2>Choose Your Toppings</h2>
+          <span>Each topping holds 12 ounces</span>
+          <div class="topping-options">
+            <label for="strawberry">
+              <input type="number" id="strawberry" name="topping" value="0" min="0">
+              Strawberry Compote
+            </label>
+            <label for="cherry">
+              <input type="number" id="cherry" name="topping" value="0" min="0">
+              Cherry Compote
+            </label>
+            <label for="raspberry">
+              <input type="number" id="raspberry" name="topping" value="0" min="0">
+              Raspberry Compote
+            </label>
+            <label for="lemon">
+              <input type="number" id="lemon" name="topping" value="0" min="0">
+              Lemon Icing
+            </label>
+            <label for="apple">
+              <input type="number" id="apple" name="topping" value="0" min="0">
+              Apple Compote
+            </label>
+            <label for="caramel">
+              <input type="number" id="caramel" name="topping" value="0" min="0">
+              Salted Caramel Sauce
+            </label>
+            <label for="white_chocolate">
+              <input type="number" id="white_chocolate" name="topping" value="0" min="0">
+              White Chocolate Sauce
+            </label>
+            <label for="dark_chocolate">
+              <input type="number" id="dark_chocolate" name="topping" value="0" min="0">
+              Dark Chocolate Sauce
+            </label>
+          </div>
+        </section>
 
-                   <!-- Billing Address -->
-                   <h3>Billing Address</h3>
-                   <label for="street-address">Street Address:</label>
-                   <input type="text" id="street-address" name="street-address" placeholder="123 Main St" required>
-                   
-                   <label for="city">City:</label>
-                   <input type="text" id="city" name="city" placeholder="Your City" required>
-                   
-                   <label for="state">State:</label>
-                   <input type="text" id="state" name="state" placeholder="Your State" required>
-                   
-                   <label for="zip">ZIP/Postal Code:</label>
-                   <input type="text" id="zip" name="zip" placeholder="12345" required>
- 
-                  <!-- Payment Information -->
-                  <h3>Payment Information</h3>
-                  <label for="card-number">Card Number:</label>
-                  <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456" required>
-                  
-                  <label for="expiry-date">Expiry Date:</label>
-                  <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY" required>
-                  
-                  <label for="cvv">CVV:</label>
-                  <input type="text" id="cvv" name="cvv" placeholder="123" required>
-              
-                 
-                  <!-- Terms and Conditions -->
-                  <div>
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
-                  </div>
-                  
-                  <!-- Submit Button -->
-                  <button type="submit" id="submit-order" class="cta">Proceed to Checkout</button>
-                </form>
-           </section>
-              
-        </div>
+        <section class="requests">
+          <h2>Special Delivery Requests</h2>
+          <p>If you have any special requests or dietary restrictions, please let us know here.</p>
+          <textarea id="special-requests" name="requests" placeholder="Special delivery instructions"></textarea>
+        </section>
+    
+        <section class="order-summary">
+          <h2>Order Review</h2>
+          <div id="order-preview" class="preview">
+              <p>Your cheesecake preview will appear here...</p>
+          </div>
+          <p id="total-price">Total: $0.00</p>
+      </section>
+      
+          <button id="submit-order">Place Order</button>
+      </div>
     </section>
-
+    
     <section class="why-choose-us" id="why-choose-us">
         <div class="why-choose-content">
           <h2>Why Choose Us?</h2>

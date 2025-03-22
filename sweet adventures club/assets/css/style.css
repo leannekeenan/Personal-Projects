@@ -62,9 +62,11 @@ h6 {
   font-size: clamp(0.875rem, 4vw, 1.75rem); /* Adjust font size for h6 on smaller screens */
 }
 
-p, a, input, label, button, textarea, td, span, caption {
-  font-size: clamp(1rem, 4vw, 2.5rem);  /* Font size adjusts responsively */
+p, a, input, label, button, textarea, td, span, caption, select, #order-preview {
+  font-size: clamp(0.8rem, 4vw, 2.5rem);  /* Font size adjusts responsively */
 }
+
+
 
 
 /* Hero Section */
@@ -345,18 +347,21 @@ nav a.active {
 
 .affiliates div {
     margin: 1rem;
-    border-radius: 12px
+    border-radius: 12px;
+    width: 80vw;
+    max-width: 600px;
+    position: relative;
 }
 
 
-.affiliates div:hover, .sacrilege div:hover {
+.affiliates div:hover {
     transform: scale(1.05);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     background-color: var(--accent);
 }
 
-.affiliates div p, .sacrilege div p {
-    width: 50vw;
+.affiliates div p {
+  
     text-align: center;
     line-height: 1.6;
     color: var(--text);
@@ -391,12 +396,6 @@ nav a.active {
     min-width: 250px;
 }
 
-.sacrilege span {
-    font-family: "David Libre", serif;
-    font-style: italic;
-    max-width: 600px;
-    text-align: center;
-}
 
 .interested a {
     text-decoration: none;

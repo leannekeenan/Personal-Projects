@@ -1,17 +1,16 @@
-const express = require('express');
+const express = require("express");
+const bodyParser = require("body-parser");
+const sendOrderEmail = require("./nodemailer");
+require("dotenv").config();
+
 const app = express();
-const bodyParser = require('body-parser');
-const orders = {}; // Example in-memory database
+const orders = {}; // In-memory store
 
 app.use(bodyParser.json());
+app.use(express.static("public")); // Serve front-end files
 
-// Fetch unavailable dates and times
-app.get('/api/orders', (req, res) => {
-  res.json(orders);
-});
-
-// Save a new order
-app.post('/api/orders', (req, res) => {
+// Store order data (for availability tracking)
+app.post("/api/orders", (req, res) => {
   const { date, time } = req.body;
   if (!orders[date]) {
     orders[date] = [];
@@ -20,4 +19,15 @@ app.post('/api/orders', (req, res) => {
   res.json({ success: true });
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+// Email route
+app.post("/send-order", async (req, res) => {
+  try {
+    await sendOrderEmail(req.body);
+    res.status(200).json({ message: "Email sent successfully!" });
+  } catch (err) {
+    console.error("Email Error:", err);
+    res.status(500).json({ message: "Email failed to send." });
+  }
+});
+
+app.listen(3000, () => console.log("Server running on http://localhost:3000"));

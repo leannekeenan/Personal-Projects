@@ -2,9 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const sendOrderEmail = require("./nodemailer");
 require("dotenv").config();
+const cors = require('cors');
+app.use(cors());
 
 const app = express();
-const orders = {}; // In-memory store
+const orders = {}; // In-memory store for orders
 
 app.use(bodyParser.json());
 app.use(express.static("public")); // Serve front-end files
@@ -19,9 +21,10 @@ app.post("/api/orders", (req, res) => {
   res.json({ success: true });
 });
 
-// Email route
+// Email route to send the order to customer and admin
 app.post("/send-order", async (req, res) => {
   try {
+    // Send email to customer
     await sendOrderEmail(req.body);
     res.status(200).json({ message: "Email sent successfully!" });
   } catch (err) {

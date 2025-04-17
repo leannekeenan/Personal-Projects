@@ -1,28 +1,36 @@
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
+const express = require("express");
+const bodyParser = require("body-parser");
+const sendOrderEmail = require("./nodemailer"); // Import the email-sending function
+
+const app = express();
+app.use(bodyParser.json());
+
+app.post("/send-order", (req, res) => {
+  const { name, email, address, city, state, zip, date, time, orderDetails } = req.body;
+
+  const orderData = {
+    name,
+    email,
+    address,
+    city,
+    state,
+    zip,
+    date,
+    time,
+    orderDetails,
+  };
+
+  // Call the function from nodemailer.js to send the email
+  sendOrderEmail(orderData)
+    .then(() => {
+      res.status(200).send("Order submitted and confirmation email sent!");
+    })
+    .catch((error) => {
+      console.error("Error sending email:", error);
+      res.status(500).send("Failed to send order.");
     });
 });
 
-
-document.getElementById("purchase-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    
-    const customerName = document.getElementById("customer-name").value;
-    const email = document.getElementById("clientEmail").value;
-    const phone = document.getElementById("phone").value;
-    const orderDate = document.getElementById("order-date").value;
-    const orderTime = document.getElementById("order-time").value;
-    const deliveryDetails = document.getElementById("delivery-details").value;
-    const orderSummary = document.getElementById("order-preview").innerText;
-    const totalPrice = document.getElementById("total-price").innerText;
-    
-    const orderDetails = `Name: ${customerName}\nEmail: ${email}\nPhone: ${phone}\nOrder Date: ${orderDate}\nOrder Time: ${orderTime}\nDelivery Address: ${deliveryDetails}\n\nOrder Summary:\n${orderSummary}\nTotal: ${totalPrice}`;
-    
-    const mailtoLink = `mailto:${email},sweetadventuresclub@gmail.com?subject=Sweet Adventures Club Order Confirmation&body=${encodeURIComponent(orderDetails)}`;
-    
-    window.location.href = mailtoLink;
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
 });

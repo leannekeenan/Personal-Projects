@@ -2771,8 +2771,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 			@media screen and (max-width: 736px) {
 
 				.features li {
-					padding: 3em 0 1em 0 ;
-					background-color: transparent !important;
+					padding: 3em 1.5em  ;
 					border-top: solid 2px #fff;
 					width: 100%;
 				}
@@ -3657,7 +3656,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 					}
 
 		#menu .close {
-			background-image: url("/sweet/images/close.svg");
+			background-image: url("images/close.svg");
 			background-position: 4.85em 1em;
 			background-repeat: no-repeat;
 			border: 0;
@@ -3776,9 +3775,12 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 					}
 
 						#header nav > ul > li > a.menuToggle {
+							
 							outline: 0;
 							position: relative;
 						}
+
+							
 
 							#header nav > ul > li > a.menuToggle:after {
 								background-image: url("images/bars.svg");
@@ -3794,6 +3796,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 							@media screen and (max-width: 736px) {
 
 								#header nav > ul > li > a.menuToggle {
+									
 									padding: 0 1.5em;
 								}
 

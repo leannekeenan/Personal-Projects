@@ -3273,7 +3273,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		}
 
 		.wrapper.style5 {
-			background-image: url('../../images/parchment.png');
+			background-image: url('/assets/css/images/parchment.png');
 			color: var(--chocolate);
 		}
 

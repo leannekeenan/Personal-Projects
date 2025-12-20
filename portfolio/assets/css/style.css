@@ -1,0 +1,657 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+PE:wght@100..400&display=swap');
+
+:root {
+    --cyan: #78dbd0;
+    --lightCyan: #a0e6de;
+    --silver: #4d4d4d;
+    --offBlack: #111111;
+    --offWhite: #FBFBFB;
+    --orange: #DB5109;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 62.5%;
+    color: var(--silver);
+    text-decoration: none;
+    font-family: "Montserrat", sans-serif;
+}
+
+body {
+    background: var(--offWhite);
+}
+
+
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 75px;
+    z-index: 1000;
+    padding: 5rem;
+    display: flex;
+    background: var(--offWhite);
+    box-shadow: 0 0 10px var(--silver);
+}
+
+.support {
+    font-family: "Playwrite PE", cursive;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 50px;
+    font-size: 1.5rem;
+    background: gold;
+    padding: 1.5rem 2rem; 
+    border-radius: 10px;
+    border: 1px solid brown;
+}
+
+.support img {
+    height: 30px;
+    margin-left: 1rem
+}
+
+.support:hover {
+    background: rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 5px gold;
+    border: none;
+}
+
+li {
+    list-style: none;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family:  "League Spartan", sans-serif;;
+}
+
+nav, .nav-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;   
+}
+
+.nav-links li {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 1rem;
+    border-radius: 10px;
+}
+
+.nav-links li:hover {
+    background: var(--lightCyan);
+}
+
+.nav-links li a {
+    font-size: 2.5rem;
+    color: var(--silver);
+    height: 100%;
+    width: 100%;
+    padding: 1rem 3rem;
+}
+
+.nav-links li:nth-child(5) a {
+    font-size: 2.5rem;
+    color: var(--cyan);
+    width: 100%;
+}
+.nav-links li:nth-child(5) a:hover {
+    color: var(--orange);
+    
+}
+
+.nav-links li:nth-child(5):hover {
+    background: var(--offWhite);    
+}
+
+
+.nav-links .resume {
+    font-size: 2.5rem;
+    padding: 1rem 3rem;
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+    background: var(--offWhite);
+    color:var(--cyan);
+    display: block;
+    border-radius: 15px;
+    margin: 1rem
+}
+
+.resume {
+    position: relative;
+}
+
+.resume:hover {
+    border: 2px solid var(--orange);
+    box-shadow: 0 0 10px var(--orange);
+    color: var(--orange);
+
+}
+
+.resume a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+
+
+h1 {
+    color: var(--cyan);
+}
+
+.hidden {
+    display: flex;
+}
+
+.collapse {
+    display: none;
+}
+
+nav .collapse img {
+    height: 60px;
+    cursor: pointer;
+}
+
+
+
+
+
+/*home*/
+.home {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: url('/portfolio/assets/images/abdul-a-6_fTMTi0HaQ-unsplash.png') no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+   
+    
+}
+
+.intro {
+    min-width: 30%;
+    margin-right: 5%; 
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    height: 50%;
+    line-height: auto;
+}
+
+.hello {
+  font-size: 5rem; 
+}
+.my-name {
+    font-size: 10rem; 
+    margin: 1rem 0 3rem 0;
+    line-height: 1rem;
+}
+.my-title {
+    font-size: 5rem;
+}
+.my-purpose {
+    font-size: 4rem; 
+    color: var(--cyan);
+}
+.greeting {
+    font-size: 3rem;  
+}
+
+.action {
+margin: 3rem 5%;
+
+}
+
+.action a {
+    font-size: 3rem;
+    background: var(--cyan);
+    padding: 1rem 5rem ;
+    scroll-behavior: smooth;
+    border-radius: 15px;
+}
+
+.action a:hover {
+    background: var(--orange);
+    color: var(--offWhite);
+}
+
+.about {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.blurb-container {
+    background: var(--cyan);
+    height: 65vh;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 1; /* Ensure it's under the aspects */
+    position: relative;
+}
+
+.blurb {
+    max-width: 900px;
+    text-align: center;
+    font-size: 3rem;
+    margin-top: 12.5rem;
+}
+
+.aspects {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    margin-top: -10%;
+    width: fit-content;
+    border-radius: 15px;
+    background: var(--offWhite);
+    box-shadow: 0 0 10px var(--lightCyan);
+}
+
+.aspects .card {
+    width: 100%;
+    max-width: 500px;
+    min-height: 500px;
+    background: var(--offWhite);
+    padding: 5rem 2rem;
+    text-align: center;
+    position: static;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;   
+}
+
+.aspects .card:nth-child(1) {
+    border-radius: 15px 0 0 15px;
+}
+
+.aspects .card:nth-child(3) {
+    border-radius: 0 15px 15px 0;
+}
+
+.card h3 {
+    color :var(--cyan)
+}
+
+.aspects .card:nth-child(1), .aspects .card:nth-child(2) {
+    border-right: 1px solid rgba(77, 77, 77, 0.5)
+}
+
+.img-container {
+    background: var(--cyan);
+    border-radius: 50%;;
+    padding: 30px;
+    margin: 30px;
+}
+
+.card img {
+    height: auto;
+    width: 25px;
+    
+}
+
+.card h2 {
+    font-size: 3rem;
+    padding-bottom: 2rem;
+}
+
+.card p {
+    padding-bottom: 1rem;
+}
+
+.card p,.card div h3,.card div ul li {
+    font-size: 1.8rem;
+    line-height: 3.5rem;
+}
+
+.headline {
+    text-align: center;
+    padding: 10rem
+}
+
+.headline h2 {
+    font-size: 4rem;
+}
+
+.headline p, .headline a {
+    font-size: 2rem;
+}
+
+.headline a {
+    color: var(--lightCyan);
+}
+
+
+.projects .grid {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0 auto;
+    width: 80%;
+    place-items: center;
+}
+
+.project {
+    height: 300px;
+    border: 1px solid rgba(77, 77, 77, 0.5);
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.project h3 {
+    color: var(--offWhite);
+    font-size: 2rem;
+    background: rgba(77, 77, 77, 0.5);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.salon {
+    background: url('/portfolio/assets/images/salon.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.coffee {
+    background: url('/portfolio/assets/images/coffee\ shop.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.pokemon {
+    background: url('/portfolio/assets/images/poke.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.dungeon {
+    background: url('/portfolio/assets/images/dungeon.png') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.mole {
+    background: url('/portfolio/assets/images/whack\ a\ mole.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.speech {
+    background: url('/portfolio/assets/images/text\ to\ speech.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.todo {
+    background: url('/portfolio/assets/images/lauren-sauder-6GPBVYLapYQ-unsplash.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.rating {
+    background: url('/portfolio/assets/images/rating.png') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.news {
+    background: url('/portfolio/assets/images/subscribe.png') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.collaborations {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.collaborations h2 {
+    font-size: 3rem;
+}
+
+.collaborations div img {
+    width: auto;
+    height: 100px;
+    margin: 0 auto
+}
+
+
+.connect {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.contact-info {
+    height: 45vh;
+    background: var(--cyan);
+    
+}
+
+form {
+    background: var(--offWhite);
+    width: 60%;
+    margin: 0 auto;
+    padding: 1rem;
+    box-shadow: 0 0 10px var(--lightCyan);
+    position: relative;
+    top: -30%;
+    min-height: 50vh;
+    border-radius: 15px;
+}
+
+form div div > * {
+    border: 2px solid rgba(212, 209, 209, 0.5)
+}
+
+form div div > *:focus {
+    border: 5px solid var(--cyan)
+}
+
+form div {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form input, textarea, .actions button {
+    height: 5rem;
+    margin: 1rem;
+    border-radius: 15px;
+    font-size: 2rem;
+    padding: 5px;
+}
+
+.user-info {
+    flex-direction: row;
+}
+
+
+
+form input, form textarea, .actions {
+    width: 100%;
+}
+
+
+.message textarea {
+    height: 200px;
+    border-radius: 15px;
+}
+
+.actions {
+    flex-direction: row;
+}
+
+.actions button {
+    width: 100%;
+    margin: 1rem;
+}
+
+.send {
+    background: var(--cyan);
+}
+
+.send:hover {
+    background: var(--silver);
+    color: var(--offWhite);
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+.clear {
+    background: var(--orange);
+    color: var(--offWhite);
+}
+
+.clear:hover {
+    background:var(--silver);
+    box-shadow: 0 0 10px var(--orange);
+}
+
+.social-media {
+    position: relative;
+    top: -45%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    background: var(--cyan);
+}
+
+
+.social-media img {
+height: 60px;
+width: auto;
+margin: 1rem;
+padding: 20px;
+background: var(--lightCyan);
+border-radius: 50%;
+cursor: pointer;
+}
+
+.social-media img:hover {
+background-color: rgba(251, 251, 251, 0.8);
+box-shadow: 0 0 10px var(--orange);
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 0 auto;
+    width: 100%;
+    background-color: var(--cyan);
+    position: relative;
+    padding: 10rem 0 5rem 0;
+    z-index: -1;
+}
+
+footer .location {
+display: flex;
+flex-direction: column;
+text-align: right;
+align-items: flex-end;
+}
+
+footer .location img {
+height: 5rem;
+padding: 10px;
+background: var(--lightCyan);
+border-radius: 50%;
+}
+
+.copyright span, .location span {
+font-size: 1.5rem;}
+
+/* Keyframes for the slide-in animation */
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.intro span,
+.intro h1,
+.intro h2, 
+.action a {
+    /* Ensure elements are off-screen initially */
+    transform: translateX(100%);
+    opacity: 0;
+    animation: slideInFromRight 1s forwards; /* 1s duration, forwards to keep the final state */
+}
+
+/* Add staggered animation delays */
+.intro span.hello {
+    animation-delay: 0.5s;
+}
+
+.intro h1.my-name {
+    animation-delay: 1s;
+}
+
+.intro h2.my-title {
+    animation-delay: 1.5s;
+}
+
+.intro h2.my-purpose {
+    animation-delay: 2s;
+}
+
+.intro span.greeting {
+    animation-delay: 2.5s;
+}
+
+.action a {
+    animation-delay: 3.5s;
+}
+
+
+
+.img-container {
+    perspective: 1000px; /* Add perspective to create a 3D effect */
+}
+
+.aspects .card:hover img {
+    height: auto;
+    animation: flipCoin 2s infinite ease-in-out; /* Infinite to repeat the animation */
+}
+
+@keyframes flipCoin {
+    0% {
+        transform: rotateY(0deg);
+    }
+    50% {
+        transform: rotateY(180deg);
+    }
+    100% {
+        transform: rotateY(0deg);
+    }
+}

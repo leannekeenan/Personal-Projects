@@ -1,0 +1,23 @@
+
+
+.timer-container {
+    margin: 1.4rem auto;
+}
+
+.timer-container h2 {
+    color: white;
+    font-size: 2rem;
+}
+
+button {
+    padding: 1rem;
+    font-size: 1rem;
+}
+
+button:nth-child(2) {
+    border-radius: 15px 0 0 15px ;
+}
+
+button:nth-child(4) {
+    border-radius: 0 15px 15px 0 ;
+}

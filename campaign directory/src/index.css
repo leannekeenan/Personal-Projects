@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+PE:wght@100..400&family=Poiret+One&family=Quicksand:wght@300..700&display=swap');
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  place-items: space-between;
+  width: 100%;
+  min-height: 100vh;
+  font-size: 62.5%;
+  font-family: "Quicksand", serif;
+  background: url('./images/parchment full screen.png') no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Poiret One", cursive;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+h4 {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+h5 {
+  font-size: clamp(.8rem, 1.5vw, 1rem);
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+h6 {
+  font-size: clamp(.6rem, 1vw, .8rem);
+  line-height: 1.2;
+  margin: 1rem 0;
+}
+
+p {
+  font-size: clamp(1.1rem, 1.5vw, 1.6rem);
+  line-height: 1.2;
+  font-family: 'David Libre', serif;
+}
+

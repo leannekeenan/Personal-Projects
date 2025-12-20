@@ -3110,7 +3110,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		}
 
 		.wrapper.style3 {
-			background-image: url('/sweet/images/36X48 a frame (3).png');
+			background-image: url('sweet/assets/css/images/parchment.png');
 			color: var(--cinnamon);
 		}
 

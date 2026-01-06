@@ -4143,14 +4143,14 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	}
 
 	#main > header#pineapple {
-		background-image: url('/sweet/assets/css/images/pineapple.png');
+		background-image: url('/sweet/assets/css/images/chocolate.png');
 		background-position: center 0%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#autumn {
-		background-image: url('/sweet/assets/css/images/pumpkin.png');
+		background-image: url('/sweet/assets/css/images/pumpkin full.png');
 		background-position: center 10%;
 	position: relative;
 	display: block;
@@ -4165,7 +4165,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	}
 
 	#main > header.menu {
-		background-image: url('/sweet/assets/css/images/menu.png');
+		background-image: url('/sweet/assets/css/images/library.png');
 		background-position: center 100%;
 		position: relative;
 		display: block;
@@ -4182,7 +4182,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 
 
 	#main header#requests {
-		background-image: url('/sweet/assets/css/images/order.png');
+		background-image: url('/sweet/assets/css/images/ordering.png');
 		background-position: center 50%;
 		position: relative;
 		display: block;

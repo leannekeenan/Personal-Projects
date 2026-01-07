@@ -1,5 +1,0 @@
-# Ignore the environment file containing sensitive credentials
-.env
-
-# Also ignore the large dependencies folder
-node_modules/

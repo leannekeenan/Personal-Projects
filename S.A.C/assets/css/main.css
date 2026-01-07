@@ -3110,7 +3110,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		}
 
 		.wrapper.style3 {
-			background-image: url('/sweet/assets/css/images/parchment.png');
+			background-image: url('/S.A.C/assets/css/images/parchment.png');
 			color: var(--cinnamon);
 		}
 
@@ -3273,7 +3273,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		}
 
 		.wrapper.style5 {
-			background-image: url('/sweet/assets/css/images/parchment.png');
+			background-image: url('/S.A.C/assets/css/images/parchment.png');
 			color: var(--chocolate);
 		}
 
@@ -3673,7 +3673,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 					}
 
 		#menu .close {
-			background-image: url("/sweet/assets/css/images/close.svg");
+			background-image: url("/S.A.C/assets/css/images/close.svg");
 			background-position: 4.85em 1em;
 			background-repeat: no-repeat;
 			border: 0;
@@ -3803,7 +3803,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 						}
 
 							#header nav > ul > li > a.menuToggle:after {
-								background-image: url("/sweet/assets/css/images/bars.svg");
+								background-image: url("/S.A.C/assets/css/images/bars.svg");
 								background-position: right center;
 								background-repeat: no-repeat;
 								content: '';
@@ -3867,7 +3867,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		overflow: hidden;
 		position: relative;
 		text-align: center;
-		background-image: url('/sweet/assets/css/images/kitchen.png');
+		background-image: url('/S.A.C/assets/css/images/kitchen.png');
     	background-size: cover;
     	background-repeat: no-repeat;
     	background-position: center center;
@@ -3945,7 +3945,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		}
 
 			#banner .more:after {
-				background-image: url("/sweet/assets/css/images/arrow.svg");
+				background-image: url("/S.A.C/assets/css/images/arrow.svg");
 				background-position: center;
 				background-repeat: no-repeat;
 				background-size: contain;
@@ -4098,14 +4098,14 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	}
 
 	#main > header#vanilla  {
-	background-image: url('/sweet/assets/css/images/vanilla.png');
+	background-image: url('/S.A.C/assets/css/images/vanilla.png');
 	background-position: center 75%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#chocolate {
-		background-image: url('/sweet/assets/css/images/chocolate.png');
+		background-image: url('/S.A.C/assets/css/images/chocolate.png');
 		background-position: center 75%;
 	position: relative;
 	display: block;
@@ -4114,28 +4114,28 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	
 
 	#main > header#cookies {
-		background-image: url('/sweet/assets/css/images/cookies.png');
+		background-image: url('/S.A.C/assets/css/images/cookies.png');
 		background-position: center 20%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#cinnamon {
-		background-image: url('/sweet/assets/css/images/cinnamon.png');
+		background-image: url('/S.A.C/assets/css/images/cinnamon.png');
 		background-position: center 45%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#peanutbutter {
-		background-image: url('/sweet/assets/css/images/pb.png');
+		background-image: url('/S.A.C/assets/css/images/pb.png');
 		background-position: center 50%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#spring {
-		background-image: url('/sweet/assets/css/images/strawberry.png');
+		background-image: url('/S.A.C/assets/css/images/strawberry.png');
 		background-position: center 80%;
 	position: relative;
 	display: block;
@@ -4143,21 +4143,21 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	}
 
 	#main > header#pineapple {
-		background-image: url('/sweet/assets/css/images/chocolate.png');
+		background-image: url('/S.A.C/assets/css/images/chocolate.png');
 		background-position: center 0%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#autumn {
-		background-image: url('/sweet/assets/css/images/pumpkin full.png');
+		background-image: url('/S.A.C/assets/css/images/pumpkin full.png');
 		background-position: center 10%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#winter {
-		background-image: url('/sweet/assets/css/images/apple.png');
+		background-image: url('/S.A.C/assets/css/images/apple.png');
 		background-position: center 60%;
 	position: relative;
 	display: block;
@@ -4165,7 +4165,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	}
 
 	#main > header.menu {
-		background-image: url('/sweet/assets/css/images/library.png');
+		background-image: url('/S.A.C/assets/css/images/library.png');
 		background-position: center 100%;
 		position: relative;
 		display: block;
@@ -4182,7 +4182,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 
 
 	#main header#requests {
-		background-image: url('/sweet/assets/css/images/ordering.png');
+		background-image: url('/S.A.C/assets/css/images/ordering.png');
 		background-position: center 50%;
 		position: relative;
 		display: block;
@@ -4197,14 +4197,14 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	}
 
 	#main > header#connect {
-		background-image: url('/sweet/assets/css/images/lounge.png');
+		background-image: url('/S.A.C/assets/css/images/lounge.png');
 		background-position: center 100%;	
 		position: relative;
 	display: block;
 	}
 
 	#main > header#blog {
-		background-image: url('/sweet/assets/css/images/blog.png');
+		background-image: url('/S.A.C/assets/css/images/blog.png');
 		background-position: center 100%;
 	position: relative;
 	top: 20%;

@@ -2,6 +2,8 @@
 // --- Configuration & Imports ---
 
 // 1. Define PORT and Load Environment Variables (MUST be first line after defining PORT)
+const serverless = require('serverless-http');
+
 const PORT = process.env.PORT || 8080; 
 
 require('dotenv').config();
@@ -207,12 +209,5 @@ app.post('/submit_connect', async (req, res) => {
 });
 
 
-// --- 5. Start the Server ---
-app.listen(PORT, () => {
-    console.log(`\n======================================================`);
-    console.log(`🚀 Server is running on http://localhost:${PORT}`);
-    console.log(`------------------------------------------------------`);
-    console.log(` Order Endpoint: http://localhost:${PORT}/submit-order`);
-    console.log(` Connect Endpoint: http://localhost:${PORT}/submit_connect`);
-    console.log(`======================================================`);
-});
+module.exports.handler = serverless(app);
+

@@ -7,7 +7,6 @@ exports.handler = async (event) => {
     }
 
     try {
-        // This handles both JSON and standard Form URL-encoded data
         let data;
         if (event.headers['content-type'] === 'application/json') {
             data = JSON.parse(event.body);
@@ -27,14 +26,22 @@ exports.handler = async (event) => {
             from: process.env.G_SENDER_EMAIL,
             to: process.env.G_SENDER_EMAIL, 
             subject: `Connect Form: ${data.name || 'New Message'}`,
-            text: `You have a new message:\n\nName: ${data.name}\nEmail: ${data.email}\nMessage: ${data.message}`
+            text: `New Message Details:
+--------------------------------------------------
+Name: ${data.name}
+Email: ${data.email}
+
+Message:
+${data.message}
+--------------------------------------------------`
         };
 
         await transporter.sendMail(mailOptions);
 
         return { 
-            statusCode: 200, 
-            body: JSON.stringify({ message: "Success! Message Sent." }) 
+            statusCode: 302, 
+            headers: { "Location": "/success.html" },
+            body: JSON.stringify({ message: "Success" }) 
         };
     } catch (error) {
         return { 

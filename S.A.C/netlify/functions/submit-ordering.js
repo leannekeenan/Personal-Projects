@@ -22,18 +22,42 @@ exports.handler = async (event) => {
             }
         });
 
+        // Helper function to only list items that have a quantity > 0
+        const orderSummary = Object.entries(data)
+            .filter(([key, val]) => val > 0 && key.includes('_qty'))
+            .map(([key, val]) => `${key.replace(/_/g, ' ')}: ${val}`)
+            .join('\n');
+
         const mailOptions = {
             from: process.env.G_SENDER_EMAIL,
             to: process.env.G_SENDER_EMAIL,
-            subject: `NEW ORDER: ${data.name || 'Customer'}`,
-            text: `New Order Received:\n\nName: ${data.name}\nEmail: ${data.email}\nItems: ${data.items}\nAddress: ${data.address}\nTotal: ${data.total}\nNotes: ${data.message}`
+            subject: `NEW ORDER: ${data.customer_name}`,
+            text: `New Order Details:
+--------------------------------------------------
+CUSTOMER INFO:
+Name: ${data.customer_name}
+Email: ${data.customer_email}
+Phone: ${data.phone_number}
+
+DELIVERY INFO:
+Address: ${data.delivery_address}
+Date: ${data.delivery_date}
+Time Window: ${data.delivery_time}
+
+ITEMS ORDERED:
+${orderSummary || "No items selected"}
+
+SPECIAL INSTRUCTIONS:
+${data.special_instructions || "None provided"}
+--------------------------------------------------`
         };
 
         await transporter.sendMail(mailOptions);
 
         return { 
-            statusCode: 200, 
-            body: JSON.stringify({ message: "Success! Order Received." }) 
+            statusCode: 302, 
+            headers: { "Location": "/success.html" },
+            body: JSON.stringify({ message: "Order Sent" }) 
         };
     } catch (error) {
         return { 

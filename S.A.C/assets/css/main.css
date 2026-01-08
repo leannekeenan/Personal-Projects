@@ -4114,28 +4114,28 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	
 
 	#main > header#cookies {
-		background-image: url('../css/images/images/cookies.png');
+		background-image: url('../css/images/cookies.png');
 		background-position: center 20%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#cinnamon {
-		background-image: url('../css/images/images/cinnamon.png');
+		background-image: url('../css/images/cinnamon.png');
 		background-position: center 45%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#peanutbutter {
-		background-image: url('../css/images/images/pb cropped.png');
+		background-image: url('../css/images/pb cropped.png');
 		background-position: center 50%;
 	position: relative;
 	display: block;
 	}
 
 	#main > header#spring {
-		background-image: url('../css/images/images/strawberry.png');
+		background-image: url('../css/images/strawberry.png');
 		background-position: center 80%;
 	position: relative;
 	display: block;

@@ -3867,7 +3867,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		overflow: hidden;
 		position: relative;
 		text-align: center;
-		background-image: url('../css/images/logo.png');
+		background-image: url('../css/images/kitchen.png');
     	background-size: cover;
     	background-repeat: no-repeat;
     	background-position: center center;

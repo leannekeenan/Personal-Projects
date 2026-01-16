@@ -13,30 +13,38 @@ function Dashboard() {
   
   const hd = new Holidays('US');
 
-  // Restored: Service is now a single string, defaulted to your first option
   const [formData, setFormData] = useState({
     clientName: '',
     email: '', 
     phone: '',
     service: 'Consultation', 
     date: '', 
-    notes: 'Phone booking',
+    notes: '', 
     consent: true 
   });
 
   useEffect(() => { fetchData(); }, []);
 
+  // RESTORED & UPDATED: Capacity-aware availability check
   useEffect(() => {
-    const checkAvailability = async () => {
-      const yyyy = selectedDate.getFullYear();
-      const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
-      const dd = String(selectedDate.getDate()).padStart(2, '0');
-      try {
-        const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${yyyy}-${mm}-${dd}`);
-        setBookedTimes(res.data.map(apt => new Date(apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })));
-      } catch (err) { console.error("Availability error:", err); }
+    const fetchAvailability = async () => {
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        try {
+            const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${formattedDate}`);
+            
+            // Count occurrences of each time slot
+            const counts = {};
+            res.data.forEach(a => {
+                const time = new Date(a.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                counts[time] = (counts[time] || 0) + 1;
+            });
+
+            // Only "block" the time if it has been booked 2 or more times
+            const blocked = Object.keys(counts).filter(time => counts[time] >= 2);
+            setBookedTimes(blocked);
+        } catch (e) { console.error("API Error", e); }
     };
-    checkAvailability();
+    fetchAvailability();
   }, [selectedDate]);
 
   const fetchData = async () => {
@@ -55,6 +63,14 @@ function Dashboard() {
 
   const handleManualSubmit = async (e) => {
     e.preventDefault();
+    
+    // Safety check for Admin manual entry
+    const timeString = new Date(formData.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (bookedTimes.includes(timeString)) {
+        alert(`❌ This slot (${timeString}) is already at max capacity (2 bookings).`);
+        return;
+    }
+
     try {
       await axios.post('http://localhost:5000/api/appointments', formData);
       alert("✅ Appointment added and Email Sent!");
@@ -83,7 +99,6 @@ function Dashboard() {
             <input type="tel" placeholder="Phone Number" required onChange={e => setFormData({...formData, phone: e.target.value})} />
             <input type="email" placeholder="Customer Email Address" required onChange={e => setFormData({...formData, email: e.target.value})} />
             
-            {/* RESTORED: Dropdown Menu */}
             <label>Service Type:</label>
             <select 
               className="service-dropdown"
@@ -108,8 +123,15 @@ function Dashboard() {
                 setFormData({...formData, date: d});
             }} />
 
+            <textarea 
+                placeholder="Admin Notes (e.g., Phone booking details)" 
+                value={formData.notes}
+                onChange={e => setFormData({...formData, notes: e.target.value})}
+            ></textarea>
+
+            {/* This will now only show times that have hit the 2-person limit */}
             {bookedTimes.length > 0 && (
-              <div className="booked-warning">Already Booked: {bookedTimes.join(', ')}</div>
+              <div className="booked-warning">Fully Booked (2/2): {bookedTimes.join(', ')}</div>
             )}
             
             <button type="submit" className="save-btn">Confirm Appointment</button>
@@ -117,7 +139,6 @@ function Dashboard() {
         </div>
       )}
 
-      {/* Table remains the same */}
       <table className="admin-table">
         <thead>
           <tr>
@@ -125,6 +146,7 @@ function Dashboard() {
             <th>Phone</th>
             <th>Email</th>
             <th>Service</th>
+            <th>Notes</th>
             <th>Date & Time</th>
             <th>Actions</th>
           </tr>
@@ -136,6 +158,7 @@ function Dashboard() {
               <td>{apt.phone}</td>
               <td>{apt.email}</td>
               <td>{apt.service}</td>
+              <td>{apt.notes}</td>
               <td>{new Date(apt.date).toLocaleString()}</td>
               <td>
                 <button className="delete-btn" onClick={async () => { 

@@ -25,7 +25,17 @@ export default function App() {
             const formattedDate = selectedDate.toISOString().split('T')[0];
             try {
                 const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${formattedDate}`);
-                setBookedTimes(res.data.map(a => new Date(a.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })));
+                
+                // Count occurrences of each time slot
+                const counts = {};
+                res.data.forEach(a => {
+                    const time = new Date(a.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    counts[time] = (counts[time] || 0) + 1;
+                });
+
+                // Only "block" the time if it has been booked 2 or more times
+                const blocked = Object.keys(counts).filter(time => counts[time] >= 2);
+                setBookedTimes(blocked);
             } catch (e) { console.error("API Error", e); }
         };
         fetchAvailability();
@@ -39,6 +49,30 @@ export default function App() {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+
+        const d = new Date(formData.date);
+        const hours = d.getHours();
+        const minutes = d.getMinutes();
+        const timeString = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Enforce 8 AM to 6 PM Operating Hours
+        if (hours < 8 || hours >= 18) {
+            alert("❌ Please choose a time between 8:00 AM and 6:00 PM.");
+            return;
+        }
+
+        // Enforce 15-Minute Intervals
+        if (![0, 15, 30, 45].includes(minutes)) {
+            alert("❌ Appointments must be booked in 15-minute increments (e.g., :00, :15, :30, :45).");
+            return;
+        }
+
+        // Prevent Double Booking (Max 2 slots)
+        if (bookedTimes.includes(timeString)) {
+            alert(`❌ The ${timeString} slot is fully booked. Please choose another time.`);
+            return;
+        }
+
         try {
             await axios.post('http://localhost:5000/api/appointments', formData);
             alert("✅ Booking Confirmed! A confirmation email has been sent.");
@@ -75,13 +109,13 @@ export default function App() {
                     setFormData({...formData, date: d});
                 }} />
 
-                {/* Added: Notes Textarea */}
+                {/* Notes Textarea */}
                 <textarea 
                     placeholder="Notes (optional)" 
                     onChange={e => setFormData({...formData, notes: e.target.value})} 
                 ></textarea>
 
-                {bookedTimes.length > 0 && <div className="booked-list">Taken: {bookedTimes.join(', ')}</div>}
+                {bookedTimes.length > 0 && <div className="booked-list">Fully Booked (2/2): {bookedTimes.join(', ')}</div>}
                 
                 <label className="consent-label">
                     <input type="checkbox" required onChange={e => setFormData({...formData, consent: e.target.checked})} /> 

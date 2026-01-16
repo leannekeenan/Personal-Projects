@@ -6,11 +6,14 @@ require('dotenv').config();
 
 const Appointment = require('./models/Appointment'); 
 
+const adminRoutes = require('./modules/Admin');
+
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/api/admin', adminRoutes);
 
 // Set up the email transporter
 // This uses the credentials from your .env file

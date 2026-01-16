@@ -2,26 +2,28 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../App.css'; 
 
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import '../App.css'; 
+
 function Dashboard() {
   const [appointments, setAppointments] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   
-  // 1. Initial State includes all required fields: phone and consent
   const [formData, setFormData] = useState({
     clientName: '',
-    email: 'walk-in@example.com', // Default for manual entries
-    phone: '',                    // Now captured via input
+    email: 'walk-in@example.com', 
+    phone: '',
     service: 'Consultation',
     date: '',
     notes: 'Phone booking',
-    consent: true                 // Set to true for admin manual adds
+    consent: true 
   });
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  // 2. Fetches the list from the admin route
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/admin/appointments');
@@ -31,7 +33,6 @@ function Dashboard() {
     }
   };
 
-  // 3. Submits to the main appointment route to trigger email notifications
   const handleManualSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -39,7 +40,6 @@ function Dashboard() {
       alert("✅ Booking added successfully!");
       setShowAddForm(false);
       
-      // Reset form data for the next entry
       setFormData({
         clientName: '',
         email: 'walk-in@example.com',
@@ -50,22 +50,19 @@ function Dashboard() {
         consent: true 
       });
 
-      fetchData(); // Refresh the table automatically
+      fetchData();
     } catch (err) {
-      // Shows the specific error (like "phone is required") if it fails
-      alert("❌ Error: " + (err.response?.data?.message || "Check server connection"));
-      console.error(err);
+      alert("❌ Error: " + (err.response?.data?.message || "Check server"));
     }
   };
 
-  // 4. Deletes via the admin-specific route
   const deleteAppointment = async (id) => {
-    if (window.confirm("Are you sure you want to cancel this booking?")) {
+    if (window.confirm("Are you sure?")) {
       try {
         await axios.delete(`http://localhost:5000/api/admin/appointments/${id}`);
         fetchData(); 
       } catch (err) {
-        alert("Error deleting appointment");
+        alert("Error deleting");
       }
     }
   };
@@ -79,12 +76,10 @@ function Dashboard() {
         </button>
       </div>
 
-      {/* MANUAL ENTRY FORM */}
       {showAddForm && (
         <div className="form-overlay">
           <form className="manual-form" onSubmit={handleManualSubmit}>
             <h3>New Manual Booking</h3>
-            
             <input 
               type="text" 
               placeholder="Client Name" 
@@ -92,7 +87,6 @@ function Dashboard() {
               value={formData.clientName}
               onChange={e => setFormData({...formData, clientName: e.target.value})} 
             />
-
             <input 
               type="tel" 
               placeholder="Phone Number" 
@@ -100,40 +94,41 @@ function Dashboard() {
               value={formData.phone}
               onChange={e => setFormData({...formData, phone: e.target.value})} 
             />
-
+            {/* FIXED: Changed clientEmail to email to match state */}
+            <input 
+              type="email" 
+              placeholder="Client Email" 
+              required 
+              value={formData.email}
+              onChange={e => setFormData({...formData, email: e.target.value})} 
+            />
             <input 
               type="datetime-local" 
               required 
               value={formData.date}
               onChange={e => setFormData({...formData, date: e.target.value})} 
             />
-            
-            <select 
-              value={formData.service}
-              onChange={e => setFormData({...formData, service: e.target.value})}
-            >
+            <select value={formData.service} onChange={e => setFormData({...formData, service: e.target.value})}>
               <option value="Consultation">Consultation</option>
-              <option value="Haircut">Haircut</option>
-              <option value="Coloring">Coloring</option>
+              <option value="one">one</option>
+              <option value="two">two</option>
             </select>
-
             <textarea 
-              placeholder="Notes (Optional)"
+              placeholder="Notes"
               value={formData.notes}
               onChange={e => setFormData({...formData, notes: e.target.value})}
             />
-            
             <button type="submit" className="save-btn">Save to Database</button>
           </form>
         </div>
       )}
 
-      {/* APPOINTMENT TABLE */}
       <table className="admin-table">
         <thead>
           <tr>
             <th>Client</th>
             <th>Phone</th>
+            <th>Email</th>
             <th>Service</th>
             <th>Date & Time</th>
             <th>Actions</th>
@@ -145,19 +140,16 @@ function Dashboard() {
               <tr key={apt._id}>
                 <td>{apt.clientName}</td>
                 <td>{apt.phone}</td>
+                <td>{apt.email}</td>
                 <td>{apt.service}</td>
                 <td>{new Date(apt.date).toLocaleString()}</td>
                 <td>
-                  <button onClick={() => deleteAppointment(apt._id)} className="delete-btn">
-                    Cancel
-                  </button>
+                  <button onClick={() => deleteAppointment(apt._id)} className="delete-btn">Cancel</button>
                 </td>
               </tr>
             ))
           ) : (
-            <tr>
-              <td colSpan="5" style={{ textAlign: 'center' }}>No appointments found.</td>
-            </tr>
+            <tr><td colSpan="6" style={{ textAlign: 'center' }}>No appointments found.</td></tr>
           )}
         </tbody>
       </table>

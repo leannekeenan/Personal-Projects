@@ -23,3 +23,18 @@ mongoose.connect(process.env.MONGO_URI)
     app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
   })
   .catch(err => console.log('❌ DB Error:', err));
+
+// add a "POST" route to create a new appointment
+
+  const Appointment = require('./models/Appointment'); // Import the model we made
+
+// CREATE a new appointment
+app.post('/api/appointments', async (req, res) => {
+  try {
+    const newAppointment = new Appointment(req.body);
+    const savedAppointment = await newAppointment.save();
+    res.status(201).json(savedAppointment);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});

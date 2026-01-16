@@ -2,12 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+const Holidays = require('date-holidays'); // Added
 require('dotenv').config();
 
 const Appointment = require('./models/Appointment'); 
 const adminRoutes = require('./models/Admin'); 
 
 const app = express();
+const hd = new Holidays('US'); // Initialize US Holidays
+
 app.use(cors());
 app.use(express.json());
 app.use('/api/admin', adminRoutes);
@@ -20,19 +23,17 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// NEW ROUTE: Check availability for a specific date
+// Check availability for a specific date
 app.get('/api/appointments/check', async (req, res) => {
   try {
-    const { date } = req.query; // Expects YYYY-MM-DD
+    const { date } = req.query; 
     if (!date) return res.status(400).json({ message: "Date is required" });
 
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
-    
     const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
 
-    // Find all appointments on that specific day
     const takenSlots = await Appointment.find({
       date: { $gte: startOfDay, $lte: endOfDay }
     }).select('date -_id');
@@ -43,9 +44,20 @@ app.get('/api/appointments/check', async (req, res) => {
   }
 });
 
-// MAIN POST ROUTE: Save booking and send email
+// Save booking with Holiday/Weekend Protection
 app.post('/api/appointments', async (req, res) => {
   try {
+    const bookingDate = new Date(req.body.date);
+    
+    // Server-side validation
+    const holidayCheck = hd.isHoliday(bookingDate);
+    const isWeekend = bookingDate.getDay() === 0 || bookingDate.getDay() === 6;
+    const isHoliday = holidayCheck && holidayCheck.some(h => h.type === 'public');
+
+    if (isWeekend || isHoliday) {
+      return res.status(400).json({ message: "We are closed on weekends and holidays." });
+    }
+
     const newAppointment = new Appointment(req.body);
     const savedAppointment = await newAppointment.save();
 

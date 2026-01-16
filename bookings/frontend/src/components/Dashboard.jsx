@@ -1,55 +1,58 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../App.css';
+import '../App.css'; 
 
 function Dashboard() {
   const [appointments, setAppointments] = useState([]);
-  // State for the "Manual Add" form
   const [showAddForm, setShowAddForm] = useState(false);
+  
+  // 1. Initial State includes 'consent: true' to satisfy Database requirements
   const [formData, setFormData] = useState({
     clientName: '',
-    email: 'walk-in@example.com', // Default for call-ins
+    email: 'walk-in@example.com',
     phone: '',
     service: 'Consultation',
     date: '',
-    new: false,
     notes: 'Phone booking',
-    consent: true
+    consent: true 
   });
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  // 2. Fetches from the /api/admin route
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/appointments');
+      const res = await axios.get('http://localhost:5000/api/admin/appointments');
       setAppointments(res.data);
     } catch (err) {
       console.error("Error fetching data", err);
     }
   };
 
+  // 3. Adds via the /api/appointments route (to trigger emails)
   const handleManualSubmit = async (e) => {
     e.preventDefault();
     try {
-      // We send this to the regular POST route we already created!
       await axios.post('http://localhost:5000/api/appointments', formData);
-      alert("Booking added successfully");
+      alert("✅ Booking added successfully!");
       setShowAddForm(false);
-      fetchData(); // Refresh table
+      fetchData(); // Refresh the table
     } catch (err) {
-      alert("Error adding booking");
+      alert("❌ Error: " + (err.response?.data?.message || "Check console"));
+      console.error(err);
     }
   };
 
+  // 4. Deletes via the /api/admin route
   const deleteAppointment = async (id) => {
-    if (window.confirm("Delete this booking?")) {
+    if (window.confirm("Are you sure you want to cancel this booking?")) {
       try {
         await axios.delete(`http://localhost:5000/api/admin/appointments/${id}`);
-        fetchData();
+        fetchData(); 
       } catch (err) {
-        alert("Error deleting");
+        alert("Error deleting appointment");
       }
     }
   };
@@ -59,32 +62,39 @@ function Dashboard() {
       <div className="admin-header">
         <h1>Appointment Manager</h1>
         <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
-          {showAddForm ? "Close Form" : "+ Add Call-in"}
+          {showAddForm ? "Close" : "+ Add Call-in"}
         </button>
       </div>
 
       {showAddForm && (
         <form className="manual-form" onSubmit={handleManualSubmit}>
-          <input type="text" placeholder="Name" required onChange={e => setFormData({...formData, clientName: e.target.value})} />
-          <input type="tel" placeholder="Phone" onChange={e => setFormData({...formData, phone: e.target.value})} />
+          <input 
+            type="text" 
+            placeholder="Client Name" 
+            required 
+            onChange={e => setFormData({...formData, clientName: e.target.value})} 
+          />
+          <input 
+            type="datetime-local" 
+            required 
+            onChange={e => setFormData({...formData, date: e.target.value})} 
+          />
           <select onChange={e => setFormData({...formData, service: e.target.value})}>
             <option value="Consultation">Consultation</option>
             <option value="Haircut">Haircut</option>
             <option value="Coloring">Coloring</option>
           </select>
-          <input type="datetime-local" required onChange={e => setFormData({...formData, date: e.target.value})} />
-          <button type="submit">Save Booking</button>
+          <button type="submit">Save to Database</button>
         </form>
       )}
 
       <table className="admin-table">
-        {/* ... (Same table structure as before) ... */}
         <thead>
           <tr>
             <th>Client</th>
             <th>Service</th>
             <th>Date & Time</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -94,7 +104,9 @@ function Dashboard() {
               <td>{apt.service}</td>
               <td>{new Date(apt.date).toLocaleString()}</td>
               <td>
-                <button onClick={() => deleteAppointment(apt._id)} className="delete-btn">Cancel</button>
+                <button onClick={() => deleteAppointment(apt._id)} className="delete-btn">
+                  Cancel
+                </button>
               </td>
             </tr>
           ))}

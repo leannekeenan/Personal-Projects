@@ -13,7 +13,8 @@ function Dashboard() {
     service: 'Consultation',
     date: '',
     new: false,
-    notes: 'Phone booking'
+    notes: 'Phone booking',
+    consent: true
   });
 
   useEffect(() => {

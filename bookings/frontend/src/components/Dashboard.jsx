@@ -23,26 +23,36 @@ function Dashboard() {
     consent: true 
   });
 
+  // Helper to generate the exact 15-minute intervals requested (8AM to 6PM)
+  const generateTimeSlots = () => {
+    const slots = [];
+    for (let hour = 8; hour < 18; hour++) {
+        ['00', '15', '30', '45'].forEach(min => {
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+            slots.push(`${hour12}:${min} ${ampm}`);
+        });
+    }
+    return slots;
+  };
+
   useEffect(() => { fetchData(); }, []);
 
-  // RESTORED & UPDATED: Capacity-aware availability check
   useEffect(() => {
     const fetchAvailability = async () => {
-        const formattedDate = selectedDate.toISOString().split('T')[0];
+        const yyyy = selectedDate.getFullYear();
+        const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(selectedDate.getDate()).padStart(2, '0');
         try {
-            const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${formattedDate}`);
-            
-            // Count occurrences of each time slot
+            const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${yyyy}-${mm}-${dd}`);
             const counts = {};
             res.data.forEach(a => {
-                const time = new Date(a.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const time = new Date(a.date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
                 counts[time] = (counts[time] || 0) + 1;
             });
-
-            // Only "block" the time if it has been booked 2 or more times
             const blocked = Object.keys(counts).filter(time => counts[time] >= 2);
             setBookedTimes(blocked);
-        } catch (e) { console.error("API Error", e); }
+        } catch (e) { console.error("Availability error:", e); }
     };
     fetchAvailability();
   }, [selectedDate]);
@@ -54,6 +64,18 @@ function Dashboard() {
     } catch (err) { console.error("Fetch error:", err); }
   };
 
+  const handleTimeSelection = (timeStr) => {
+    if (!timeStr) return;
+    const [time, modifier] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':');
+    if (hours === '12') hours = '00';
+    if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
+    
+    const updatedDate = new Date(selectedDate);
+    updatedDate.setHours(hours, minutes, 0, 0);
+    setFormData({ ...formData, date: updatedDate });
+  };
+
   const tileDisabled = ({ date, view }) => {
     if (view === 'month') {
       const isHoliday = hd.isHoliday(date);
@@ -63,13 +85,7 @@ function Dashboard() {
 
   const handleManualSubmit = async (e) => {
     e.preventDefault();
-    
-    // Safety check for Admin manual entry
-    const timeString = new Date(formData.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    if (bookedTimes.includes(timeString)) {
-        alert(`❌ This slot (${timeString}) is already at max capacity (2 bookings).`);
-        return;
-    }
+    if (!formData.date) return alert("Please select a time slot.");
 
     try {
       await axios.post('http://localhost:5000/api/appointments', formData);
@@ -100,12 +116,7 @@ function Dashboard() {
             <input type="email" placeholder="Customer Email Address" required onChange={e => setFormData({...formData, email: e.target.value})} />
             
             <label>Service Type:</label>
-            <select 
-              className="service-dropdown"
-              value={formData.service} 
-              required 
-              onChange={e => setFormData({...formData, service: e.target.value})}
-            >
+            <select className="service-dropdown" value={formData.service} required onChange={e => setFormData({...formData, service: e.target.value})}>
               <option value="Consultation">Consultation</option>
               <option value="Follow-up">Follow-up</option>
               <option value="Emergency">Emergency</option>
@@ -116,23 +127,22 @@ function Dashboard() {
                <Calendar onChange={setSelectedDate} value={selectedDate} minDate={new Date()} tileDisabled={tileDisabled} />
             </div>
 
-            <h4>Choose a Time:</h4>
-            <input type="time" required onChange={e => {
-                const [h, m] = e.target.value.split(':');
-                const d = new Date(selectedDate); d.setHours(h, m);
-                setFormData({...formData, date: d});
-            }} />
+            {/* RESTRICTED: 15-Minute Dropdown replaces manual time input */}
+            <h4>Choose a Time (15 min intervals):</h4>
+            <select className="service-dropdown" required onChange={(e) => handleTimeSelection(e.target.value)}>
+                <option value="">-- Choose a Time --</option>
+                {generateTimeSlots().map(slot => (
+                    <option key={slot} value={slot} disabled={bookedTimes.includes(slot)}>
+                        {slot} {bookedTimes.includes(slot) ? "(Fully Booked)" : ""}
+                    </option>
+                ))}
+            </select>
 
             <textarea 
                 placeholder="Admin Notes (e.g., Phone booking details)" 
                 value={formData.notes}
                 onChange={e => setFormData({...formData, notes: e.target.value})}
             ></textarea>
-
-            {/* This will now only show times that have hit the 2-person limit */}
-            {bookedTimes.length > 0 && (
-              <div className="booked-warning">Fully Booked (2/2): {bookedTimes.join(', ')}</div>
-            )}
             
             <button type="submit" className="save-btn">Confirm Appointment</button>
           </form>

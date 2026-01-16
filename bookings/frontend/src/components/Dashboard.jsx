@@ -22,7 +22,7 @@ function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/appointments');
+      const res = await axios.get('http://localhost:5000/api/appointments');
       setAppointments(res.data);
     } catch (err) {
       console.error("Error fetching data", err);

@@ -32,11 +32,12 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
-  /* background-color is already inherited from :root */
+  display: block; /* Ensure it's not flex */
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 h1 {

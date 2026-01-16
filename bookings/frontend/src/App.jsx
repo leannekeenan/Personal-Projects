@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import Holidays from 'date-holidays';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Dashboard from './Dashboard';
+import CRM from './CRM';
 import 'react-calendar/dist/Calendar.css';
 import './App.css';
 
-export default function App() {
-    // Choice State: null = no choice, 'new' = new customer, 'returning' = returning customer
+// --- CLIENT FACING BOOKING COMPONENT ---
+function BookingForm() {
     const [customerType, setCustomerType] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [bookedTimes, setBookedTimes] = useState([]);
@@ -75,13 +78,15 @@ export default function App() {
             return;
         }
         try {
-            await axios.post('http://localhost:5000/api/appointments', formData);
+            await axios.post('http://localhost:5000/api/appointments', {
+                ...formData,
+                customerType: customerType // Pass the type chosen at the start
+            });
             alert("✅ Booking Confirmed! A confirmation email has been sent.");
             window.location.reload();
         } catch (err) { alert(err.response?.data?.message || "Error"); }
     };
 
-    // Initial Screen: Choose New or Returning
     if (customerType === null) {
         return (
             <div className="booking-container choice-container">
@@ -108,12 +113,7 @@ export default function App() {
                 <input type="tel" placeholder="Phone" required onChange={e => setFormData({...formData, phone: e.target.value})} />
                 
                 <label className="field-label">Select Service:</label>
-                <select 
-                    className="service-dropdown"
-                    value={formData.service} 
-                    required 
-                    onChange={e => setFormData({...formData, service: e.target.value})}
-                >
+                <select className="service-dropdown" value={formData.service} required onChange={e => setFormData({...formData, service: e.target.value})}>
                     <option value="Consultation">Consultation</option>
                     <option value="Follow-up">Follow-up</option>
                     <option value="Emergency">Emergency</option>
@@ -122,11 +122,7 @@ export default function App() {
                 <Calendar onChange={setSelectedDate} value={selectedDate} minDate={new Date()} tileDisabled={isDateDisabled} />
                 
                 <label className="field-label">Select Appointment Time:</label>
-                <select 
-                    className="service-dropdown" 
-                    required 
-                    onChange={(e) => handleTimeSelection(e.target.value)}
-                >
+                <select className="service-dropdown" required onChange={(e) => handleTimeSelection(e.target.value)}>
                     <option value="">-- Choose a Time --</option>
                     {generateTimeSlots().map(slot => (
                         <option key={slot} value={slot} disabled={bookedTimes.includes(slot)}>
@@ -135,10 +131,7 @@ export default function App() {
                     ))}
                 </select>
 
-                <textarea 
-                    placeholder="Notes (optional)" 
-                    onChange={e => setFormData({...formData, notes: e.target.value})} 
-                ></textarea>
+                <textarea placeholder="Notes (optional)" onChange={e => setFormData({...formData, notes: e.target.value})}></textarea>
 
                 <label className="consent-label">
                     <input type="checkbox" required onChange={e => setFormData({...formData, consent: e.target.checked})} /> 
@@ -149,4 +142,20 @@ export default function App() {
             </form>
         </div>
     );
+}
+
+// --- MAIN APP ROUTER ---
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        {/* Public Route */}
+        <Route path="/" element={<BookingForm />} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin" element={<Dashboard />} />
+        <Route path="/crm" element={<CRM />} />
+      </Routes>
+    </Router>
+  );
 }

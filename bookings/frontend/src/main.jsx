@@ -9,12 +9,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        {/* This is the public booking page */}
+        {/* Public booking page */}
         <Route path="/" element={<App />} />
         
-        {/* This is your secret admin page */}
+        {/* Admin page */}
         <Route path="/admin" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>,
+  </React.StrictMode>
 )

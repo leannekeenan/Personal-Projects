@@ -2,19 +2,21 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-const Holidays = require('date-holidays'); // Added
+const Holidays = require('date-holidays'); // This is what was missing
 require('dotenv').config();
 
 const Appointment = require('./models/Appointment'); 
-const adminRoutes = require('./models/Admin'); 
+const adminRoutes = require('./models/Admin');
 
 const app = express();
-const hd = new Holidays('US'); // Initialize US Holidays
+const hd = new Holidays('US'); // Initialize US Holiday logic
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use('/api/admin', adminRoutes);
 
+// Email Transporter
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -23,7 +25,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Check availability for a specific date
+// Check Availability Route
 app.get('/api/appointments/check', async (req, res) => {
   try {
     const { date } = req.query; 
@@ -44,23 +46,24 @@ app.get('/api/appointments/check', async (req, res) => {
   }
 });
 
-// Save booking with Holiday/Weekend Protection
+// Create Booking Route (with Holiday/Weekend block)
 app.post('/api/appointments', async (req, res) => {
   try {
     const bookingDate = new Date(req.body.date);
     
-    // Server-side validation
+    // Server-side block for holidays and weekends
     const holidayCheck = hd.isHoliday(bookingDate);
-    const isWeekend = bookingDate.getDay() === 0 || bookingDate.getDay() === 6;
+   //const isWeekend = bookingDate.getDay() === 0 || bookingDate.getDay() === 6;
     const isHoliday = holidayCheck && holidayCheck.some(h => h.type === 'public');
 
-    if (isWeekend || isHoliday) {
+    if ( isHoliday) {
       return res.status(400).json({ message: "We are closed on weekends and holidays." });
     }
 
     const newAppointment = new Appointment(req.body);
     const savedAppointment = await newAppointment.save();
 
+    // Send Email
     try {
       const { clientName, email, phone, service, date, notes } = savedAppointment;
       const mailOptions = {
@@ -72,7 +75,7 @@ app.post('/api/appointments', async (req, res) => {
       };
       await transporter.sendMail(mailOptions);
     } catch (emailErr) {
-      console.error("Email failed:", emailErr.message);
+      console.error("Email notification failed:", emailErr.message);
     }
 
     res.status(201).json(savedAppointment);

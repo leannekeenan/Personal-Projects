@@ -53,19 +53,31 @@
 
 .admin-header {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 70%;
+  gap: 10px;
+  align-items: center;
 }
 
 .search-input {
   padding: 15px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  width: 99vw;
+  width: 90%;
   margin: 0 auto;
-  height: 2rem;
+  height: 1.5rem;
 }
+
+
 
 .add-btn {
   background-color: #4CAF50;
@@ -82,6 +94,24 @@
   flex-direction: column;
   justify-content: center;
   margin: 0 auto
+}
+
+/* Mobile-specific Side-Scroll */
+@media screen and (max-width: 768px) {
+  .admin-table {
+    display: block; /* Required for overflow-x to work on tables */
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap; /* Keeps columns from squishing/wrapping */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+  }
+
+  /* Keep the text readable while scrolling */
+  .admin-table th, 
+  .admin-table td {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+  }
 }
 
 .manual-form {

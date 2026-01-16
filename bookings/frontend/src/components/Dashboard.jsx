@@ -90,12 +90,10 @@ function Dashboard() {
     } catch (err) { alert("❌ " + (err.response?.data?.message || "Error saving booking")); }
   };
 
-  // UPDATED FILTER LOGIC: Robust handling for 'new' and 'returning'
+  // MULTI-FIELD FILTER LOGIC (Case Insensitive)
   const filteredAppointments = appointments.filter(apt => {
-    // Standardize both values to lowercase to ensure 'Returning' matches 'returning'
     const aptType = (apt.customerType || 'new').toLowerCase();
     const currentFilter = filterType.toLowerCase();
-
     const matchesType = currentFilter === 'all' || aptType === currentFilter;
     
     const searchLower = searchTerm.toLowerCase();
@@ -112,12 +110,14 @@ function Dashboard() {
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
         
-        <div className="admin-top-controls">
+        <div className="admin-controls" style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
             <div className="filter-group">
                 <span>Filter List: </span>
-                <label><input type="radio" name="filter" checked={filterType === 'all'} onChange={() => setFilterType('all')} /> All</label>
-                <label style={{marginLeft: '10px'}}><input type="radio" name="filter" checked={filterType === 'new'} onChange={() => setFilterType('new')} /> New</label>
-                <label style={{marginLeft: '10px'}}><input type="radio" name="filter" checked={filterType === 'returning'} onChange={() => setFilterType('returning')} /> Returning</label>
+                <div>
+                    <label><input type="radio" name="filter" checked={filterType === 'all'} onChange={() => setFilterType('all')} /> All</label>
+                    <label><input type="radio" name="filter" checked={filterType === 'new'} onChange={() => setFilterType('new')} /> New</label>
+                    <label><input type="radio" name="filter" checked={filterType === 'returning'} onChange={() => setFilterType('returning')} /> Returning</label>
+                </div>
             </div>
             <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
               {showAddForm ? "Close Form" : "+ Add Manual Booking"}
@@ -164,7 +164,7 @@ function Dashboard() {
                <Calendar onChange={setSelectedDate} value={selectedDate} minDate={new Date()} />
             </div>
 
-            <h4>Choose a Time (15 min intervals):</h4>
+            <h4>Choose a Time:</h4>
             <select className="service-dropdown" required onChange={(e) => handleTimeSelection(e.target.value)}>
                 <option value="">-- Choose a Time --</option>
                 {generateTimeSlots().map(slot => (
@@ -215,7 +215,7 @@ function Dashboard() {
               </tr>
             ))
           ) : (
-            <tr><td colSpan="8" style={{textAlign: 'center', padding: '20px'}}>No appointments found matching your search.</td></tr>
+            <tr><td colSpan="8" style={{textAlign: 'center', padding: '20px'}}>No appointments found.</td></tr>
           )}
         </tbody>
       </table>

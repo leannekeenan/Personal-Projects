@@ -169,3 +169,27 @@ mongoose.connect(process.env.MONGO_URI)
     app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
   })
   .catch(err => console.log('❌ DB Error:', err));
+
+
+  // Get unique customers for the CRM
+app.get('/api/admin/customers', async (req, res) => {
+  try {
+    const customers = await Appointment.aggregate([
+      {
+        $group: {
+          _id: "$email", // Group by email to ensure uniqueness
+          clientName: { $first: "$clientName" },
+          phone: { $first: "$phone" },
+          email: { $first: "$email" },
+          customerType: { $first: "$customerType" },
+          totalBookings: { $sum: 1 },
+          lastVisit: { $max: "$date" }
+        }
+      },
+      { $sort: { clientName: 1 } }
+    ]);
+    res.json(customers);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});

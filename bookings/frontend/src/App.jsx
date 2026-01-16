@@ -6,21 +6,22 @@ import 'react-calendar/dist/Calendar.css';
 import './App.css';
 
 export default function App() {
+    // Choice State: null = no choice, 'new' = new customer, 'returning' = returning customer
+    const [customerType, setCustomerType] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [bookedTimes, setBookedTimes] = useState([]);
     const [formData, setFormData] = useState({ 
         clientName: '', 
         email: '', 
         phone: '', 
-        service: 'Consultation', // Default selection
-        notes: '', // Added notes to state
+        service: 'Consultation', 
+        notes: '', 
         date: '', 
         consent: false 
     });
     
     const hd = new Holidays('US');
 
-    // Helper to generate the exact 15-minute intervals requested
     const generateTimeSlots = () => {
         const slots = [];
         for (let hour = 8; hour < 18; hour++) {
@@ -38,15 +39,11 @@ export default function App() {
             const formattedDate = selectedDate.toISOString().split('T')[0];
             try {
                 const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${formattedDate}`);
-                
-                // Count occurrences to enforce the "Max 2 per slot" rule
                 const counts = {};
                 res.data.forEach(a => {
                     const time = new Date(a.date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
                     counts[time] = (counts[time] || 0) + 1;
                 });
-
-                // Only block the time if it has 2 or more bookings
                 const blocked = Object.keys(counts).filter(time => counts[time] >= 2);
                 setBookedTimes(blocked);
             } catch (e) { console.error("API Error", e); }
@@ -54,7 +51,6 @@ export default function App() {
         fetchAvailability();
     }, [selectedDate]);
 
-    // Helper to convert the dropdown string back into a Date object for the database
     const handleTimeSelection = (timeStr) => {
         if (!timeStr) return;
         const [time, modifier] = timeStr.split(' ');
@@ -85,9 +81,27 @@ export default function App() {
         } catch (err) { alert(err.response?.data?.message || "Error"); }
     };
 
+    // Initial Screen: Choose New or Returning
+    if (customerType === null) {
+        return (
+            <div className="booking-container choice-container">
+                <h2>Welcome! Please select an option:</h2>
+                <div className="button-group">
+                    <button className="choice-btn" onClick={() => setCustomerType('new')}>
+                        I am a New Customer
+                    </button>
+                    <button className="choice-btn" onClick={() => setCustomerType('returning')}>
+                        I am a Returning Customer
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="booking-container">
-            <h2>Book Appointment</h2>
+            <button className="back-btn" onClick={() => setCustomerType(null)}>← Back</button>
+            <h2>{customerType === 'new' ? 'New Customer Booking' : 'Returning Customer Booking'}</h2>
             <form onSubmit={handleFormSubmit}>
                 <input type="text" placeholder="Name" required onChange={e => setFormData({...formData, clientName: e.target.value})} />
                 <input type="email" placeholder="Email" required onChange={e => setFormData({...formData, email: e.target.value})} />
@@ -107,7 +121,6 @@ export default function App() {
 
                 <Calendar onChange={setSelectedDate} value={selectedDate} minDate={new Date()} tileDisabled={isDateDisabled} />
                 
-                {/* REPLACED: Manual time input replaced with restricted 15-minute dropdown */}
                 <label className="field-label">Select Appointment Time:</label>
                 <select 
                     className="service-dropdown" 

@@ -11,6 +11,10 @@ function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [bookedTimes, setBookedTimes] = useState([]);
   
+  // FILTER STATES
+  const [filterType, setFilterType] = useState('all'); 
+  const [searchTerm, setSearchTerm] = useState(''); // Added Search State
+  
   const hd = new Holidays('US');
 
   const [formData, setFormData] = useState({
@@ -20,10 +24,10 @@ function Dashboard() {
     service: 'Consultation', 
     date: '', 
     notes: '', 
-    consent: true 
+    consent: true,
+    customerType: 'new' 
   });
 
-  // Helper to generate the exact 15-minute intervals requested (8AM to 6PM)
   const generateTimeSlots = () => {
     const slots = [];
     for (let hour = 8; hour < 18; hour++) {
@@ -70,40 +74,65 @@ function Dashboard() {
     let [hours, minutes] = time.split(':');
     if (hours === '12') hours = '00';
     if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
-    
     const updatedDate = new Date(selectedDate);
     updatedDate.setHours(hours, minutes, 0, 0);
     setFormData({ ...formData, date: updatedDate });
   };
 
-  const tileDisabled = ({ date, view }) => {
-    if (view === 'month') {
-      const isHoliday = hd.isHoliday(date);
-      return (isHoliday && isHoliday.some(h => h.type === 'public'));
-    }
-  };
-
   const handleManualSubmit = async (e) => {
     e.preventDefault();
     if (!formData.date) return alert("Please select a time slot.");
-
     try {
       await axios.post('http://localhost:5000/api/appointments', formData);
-      alert("✅ Appointment added and Email Sent!");
+      alert("✅ Appointment added and CRM Updated!");
       setShowAddForm(false);
       fetchData();
-    } catch (err) { 
-      alert("❌ " + (err.response?.data?.message || "Error saving booking")); 
-    }
+    } catch (err) { alert("❌ " + (err.response?.data?.message || "Error saving booking")); }
   };
+
+  // MULTI-FIELD FILTER LOGIC: Handles both Radios and Search Bar
+  const filteredAppointments = appointments.filter(apt => {
+    // 1. Check Radio Button (New/Returning)
+    const matchesType = filterType === 'all' || apt.customerType === filterType;
+    
+    // 2. Check Search Bar (Name, Service, or Email)
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = 
+        apt.clientName.toLowerCase().includes(searchLower) || 
+        apt.service.toLowerCase().includes(searchLower) ||
+        apt.email.toLowerCase().includes(searchLower);
+
+    return matchesType && matchesSearch;
+  });
 
   return (
     <div className="admin-container">
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
-        <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
-          {showAddForm ? "Close Form" : "+ Add Manual Booking"}
-        </button>
+        
+        <div className="admin-filters-bar" style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '20px' }}>
+            {/* SEARCH INPUT FIELD */}
+            <input 
+                type="text" 
+                className="search-input"
+                placeholder="Search name, service, or email..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ padding: '8px', borderRadius: '5px', border: '1px solid #ccc', minWidth: '250px' }}
+            />
+
+            <div className="admin-controls" style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+                <div className="filter-group">
+                    <span>Filter List: </span>
+                    <label><input type="radio" name="filter" checked={filterType === 'all'} onChange={() => setFilterType('all')} /> All</label>
+                    <label style={{marginLeft: '10px'}}><input type="radio" name="filter" checked={filterType === 'new'} onChange={() => setFilterType('new')} /> New</label>
+                    <label style={{marginLeft: '10px'}}><input type="radio" name="filter" checked={filterType === 'returning'} onChange={() => setFilterType('returning')} /> Returning</label>
+                </div>
+                <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
+                  {showAddForm ? "Close Form" : "+ Add Manual Booking"}
+                </button>
+            </div>
+        </div>
       </div>
 
       {showAddForm && (
@@ -111,6 +140,15 @@ function Dashboard() {
           <form className="manual-form" onSubmit={handleManualSubmit}>
             <h3>Manual Call-in Entry</h3>
             
+            <div className="radio-selection">
+                <label>
+                    <input type="radio" name="custType" value="new" checked={formData.customerType === 'new'} onChange={e => setFormData({...formData, customerType: e.target.value})} /> New Customer
+                </label>
+                <label style={{marginLeft: '15px'}}>
+                    <input type="radio" name="custType" value="returning" checked={formData.customerType === 'returning'} onChange={e => setFormData({...formData, customerType: e.target.value})} /> Returning Customer
+                </label>
+            </div>
+
             <input type="text" placeholder="Client Name" required onChange={e => setFormData({...formData, clientName: e.target.value})} />
             <input type="tel" placeholder="Phone Number" required onChange={e => setFormData({...formData, phone: e.target.value})} />
             <input type="email" placeholder="Customer Email Address" required onChange={e => setFormData({...formData, email: e.target.value})} />
@@ -122,28 +160,21 @@ function Dashboard() {
               <option value="Emergency">Emergency</option>
             </select>
             
-            <h4>Select a date:</h4>
             <div className="calendar-box">
-               <Calendar onChange={setSelectedDate} value={selectedDate} minDate={new Date()} tileDisabled={tileDisabled} />
+               <Calendar onChange={setSelectedDate} value={selectedDate} minDate={new Date()} />
             </div>
 
-            {/* RESTRICTED: 15-Minute Dropdown replaces manual time input */}
             <h4>Choose a Time (15 min intervals):</h4>
             <select className="service-dropdown" required onChange={(e) => handleTimeSelection(e.target.value)}>
                 <option value="">-- Choose a Time --</option>
                 {generateTimeSlots().map(slot => (
                     <option key={slot} value={slot} disabled={bookedTimes.includes(slot)}>
-                        {slot} {bookedTimes.includes(slot) ? "(Fully Booked)" : ""}
+                        {slot} {bookedTimes.includes(slot) ? "(Full)" : ""}
                     </option>
                 ))}
             </select>
 
-            <textarea 
-                placeholder="Admin Notes (e.g., Phone booking details)" 
-                value={formData.notes}
-                onChange={e => setFormData({...formData, notes: e.target.value})}
-            ></textarea>
-            
+            <textarea placeholder="Admin Notes" value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})}></textarea>
             <button type="submit" className="save-btn">Confirm Appointment</button>
           </form>
         </div>
@@ -152,6 +183,7 @@ function Dashboard() {
       <table className="admin-table">
         <thead>
           <tr>
+            <th>Type</th>
             <th>Client</th>
             <th>Phone</th>
             <th>Email</th>
@@ -162,24 +194,29 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody>
-          {appointments.map(apt => (
-            <tr key={apt._id}>
-              <td>{apt.clientName}</td>
-              <td>{apt.phone}</td>
-              <td>{apt.email}</td>
-              <td>{apt.service}</td>
-              <td>{apt.notes}</td>
-              <td>{new Date(apt.date).toLocaleString()}</td>
-              <td>
-                <button className="delete-btn" onClick={async () => { 
-                  if(window.confirm("Are you sure?")) { 
-                    await axios.delete(`http://localhost:5000/api/admin/appointments/${apt._id}`); 
-                    fetchData(); 
-                  } 
-                }}>Cancel</button>
-              </td>
-            </tr>
-          ))}
+          {filteredAppointments.length > 0 ? (
+            filteredAppointments.map(apt => (
+              <tr key={apt._id}>
+                <td><span className={`badge ${apt.customerType || 'new'}`}>{apt.customerType || 'new'}</span></td>
+                <td>{apt.clientName}</td>
+                <td>{apt.phone}</td>
+                <td>{apt.email}</td>
+                <td>{apt.service}</td>
+                <td>{apt.notes}</td>
+                <td>{new Date(apt.date).toLocaleString()}</td>
+                <td>
+                  <button className="delete-btn" onClick={async () => { 
+                    if(window.confirm("Delete this appointment?")) { 
+                      await axios.delete(`http://localhost:5000/api/admin/appointments/${apt._id}`); 
+                      fetchData(); 
+                    } 
+                  }}>Cancel</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr><td colSpan="8" style={{textAlign: 'center', padding: '20px'}}>No appointments found matching your search.</td></tr>
+          )}
         </tbody>
       </table>
     </div>

@@ -11,6 +11,16 @@ const adminRoutes = require('./models/Admin');
 const app = express();
 const hd = new Holidays('US'); // Initialize US Holiday logic
 
+// CRM: Customer Schema and Model (Added for Returning Customer logic)
+const customerSchema = new mongoose.Schema({
+    clientName: String,
+    email: { type: String, unique: true },
+    phone: String,
+    lastBooking: Date,
+    appointmentCount: { type: Number, default: 1 }
+});
+const Customer = mongoose.model('Customer', customerSchema);
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -46,7 +56,7 @@ app.get('/api/appointments/check', async (req, res) => {
   }
 });
 
-// Create Booking Route (with Holiday/Weekend block & STRICT Capacity)
+// Create Booking Route (with Holiday, Capacity, and CRM logic)
 app.post('/api/appointments', async (req, res) => {
   try {
     const bookingDate = new Date(req.body.date);
@@ -71,7 +81,27 @@ app.post('/api/appointments', async (req, res) => {
     const newAppointment = new Appointment(req.body);
     const savedAppointment = await newAppointment.save();
 
-    // 4. Send Emails (HTML Formatting)
+    // 4. CRM logic: Automatically create or update Customer profile
+    try {
+        const customerUpdate = {
+            clientName: savedAppointment.clientName,
+            phone: savedAppointment.phone,
+            lastBooking: savedAppointment.date,
+        };
+        
+        await Customer.findOneAndUpdate(
+            { email: savedAppointment.email.toLowerCase() },
+            { 
+                $set: customerUpdate,
+                $inc: { appointmentCount: 1 } 
+            },
+            { upsert: true, new: true }
+        );
+    } catch (crmErr) {
+        console.error("CRM Update Failed:", crmErr.message);
+    }
+
+    // 5. Send Emails (HTML Formatting)
     try {
       const mailOptionsCustomer = {
         from: process.env.EMAIL_USER,
@@ -119,7 +149,6 @@ app.post('/api/appointments', async (req, res) => {
         `
       };
 
-      // Execute sending both emails
       await transporter.sendMail(mailOptionsCustomer);
       await transporter.sendMail(mailOptionsAdmin);
 

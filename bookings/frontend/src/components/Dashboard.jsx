@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; 
 import '../App.css'; 
 
 function Dashboard() {
   const [appointments, setAppointments] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [bookedTimes, setBookedTimes] = useState([]);
   
-  // State handles all required database fields
   const [formData, setFormData] = useState({
     clientName: '',
     email: 'walk-in@example.com', 
     phone: '',
     service: 'Consultation',
-    date: '',
+    date: '', 
     notes: 'Phone booking',
     consent: true 
   });
@@ -21,7 +24,30 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  // Fetches from the /api/admin route
+  // Fetch taken times whenever the user clicks a new date on the calendar
+  useEffect(() => {
+    const checkTakenTimes = async () => {
+      try {
+        const yyyy = selectedDate.getFullYear();
+        const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(selectedDate.getDate()).padStart(2, '0');
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
+        
+        const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${formattedDate}`);
+        
+        // Format the times (e.g., "10:30 AM") for display
+        const times = res.data.map(apt => 
+          new Date(apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        );
+        setBookedTimes(times);
+      } catch (err) {
+        console.error("Error checking availability", err);
+      }
+    };
+
+    checkTakenTimes();
+  }, [selectedDate]);
+
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/admin/appointments');
@@ -31,35 +57,22 @@ function Dashboard() {
     }
   };
 
-  // Adds via the main /api/appointments route to trigger email logic
   const handleManualSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.date) return alert("Please select a time!");
+
     try {
       await axios.post('http://localhost:5000/api/appointments', formData);
       alert("✅ Booking added successfully!");
       setShowAddForm(false);
-      
-      // Reset form to defaults
-      setFormData({
-        clientName: '',
-        email: 'walk-in@example.com',
-        phone: '',
-        service: 'Consultation',
-        date: '',
-        notes: 'Phone booking',
-        consent: true 
-      });
-
-      fetchData(); // Refresh table
+      fetchData();
     } catch (err) {
       alert("❌ Error: " + (err.response?.data?.message || "Check server"));
-      console.error(err);
     }
   };
 
-  // Deletes via the admin route
   const deleteAppointment = async (id) => {
-    if (window.confirm("Are you sure you want to cancel this booking?")) {
+    if (window.confirm("Are you sure?")) {
       try {
         await axios.delete(`http://localhost:5000/api/admin/appointments/${id}`);
         fetchData(); 
@@ -80,57 +93,49 @@ function Dashboard() {
 
       {showAddForm && (
         <div className="form-overlay">
-             <h3>New Manual Booking</h3>
           <form className="manual-form" onSubmit={handleManualSubmit}>
-           
+            <h3>New Manual Booking</h3>
             
-            <input 
-              type="text" 
-              placeholder="Client Name" 
-              required 
-              value={formData.clientName}
-              onChange={e => setFormData({...formData, clientName: e.target.value})} 
-            />
+            <input type="text" placeholder="Client Name" required 
+              onChange={e => setFormData({...formData, clientName: e.target.value})} />
 
-            <input 
-              type="tel" 
-              placeholder="Phone Number" 
-              required 
-              value={formData.phone}
-              onChange={e => setFormData({...formData, phone: e.target.value})} 
-            />
+            <input type="tel" placeholder="Phone Number" required 
+              onChange={e => setFormData({...formData, phone: e.target.value})} />
 
-            <input 
-              type="email" 
-              placeholder="Client Email" 
-              required 
-              value={formData.email}
-              onChange={e => setFormData({...formData, email: e.target.value})} 
-            />
+            <div className="calendar-box">
+              <label>1. Pick Date:</label>
+              <Calendar 
+                onChange={setSelectedDate} 
+                value={selectedDate} 
+                minDate={new Date()} 
+              />
+            </div>
 
-            <input 
-              type="datetime-local" 
-              required 
-              value={formData.date}
-              onChange={e => setFormData({...formData, date: e.target.value})} 
-            />
-            
-            <select 
-              value={formData.service}
-              onChange={e => setFormData({...formData, service: e.target.value})}
-            >
+            <div className="time-box">
+              <label>2. Pick Time:</label>
+              <input type="time" required 
+                onChange={e => {
+                  const [hours, minutes] = e.target.value.split(':');
+                  const updatedDate = new Date(selectedDate);
+                  updatedDate.setHours(hours, minutes);
+                  setFormData({...formData, date: updatedDate});
+                }} 
+              />
+            </div>
+
+            {bookedTimes.length > 0 && (
+              <div className="booked-warning">
+                ⚠️ Already booked on this day: {bookedTimes.join(', ')}
+              </div>
+            )}
+
+            <select onChange={e => setFormData({...formData, service: e.target.value})}>
               <option value="Consultation">Consultation</option>
-              <option value="One">One</option>
-              <option value="Two">Two</option>
+              <option value="Service One">Service One</option>
+              <option value="Service Two">Service Two</option>
             </select>
 
-            <textarea 
-              placeholder="Notes (Optional)"
-              value={formData.notes}
-              onChange={e => setFormData({...formData, notes: e.target.value})}
-            />
-            
-            <button type="submit" className="save-btn">Save to Database</button>
+            <button type="submit" className="save-btn">Save Appointment</button>
           </form>
         </div>
       )}
@@ -140,33 +145,21 @@ function Dashboard() {
           <tr>
             <th>Client</th>
             <th>Phone</th>
-            <th>Email</th>
             <th>Service</th>
             <th>Date & Time</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {appointments.length > 0 ? (
-            appointments.map((apt) => (
-              <tr key={apt._id}>
-                <td>{apt.clientName}</td>
-                <td>{apt.phone}</td>
-                <td>{apt.email}</td>
-                <td>{apt.service}</td>
-                <td>{new Date(apt.date).toLocaleString()}</td>
-                <td>
-                  <button onClick={() => deleteAppointment(apt._id)} className="delete-btn">
-                    Cancel
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" style={{ textAlign: 'center' }}>No appointments found.</td>
+          {appointments.map((apt) => (
+            <tr key={apt._id}>
+              <td>{apt.clientName}</td>
+              <td>{apt.phone}</td>
+              <td>{apt.service}</td>
+              <td>{new Date(apt.date).toLocaleString()}</td>
+              <td><button onClick={() => deleteAppointment(apt._id)} className="delete-btn">Cancel</button></td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
     </div>

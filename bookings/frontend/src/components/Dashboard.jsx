@@ -13,7 +13,7 @@ function Dashboard() {
   
   // FILTER STATES
   const [filterType, setFilterType] = useState('all'); 
-  const [searchTerm, setSearchTerm] = useState(''); // Added Search State
+  const [searchTerm, setSearchTerm] = useState(''); 
   
   const hd = new Holidays('US');
 
@@ -90,17 +90,19 @@ function Dashboard() {
     } catch (err) { alert("❌ " + (err.response?.data?.message || "Error saving booking")); }
   };
 
-  // MULTI-FIELD FILTER LOGIC: Handles both Radios and Search Bar
+  // UPDATED FILTER LOGIC: Robust handling for 'new' and 'returning'
   const filteredAppointments = appointments.filter(apt => {
-    // 1. Check Radio Button (New/Returning)
-    const matchesType = filterType === 'all' || apt.customerType === filterType;
+    // Standardize both values to lowercase to ensure 'Returning' matches 'returning'
+    const aptType = (apt.customerType || 'new').toLowerCase();
+    const currentFilter = filterType.toLowerCase();
+
+    const matchesType = currentFilter === 'all' || aptType === currentFilter;
     
-    // 2. Check Search Bar (Name, Service, or Email)
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
         apt.clientName.toLowerCase().includes(searchLower) || 
         apt.service.toLowerCase().includes(searchLower) ||
-        apt.email.toLowerCase().includes(searchLower);
+        (apt.email && apt.email.toLowerCase().includes(searchLower));
 
     return matchesType && matchesSearch;
   });
@@ -110,29 +112,27 @@ function Dashboard() {
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
         
-        <div className="admin-filters-bar" style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '20px' }}>
-            {/* SEARCH INPUT FIELD */}
-            <input 
-                type="text" 
-                className="search-input"
-                placeholder="Search name, service, or email..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ padding: '8px', borderRadius: '5px', border: '1px solid #ccc', minWidth: '250px' }}
-            />
-
-            <div className="admin-controls" style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                <div className="filter-group">
-                    <span>Filter List: </span>
-                    <label><input type="radio" name="filter" checked={filterType === 'all'} onChange={() => setFilterType('all')} /> All</label>
-                    <label style={{marginLeft: '10px'}}><input type="radio" name="filter" checked={filterType === 'new'} onChange={() => setFilterType('new')} /> New</label>
-                    <label style={{marginLeft: '10px'}}><input type="radio" name="filter" checked={filterType === 'returning'} onChange={() => setFilterType('returning')} /> Returning</label>
-                </div>
-                <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
-                  {showAddForm ? "Close Form" : "+ Add Manual Booking"}
-                </button>
+        <div className="admin-top-controls">
+            <div className="filter-group">
+                <span>Filter List: </span>
+                <label><input type="radio" name="filter" checked={filterType === 'all'} onChange={() => setFilterType('all')} /> All</label>
+                <label style={{marginLeft: '10px'}}><input type="radio" name="filter" checked={filterType === 'new'} onChange={() => setFilterType('new')} /> New</label>
+                <label style={{marginLeft: '10px'}}><input type="radio" name="filter" checked={filterType === 'returning'} onChange={() => setFilterType('returning')} /> Returning</label>
             </div>
+            <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
+              {showAddForm ? "Close Form" : "+ Add Manual Booking"}
+            </button>
         </div>
+      </div>
+
+      <div className="search-bar-container">
+        <input 
+            type="text" 
+            className="search-input"
+            placeholder="Search name, service, or email..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       {showAddForm && (
@@ -190,7 +190,7 @@ function Dashboard() {
             <th>Service</th>
             <th>Notes</th>
             <th>Date & Time</th>
-            <th>Actions</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; 
-import '../App.css'; 
+import './App.css'; 
 
 function PublicBooking() {
   const [selectedDate, setSelectedDate] = useState(new Date());

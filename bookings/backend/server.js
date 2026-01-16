@@ -172,12 +172,13 @@ mongoose.connect(process.env.MONGO_URI)
 
 
   // Get unique customers for the CRM
+
 app.get('/api/admin/customers', async (req, res) => {
   try {
     const customers = await Appointment.aggregate([
       {
         $group: {
-          _id: "$email", // Group by email to ensure uniqueness
+          _id: "$email", 
           clientName: { $first: "$clientName" },
           phone: { $first: "$phone" },
           email: { $first: "$email" },
@@ -193,3 +194,5 @@ app.get('/api/admin/customers', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// ... app.listen ...

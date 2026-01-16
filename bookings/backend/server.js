@@ -56,14 +56,14 @@ app.post('/api/appointments', async (req, res) => {
     const isHoliday = holidayCheck && holidayCheck.some(h => h.type === 'public');
 
     if (isHoliday) {
-      return res.status(400).json({ message: "We are closed on weekends and holidays." });
+      return res.status(400).json({ message: "We are closed on holidays. 😎. Please select another date." });
     }
 
     // 2. STRICT CAPACITY CHECK: Block if more than 2 people are in this 15-min slot
     const existingCount = await Appointment.countDocuments({ date: bookingDate });
     if (existingCount >= 2) {
         return res.status(400).json({ 
-            message: "This specific 15-minute slot is full. Please pick another time." 
+            message: "❌ This specific 15-minute slot is full. Please pick another time." 
         });
     }
 

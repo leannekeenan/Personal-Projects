@@ -46,24 +46,32 @@ app.get('/api/appointments/check', async (req, res) => {
   }
 });
 
-// Create Booking Route (with Holiday/Weekend block)
+// Create Booking Route (with Holiday/Weekend block & STRICT Capacity)
 app.post('/api/appointments', async (req, res) => {
   try {
     const bookingDate = new Date(req.body.date);
     
-    // Server-side block for holidays and weekends
+    // 1. Server-side block for holidays and weekends
     const holidayCheck = hd.isHoliday(bookingDate);
-    //const isWeekend = bookingDate.getDay() === 0 || bookingDate.getDay() === 6;
     const isHoliday = holidayCheck && holidayCheck.some(h => h.type === 'public');
 
-    if ( isHoliday) {
+    if (isHoliday) {
       return res.status(400).json({ message: "We are closed on weekends and holidays." });
     }
 
+    // 2. STRICT CAPACITY CHECK: Block if more than 2 people are in this 15-min slot
+    const existingCount = await Appointment.countDocuments({ date: bookingDate });
+    if (existingCount >= 2) {
+        return res.status(400).json({ 
+            message: "This specific 15-minute slot is full. Please pick another time." 
+        });
+    }
+
+    // 3. Save Appointment
     const newAppointment = new Appointment(req.body);
     const savedAppointment = await newAppointment.save();
 
-    // Send Emails
+    // 4. Send Emails (HTML Formatting)
     try {
       const mailOptionsCustomer = {
         from: process.env.EMAIL_USER,

@@ -3,8 +3,8 @@ import axios from 'axios';
 import Calendar from 'react-calendar';
 import Holidays from 'date-holidays';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import CRM from './CRM';
+import Dashboard from './components/Dashboard'; 
+import CRM from './components/CRM';
 import 'react-calendar/dist/Calendar.css';
 import './App.css';
 

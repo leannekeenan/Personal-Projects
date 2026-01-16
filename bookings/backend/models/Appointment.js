@@ -8,8 +8,8 @@ const appointmentSchema = new mongoose.Schema({
   service: { type: String, required: true },
   date: { type: Date, required: true },
   consent: { type: Boolean, required: true }, 
-  notes: { type: String }// "Standard question" for extra info
-  
+  notes: { type: String }, // "Standard question" for extra info
+  consent: { type: Boolean, required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

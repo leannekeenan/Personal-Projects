@@ -135,6 +135,7 @@
   color: #000 !important; /* Forces the numbers to be black and visible */
   font-weight: 500;
   padding: 12px !important;
+  margin: 1px
 }
 
 /* --- Hover Effect --- */
@@ -153,7 +154,7 @@
 
 /* --- Today's Date Highlight --- */
 .react-calendar__tile--now {
-  background: #ffff76; /* Yellow highlight for today */
+  background: #7ee8a1; /* Yellow highlight for today */
   border-radius: 6px;
 }
 

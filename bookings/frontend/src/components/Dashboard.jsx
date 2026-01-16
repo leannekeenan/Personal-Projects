@@ -124,6 +124,7 @@ function Dashboard() {
             <th>Client</th>
             <th>Phone</th>
             <th>Email</th>
+            <th>Service</th>
             <th>Date & Time</th>
             <th>Actions</th>
           </tr>
@@ -134,6 +135,7 @@ function Dashboard() {
               <td>{apt.clientName}</td>
               <td>{apt.phone}</td>
               <td>{apt.email}</td>
+              <td>{apt.service}</td>
               <td>{new Date(apt.date).toLocaleString()}</td>
               <td>
                 <button className="delete-btn" onClick={async () => { 

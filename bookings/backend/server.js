@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const Appointment = require('./models/Appointment'); 
 
-const adminRoutes = require('./modules/Admin');
+const adminRoutes = require('./models/Admin');
 
 const app = express();
 

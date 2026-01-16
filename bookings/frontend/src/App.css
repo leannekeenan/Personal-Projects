@@ -85,3 +85,70 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+/*React Calendar Styles*/
+
+/* --- Calendar Container Customization --- */
+.react-calendar {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff; /* Main background color */
+  border: 1px solid #ddd;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.125em;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Navigation (Month/Year Picker) --- */
+.react-calendar__navigation button {
+  color: #333; /* Change month/year text color */
+  min-width: 44px;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+/* --- Weekdays (Mon, Tue, etc.) --- */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.8em;
+  color: #555; /* Weekday text color */
+}
+
+/* --- Days (The actual numbers) --- */
+.react-calendar__tile {
+  color: #000 !important; /* Forces the numbers to be black and visible */
+  font-weight: 500;
+  padding: 12px !important;
+}
+
+/* --- Hover Effect --- */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #e6e6e6;
+  border-radius: 6px;
+}
+
+/* --- Selected Day (The day you click) --- */
+.react-calendar__tile--active {
+  background: #007bff !important; /* High contrast Blue background */
+  color: white !important; /* White text for the selected day */
+  border-radius: 6px;
+}
+
+/* --- Today's Date Highlight --- */
+.react-calendar__tile--now {
+  background: #ffff76; /* Yellow highlight for today */
+  border-radius: 6px;
+}
+
+/* --- Disabled Days (Past dates) --- */
+.react-calendar__tile:disabled {
+  background-color: #f0f0f0;
+  color: #ccc !important; /* Light grey text for unavailable dates */
+}

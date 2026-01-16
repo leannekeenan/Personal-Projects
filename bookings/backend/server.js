@@ -5,7 +5,10 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const Appointment = require('./models/Appointment'); 
-const adminRoutes = require('./modules/Admin'); // Note: Updated to 'modules' folder
+
+// Check your folder name: if your file is in 'models/Admin.js', use './models/Admin'
+// If you moved it to a folder called 'modules', change this to './modules/Admin'
+const adminRoutes = require('./models/Admin'); 
 
 const app = express();
 
@@ -42,10 +45,7 @@ app.post('/api/appointments', async (req, res) => {
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
-        // FIX: Always send the notification TO your business email 
-        // This avoids DNS errors from the placeholder 'walk-in@example.com'
         to: process.env.EMAIL_USER, 
-        
         subject: `New Booking: ${clientName}`,
         text: `
           New Appointment Details:
@@ -58,17 +58,15 @@ app.post('/api/appointments', async (req, res) => {
           Email: ${email}
           --------------------------
         `,
-        // If it's a walk-in, reply-to goes to you. If it's a real client, reply-to goes to them.
         replyTo: email === 'walk-in@example.com' ? process.env.EMAIL_USER : email 
       };
 
       await transporter.sendMail(mailOptions);
-      console.log("✅ Notification email sent to Admin");
+      console.log("✅ Notification email sent");
     } catch (emailErr) {
-      console.error("❌ Email failed to send, but database is fine:", emailErr.message);
+      console.error("❌ Email failed:", emailErr.message);
     }
 
-    // 3. Send success response to the React Frontend
     res.status(201).json(savedAppointment);
 
   } catch (err) {
@@ -83,8 +81,6 @@ const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Connected to MongoDB');
-    if (!app.listening) {
-       app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
-    }
+    app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
   })
   .catch(err => console.log('❌ DB Error:', err));

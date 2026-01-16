@@ -2,14 +2,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../App.css'; 
 
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import '../App.css'; 
-
 function Dashboard() {
   const [appointments, setAppointments] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   
+  // State handles all required database fields
   const [formData, setFormData] = useState({
     clientName: '',
     email: 'walk-in@example.com', 
@@ -24,6 +21,7 @@ function Dashboard() {
     fetchData();
   }, []);
 
+  // Fetches from the /api/admin route
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/admin/appointments');
@@ -33,6 +31,7 @@ function Dashboard() {
     }
   };
 
+  // Adds via the main /api/appointments route to trigger email logic
   const handleManualSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -40,6 +39,7 @@ function Dashboard() {
       alert("✅ Booking added successfully!");
       setShowAddForm(false);
       
+      // Reset form to defaults
       setFormData({
         clientName: '',
         email: 'walk-in@example.com',
@@ -50,19 +50,21 @@ function Dashboard() {
         consent: true 
       });
 
-      fetchData();
+      fetchData(); // Refresh table
     } catch (err) {
       alert("❌ Error: " + (err.response?.data?.message || "Check server"));
+      console.error(err);
     }
   };
 
+  // Deletes via the admin route
   const deleteAppointment = async (id) => {
-    if (window.confirm("Are you sure?")) {
+    if (window.confirm("Are you sure you want to cancel this booking?")) {
       try {
         await axios.delete(`http://localhost:5000/api/admin/appointments/${id}`);
         fetchData(); 
       } catch (err) {
-        alert("Error deleting");
+        alert("Error deleting appointment");
       }
     }
   };
@@ -80,6 +82,7 @@ function Dashboard() {
         <div className="form-overlay">
           <form className="manual-form" onSubmit={handleManualSubmit}>
             <h3>New Manual Booking</h3>
+            
             <input 
               type="text" 
               placeholder="Client Name" 
@@ -87,6 +90,7 @@ function Dashboard() {
               value={formData.clientName}
               onChange={e => setFormData({...formData, clientName: e.target.value})} 
             />
+
             <input 
               type="tel" 
               placeholder="Phone Number" 
@@ -94,7 +98,7 @@ function Dashboard() {
               value={formData.phone}
               onChange={e => setFormData({...formData, phone: e.target.value})} 
             />
-            {/* FIXED: Changed clientEmail to email to match state */}
+
             <input 
               type="email" 
               placeholder="Client Email" 
@@ -102,22 +106,29 @@ function Dashboard() {
               value={formData.email}
               onChange={e => setFormData({...formData, email: e.target.value})} 
             />
+
             <input 
               type="datetime-local" 
               required 
               value={formData.date}
               onChange={e => setFormData({...formData, date: e.target.value})} 
             />
-            <select value={formData.service} onChange={e => setFormData({...formData, service: e.target.value})}>
+            
+            <select 
+              value={formData.service}
+              onChange={e => setFormData({...formData, service: e.target.value})}
+            >
               <option value="Consultation">Consultation</option>
-              <option value="one">one</option>
-              <option value="two">two</option>
+              <option value="One">One</option>
+              <option value="Two">Two</option>
             </select>
+
             <textarea 
-              placeholder="Notes"
+              placeholder="Notes (Optional)"
               value={formData.notes}
               onChange={e => setFormData({...formData, notes: e.target.value})}
             />
+            
             <button type="submit" className="save-btn">Save to Database</button>
           </form>
         </div>
@@ -144,12 +155,16 @@ function Dashboard() {
                 <td>{apt.service}</td>
                 <td>{new Date(apt.date).toLocaleString()}</td>
                 <td>
-                  <button onClick={() => deleteAppointment(apt._id)} className="delete-btn">Cancel</button>
+                  <button onClick={() => deleteAppointment(apt._id)} className="delete-btn">
+                    Cancel
+                  </button>
                 </td>
               </tr>
             ))
           ) : (
-            <tr><td colSpan="6" style={{ textAlign: 'center' }}>No appointments found.</td></tr>
+            <tr>
+              <td colSpan="6" style={{ textAlign: 'center' }}>No appointments found.</td>
+            </tr>
           )}
         </tbody>
       </table>

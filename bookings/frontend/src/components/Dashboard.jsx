@@ -80,8 +80,9 @@ function Dashboard() {
 
       {showAddForm && (
         <div className="form-overlay">
+             <h3>New Manual Booking</h3>
           <form className="manual-form" onSubmit={handleManualSubmit}>
-            <h3>New Manual Booking</h3>
+           
             
             <input 
               type="text" 

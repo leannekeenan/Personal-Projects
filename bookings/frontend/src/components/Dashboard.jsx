@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import Holidays from 'date-holidays';
+import { useNavigate } from 'react-router-dom'; // Add this import
 import 'react-calendar/dist/Calendar.css'; 
 import '../App.css'; 
 
 function Dashboard() {
+  const navigate = useNavigate(); // Initialize the hook here
   const [appointments, setAppointments] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -107,6 +109,26 @@ function Dashboard() {
 
   return (
     <div className="admin-container">
+      <div className="admin-nav" style={{ 
+          marginBottom: '20px', 
+          display: 'flex', 
+          gap: '10px',
+          borderBottom: '1px solid var(--primary-color)',
+          paddingBottom: '15px' 
+        }}>
+          <button 
+            style={{ background: 'var(--primary-color)' }}
+          >
+            📅 Dashboard
+          </button>
+          <button 
+            onClick={() => navigate('/crm')} 
+            style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
+          >
+            👥 CRM
+          </button>
+      </div>
+
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
         

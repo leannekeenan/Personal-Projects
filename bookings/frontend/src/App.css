@@ -177,3 +177,25 @@
   background: #7ee8a1 !important;
   border-radius: 6px;
 }
+
+
+/* Status Dropdown Styling */
+.status-select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    background-color: #1a1a1a;
+    color: white;
+    border: 1px solid var(--primary-color);
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.status-select.scheduled { color: #ff9800; border-color: #ff9800; }
+.status-select.in-progress { color: #2196f3; border-color: #2196f3; }
+.status-select.completed { color: #4caf50; border-color: #4caf50; }
+.status-select.declined { color: #f44336; border-color: #f44336; }
+
+.status-select option {
+    background-color: #222;
+    color: white;
+}

@@ -2,19 +2,18 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import Holidays from 'date-holidays';
-import { useNavigate } from 'react-router-dom'; // Add this import
+import { useNavigate } from 'react-router-dom';
 import 'react-calendar/dist/Calendar.css'; 
 
 import '../App.css'; 
 
 function Dashboard() {
-  const navigate = useNavigate(); // Initialize the hook here
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [bookedTimes, setBookedTimes] = useState([]);
   
-  // FILTER STATES
   const [filterType, setFilterType] = useState('all'); 
   const [searchTerm, setSearchTerm] = useState(''); 
   
@@ -93,7 +92,6 @@ function Dashboard() {
     } catch (err) { alert("❌ " + (err.response?.data?.message || "Error saving booking")); }
   };
 
-  // MULTI-FIELD FILTER LOGIC (Case Insensitive)
   const filteredAppointments = appointments.filter(apt => {
     const aptType = (apt.customerType || 'new').toLowerCase();
     const currentFilter = filterType.toLowerCase();
@@ -117,11 +115,7 @@ function Dashboard() {
           borderBottom: '1px solid var(--primary-color)',
           paddingBottom: '15px' 
         }}>
-          <button 
-            style={{ background: 'var(--primary-color)' }}
-          >
-            📅 Dashboard
-          </button>
+          <button style={{ background: 'var(--primary-color)' }}>📅 Dashboard</button>
           <button 
             onClick={() => navigate('/crm')} 
             style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
@@ -163,14 +157,6 @@ function Dashboard() {
           <form className="manual-form" onSubmit={handleManualSubmit}>
             <h3>Manual Call-in Entry</h3>
             
-            <div className="radio-selection">
-                <label>
-                    <input type="radio" name="custType" value="new" checked={formData.customerType === 'new'} onChange={e => setFormData({...formData, customerType: e.target.value})} /> New Customer
-                </label>
-                <label style={{marginLeft: '15px'}}>
-                    <input type="radio" name="custType" value="returning" checked={formData.customerType === 'returning'} onChange={e => setFormData({...formData, customerType: e.target.value})} /> Returning Customer
-                </label>
-            </div>
 
             <input type="text" placeholder="Client Name" required onChange={e => setFormData({...formData, clientName: e.target.value})} />
             <input type="tel" placeholder="Phone Number" required onChange={e => setFormData({...formData, phone: e.target.value})} />
@@ -213,7 +199,8 @@ function Dashboard() {
             <th>Service</th>
             <th>Notes</th>
             <th>Date & Time</th>
-            <th></th>
+            <th>Status</th> {/* Header added */}
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -228,6 +215,24 @@ function Dashboard() {
                 <td>{apt.notes}</td>
                 <td>{new Date(apt.date).toLocaleString()}</td>
                 <td>
+                  <select 
+                    value={apt.status || 'Scheduled'} 
+                    className={`status-select ${apt.status?.toLowerCase() || 'scheduled'}`}
+                    onChange={async (e) => {
+                        const newStatus = e.target.value;
+                        try {
+                            await axios.patch(`http://localhost:5000/api/admin/appointments/${apt._id}/status`, { status: newStatus });
+                            fetchData(); 
+                        } catch (err) { alert("Failed to update status"); }
+                    }}
+                  >
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Declined">Declined</option>
+                  </select>
+                </td>
+                <td>
                   <button className="delete-btn" onClick={async () => { 
                     if(window.confirm("Delete this appointment?")) { 
                       await axios.delete(`http://localhost:5000/api/admin/appointments/${apt._id}`); 
@@ -238,7 +243,7 @@ function Dashboard() {
               </tr>
             ))
           ) : (
-            <tr><td colSpan="8" style={{textAlign: 'center', padding: '20px'}}>No appointments found.</td></tr>
+            <tr><td colSpan="9" style={{textAlign: 'center', padding: '20px'}}>No appointments found.</td></tr>
           )}
         </tbody>
       </table>

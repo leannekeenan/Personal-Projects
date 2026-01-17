@@ -119,7 +119,7 @@ function CRM() {
                         alignItems: 'center'
                     }}
                 >
-                    📥 Export Detailed Excel
+                    📥 Export to Excel
                 </CSVLink>
             </div>
 

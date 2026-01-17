@@ -124,8 +124,6 @@ function Dashboard() {
     </button>
 </div>
 
-<div className="admin-header"><h1>Appointment Dashboard</h1></div>
-
 <div className="filter-group">
     {/* Your Dashboard filters (Status/Date) go here */}
 </div>

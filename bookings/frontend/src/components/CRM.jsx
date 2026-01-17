@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CSVLink } from "react-csv";
 import '../App.css';
 
@@ -8,14 +8,12 @@ const headers = [
     { label: "Customer Name", key: "clientName" },
     { label: "Email", key: "email" },
     { label: "Phone", key: "phone" },
-    { label: "Total Visits", key: "totalBookings" },
-    { label: "Visit Date", key: "visitDate" },
-    { label: "Service Type", key: "serviceType" },
-    { label: "Status", key: "visitStatus" }
+    { label: "Total Visits", key: "totalBookings" }
 ];
 
 function CRM() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [customers, setCustomers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -24,19 +22,15 @@ function CRM() {
     const [editForm, setEditForm] = useState({ clientName: '', phone: '' });
 
     useEffect(() => {
-        const loggedIn = localStorage.getItem('isAdmin');
-        if (loggedIn !== 'true') navigate('/login');
+        if (localStorage.getItem('isAdmin') !== 'true') navigate('/login');
+        fetchCustomers();
     }, [navigate]);
-
-    useEffect(() => { fetchCustomers(); }, []);
 
     const fetchCustomers = async () => {
         try {
             const res = await axios.get('http://localhost:5000/api/admin/customers');
             setCustomers(Array.isArray(res.data) ? res.data : []);
-        } catch (err) {
-            console.error("API Error:", err);
-        }
+        } catch (err) { console.error("API Error:", err); }
     };
 
     const viewHistory = async (email) => {
@@ -58,49 +52,21 @@ function CRM() {
 
     const filtered = customers.filter(c => 
         (c.clientName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (c.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (c.phone || "").includes(searchTerm)
+        (c.email || "").toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    // FLATTEN DATA FOR EXCEL (One row per visit)
-    const exportData = filtered.flatMap(customer => {
-        if (!customer.history || customer.history.length === 0) {
-            return [{
-                ...customer,
-                visitDate: "N/A",
-                serviceType: "None",
-                visitStatus: "N/A"
-            }];
-        }
-        return customer.history.map(visit => ({
-            ...customer,
-            visitDate: new Date(visit.date).toLocaleDateString(),
-            serviceType: visit.service,
-            visitStatus: visit.status || 'Scheduled'
-        }));
-    });
 
     return (
         <div className="admin-container">
-            <div className="admin-nav" style={{ 
-    justifyContent: 'space-between', 
-    display: 'flex', 
-    width: '100%', 
-    borderBottom: '1px solid white', 
-    paddingBottom: '15px' 
-}}>
-    <div style={{ display: 'flex', gap: '10px' }}>
-        <button className={`nav-btn ${window.location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => navigate('/dashboard')}>📅 Dashboard</button>
-        <button className={`nav-btn ${window.location.pathname === '/crm' ? 'active' : ''}`} onClick={() => navigate('/crm')}>👥 CRM</button>
-        <button className={`nav-btn ${window.location.pathname === '/analytics' ? 'active' : ''}`} onClick={() => navigate('/analytics')}>📈 Analytics</button>
-    </div>
-    
-    <div>
-        <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>
-            🔒 Lock Grimoire
-        </button>
-    </div>
-</div>
+            <div className="admin-nav" style={{ justifyContent: 'space-between', display: 'flex', width: '100%', borderBottom: '1px solid white', paddingBottom: '15px' }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button className={`nav-btn ${location.pathname === '/admin' ? 'active' : ''}`} onClick={() => navigate('/admin')}>📅 Dashboard</button>
+                    <button className={`nav-btn ${location.pathname === '/crm' ? 'active' : ''}`} onClick={() => navigate('/crm')}>👥 CRM</button>
+                    <button className={`nav-btn ${location.pathname === '/analytics' ? 'active' : ''}`} onClick={() => navigate('/analytics')}>📈 Analytics</button>
+                </div>
+                <div>
+                    <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>🔒 Lock Grimoire</button>
+                </div>
+            </div>
 
             <h1 style={{ color: 'white', marginTop: '20px' }}>Customer Manager</h1>
 
@@ -113,67 +79,47 @@ function CRM() {
                     onChange={(e) => setSearchTerm(e.target.value)} 
                     style={{ flex: 1, padding: '12px', borderRadius: '5px', border: '1px solid #444', background: '#222', color: 'white' }}
                 />
-                
                 <CSVLink 
-                    // UPDATED THIS LINE TO USE exportData
-                    data={exportData.length > 0 ? exportData : [{ clientName: "No Data" }]} 
+                    data={filtered.length > 0 ? filtered : [{ clientName: "No Data" }]} 
                     headers={headers}
-                    filename="Detailed_Customer_Report.csv"
-                    style={{ 
-                        background: '#444', 
-                        color: 'white', 
-                        padding: '10px 20px', 
-                        borderRadius: '5px', 
-                        textDecoration: 'none',
-                        border: '1px solid #666',
-                        fontWeight: 'bold',
-                        display: 'flex',
-                        alignItems: 'center'
-                    }}
+                    filename="Customer_Ledger.csv"
+                    className="add-btn"
+                    style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
                 >
-                    📥 Export to Excel
+                    📥 Export Ledger
                 </CSVLink>
             </div>
 
-            <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse', color: 'white' }}>
+            <table className="admin-table">
                 <thead>
-                    <tr style={{ textAlign: 'left', borderBottom: '2px solid #444' }}>
-                        <th>Name</th><th>Email</th><th>Phone</th><th>Visits</th><th>Actions</th>
-                    </tr>
+                    <tr><th>Name</th><th>Email</th><th>Phone</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
-                    {filtered.length > 0 ? filtered.map(c => (
-                        <tr key={c.email} style={{ borderBottom: '1px solid #333' }}>
+                    {filtered.map(c => (
+                        <tr key={c.email}>
                             {editingEmail === c.email ? (
                                 <>
                                     <td><input className="edit-input" value={editForm.clientName} onChange={e => setEditForm({...editForm, clientName: e.target.value})} /></td>
                                     <td>{c.email}</td>
                                     <td><input className="edit-input" value={editForm.phone} onChange={e => setEditForm({...editForm, phone: e.target.value})} /></td>
-                                    <td>{c.totalBookings || 0}</td>
                                     <td>
                                         <button className="add-btn" onClick={() => handleSaveEdit(c.email)}>Save</button>
-                                        <button className="delete-btn" style={{marginLeft: '5px'}} onClick={() => setEditingEmail(null)}>X</button>
+                                        <button className="delete-btn" onClick={() => setEditingEmail(null)}>X</button>
                                     </td>
                                 </>
                             ) : (
                                 <>
-                                    <td>{c.clientName || "Unknown"}</td>
+                                    <td>{c.clientName}</td>
                                     <td>{c.email}</td>
                                     <td>{c.phone || "N/A"}</td>
-                                    <td>{c.totalBookings || 0}</td>
                                     <td>
-                                        <button className="add-btn" onClick={() => {
-                                            setEditingEmail(c.email);
-                                            setEditForm({ clientName: c.clientName, phone: c.phone || '' });
-                                        }}>Edit Identity</button>
+                                        <button className="add-btn" onClick={() => { setEditingEmail(c.email); setEditForm({ clientName: c.clientName, phone: c.phone || '' }); }}>Edit</button>
                                         <button className="add-btn" style={{marginLeft: '5px', background: '#28a745'}} onClick={() => viewHistory(c.email)}>History</button>
                                     </td>
                                 </>
                             )}
                         </tr>
-                    )) : (
-                        <tr><td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#888' }}>No records found in the Ledger.</td></tr>
-                    )}
+                    ))}
                 </tbody>
             </table>
 
@@ -183,7 +129,7 @@ function CRM() {
                         <h2 style={{ color: 'white' }}>History for {selectedCustomer}</h2>
                         <button className="delete-btn" onClick={() => setSelectedCustomer(null)}>Close</button>
                     </div>
-                    <table className="admin-table" style={{ width: '100%', color: 'white' }}>
+                    <table className="admin-table">
                         <thead><tr><th>Date</th><th>Service</th><th>Status</th></tr></thead>
                         <tbody>
                             {history.map(h => (

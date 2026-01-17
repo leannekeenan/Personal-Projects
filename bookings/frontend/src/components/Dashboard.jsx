@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Calendar from 'react-calendar';
-import Holidays from 'date-holidays';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import 'react-calendar/dist/Calendar.css'; 
 import '../App.css'; 
 
 function Dashboard() {
     const navigate = useNavigate();
-    
-    // --- State Management ---
+    const location = useLocation(); 
     const [appointments, setAppointments] = useState([]);
     const [customers, setCustomers] = useState([]); 
     const [showAddForm, setShowAddForm] = useState(false);
@@ -17,145 +15,92 @@ function Dashboard() {
     const [bookedTimes, setBookedTimes] = useState([]);
     const [filterType, setFilterType] = useState('all'); 
     const [searchTerm, setSearchTerm] = useState(''); 
-    
-    // Quick-Find Search State
     const [crmSearch, setCrmSearch] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     const [formData, setFormData] = useState({
-        clientName: '',
-        email: '', 
-        phone: '',
-        service: 'Consultation', 
-        date: '', 
-        notes: '', 
-        consent: true,
-        customerType: 'new' 
+        clientName: '', email: '', phone: '', service: 'Consultation', 
+        date: '', notes: '', consent: true, customerType: 'new' 
     });
 
-    const hd = new Holidays('US');
-
-    // --- Effects & Data Fetching ---
     useEffect(() => {
-        const loggedIn = localStorage.getItem('isAdmin');
-        if (loggedIn !== 'true') navigate('/login');
+        if (localStorage.getItem('isAdmin') !== 'true') navigate('/login');
+        fetchData();
     }, [navigate]);
 
-    useEffect(() => { fetchData(); }, []);
-
-    // --- UPDATED FETCH LOGIC ---
     const fetchData = async () => {
         try {
-            // 1. Fetch Appointments first as priority
             const aptRes = await axios.get('http://localhost:5000/api/admin/appointments');
-            setAppointments(aptRes.data);
-            
-            // 2. Try fetching customers (wrapped in own try/catch so it doesn't crash the table)
-            try {
-                const custRes = await axios.get('http://localhost:5000/api/admin/customers');
-                setCustomers(custRes.data);
-            } catch (e) { 
-                console.warn("CRM data not loaded:", e.message); 
-            }
-            
-        } catch (err) { 
-            console.error("Fetch error:", err); 
-            setAppointments([]); // Prevents infinite loading spinners
-        }
+            setAppointments(Array.isArray(aptRes.data) ? aptRes.data : []);
+            const custRes = await axios.get('http://localhost:5000/api/admin/customers');
+            setCustomers(Array.isArray(custRes.data) ? custRes.data : []);
+        } catch (err) { console.error("Fetch error:", err); }
     };
 
     useEffect(() => {
         const fetchAvailability = async () => {
-            const yyyy = selectedDate.getFullYear();
-            const mm = String(selectedDate.getMonth() + 1).padStart(2, '0');
-            const dd = String(selectedDate.getDate()).padStart(2, '0');
+            const d = selectedDate;
+            const dateStr = d.toISOString().split('T')[0];
             try {
-                const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${yyyy}-${mm}-${dd}`);
+                const res = await axios.get(`http://localhost:5000/api/appointments/check?date=${dateStr}`);
                 const counts = {};
-                res.data.forEach(a => {
-                    const time = new Date(a.date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-                    counts[time] = (counts[time] || 0) + 1;
+                (res.data || []).forEach(a => {
+                    const t = new Date(a.date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+                    counts[t] = (counts[t] || 0) + 1;
                 });
-                const blocked = Object.keys(counts).filter(time => counts[time] >= 2);
-                setBookedTimes(blocked);
-            } catch (e) { console.error("Availability error:", e); }
+                setBookedTimes(Object.keys(counts).filter(t => counts[t] >= 2));
+            } catch (e) { console.error(e); }
         };
         fetchAvailability();
     }, [selectedDate]);
 
-    // --- Logic Handlers ---
     const generateTimeSlots = () => {
         const slots = [];
-        for (let hour = 8; hour < 18; hour++) {
-            ['00', '15', '30', '45'].forEach(min => {
-                const ampm = hour >= 12 ? 'PM' : 'AM';
-                const hour12 = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
-                slots.push(`${hour12}:${min} ${ampm}`);
+        for (let h = 8; h < 18; h++) {
+            ['00', '15', '30', '45'].forEach(m => {
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                const h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+                slots.push(`${h12}:${m} ${ampm}`);
             });
         }
         return slots;
     };
 
-    const autoFillCustomer = (customer) => {
-        setFormData({
-            ...formData,
-            clientName: customer.clientName || '',
-            phone: customer.phone || '',
-            email: customer.email || '',
-            customerType: 'returning' 
-        });
-        setCrmSearch(''); 
-        setShowSuggestions(false); 
-    };
-
-    const searchResults = (customers || []).filter(c => 
-        (c.email || "").toLowerCase().includes(crmSearch.toLowerCase()) || 
-        (c.clientName || "").toLowerCase().includes(crmSearch.toLowerCase())
-    ).slice(0, 5);
-
     const handleTimeSelection = (timeStr) => {
         if (!timeStr) return;
         const [time, modifier] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':');
-        if (hours === '12') hours = '00';
-        if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
-        const updatedDate = new Date(selectedDate);
-        updatedDate.setHours(hours, minutes, 0, 0);
-        setFormData({ ...formData, date: updatedDate });
+        let [hrs, mins] = time.split(':');
+        if (hrs === '12') hrs = '00';
+        if (modifier === 'PM') hrs = parseInt(hrs, 10) + 12;
+        const newD = new Date(selectedDate);
+        newD.setHours(parseInt(hrs, 10), parseInt(mins, 10), 0, 0);
+        setFormData({ ...formData, date: newD });
     };
 
     const handleManualSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.date) return alert("Please select a time slot.");
+        if (!formData.date) return alert("Select a time.");
         try {
             await axios.post('http://localhost:5000/api/appointments', formData);
-            alert("✅ Appointment added and CRM Updated!");
+            alert("✅ Added!");
             setShowAddForm(false);
             fetchData();
-        } catch (err) { alert("❌ " + (err.response?.data?.message || "Error saving booking")); }
+        } catch (err) { alert("❌ Error"); }
     };
 
     const filteredAppointments = appointments.filter(apt => {
-        const aptType = (apt.customerType || 'new').toLowerCase();
-        const currentFilter = filterType.toLowerCase();
-        const matchesType = currentFilter === 'all' || aptType === currentFilter;
-        
-        const searchLower = searchTerm.toLowerCase();
-        const matchesSearch = 
-            apt.clientName.toLowerCase().includes(searchLower) || 
-            apt.service.toLowerCase().includes(searchLower) ||
-            (apt.email && apt.email.toLowerCase().includes(searchLower));
-
-        return matchesType && matchesSearch;
+        const matchesType = filterType === 'all' || (apt.customerType || 'new') === filterType;
+        const s = searchTerm.toLowerCase();
+        return matchesType && (apt.clientName?.toLowerCase().includes(s) || apt.email?.toLowerCase().includes(s));
     });
 
     return (
         <div className="admin-container">
-            <div className="admin-nav" style={{ justifyContent: 'space-between', display: 'flex', width: '100%', borderBottom: '1px solid white', paddingBottom: '15px' }}>
+            <div className="admin-nav" style={{ justifyContent: 'space-between', display: 'flex', width: '100%', borderBottom: '1px solid #444', paddingBottom: '15px', marginBottom: '20px' }}>
                 <div style={{ display: 'flex', gap: '10px' }}>
-                    <button className={`nav-btn ${window.location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => navigate('/dashboard')}>📅 Dashboard</button>
-                    <button className={`nav-btn ${window.location.pathname === '/crm' ? 'active' : ''}`} onClick={() => navigate('/crm')}>👥 CRM</button>
-                    <button className={`nav-btn ${window.location.pathname === '/analytics' ? 'active' : ''}`} onClick={() => navigate('/analytics')}>📈 Analytics</button>
+                    <button className={`nav-btn ${location.pathname === '/admin' ? 'active' : ''}`} onClick={() => navigate('/admin')}>📅 Dashboard</button>
+                    <button className={`nav-btn ${location.pathname === '/crm' ? 'active' : ''}`} onClick={() => navigate('/crm')}>👥 CRM</button>
+                    <button className={`nav-btn ${location.pathname === '/analytics' ? 'active' : ''}`} onClick={() => navigate('/analytics')}>📈 Analytics</button>
                 </div>
                 <div>
                     <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>🔒 Lock Grimoire</button>
@@ -164,83 +109,44 @@ function Dashboard() {
 
             <div className="admin-header">
                 <h1>Admin Dashboard</h1>
-                <div className="admin-controls">
+                <div className="admin-controls" style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
                     <div className="filter-group">
-                        <span>Filter List: </span>
+                        <span style={{color: 'white', marginRight: '10px'}}>Filter List:</span>
                         <div>
                             <label><input type="radio" name="filter" checked={filterType === 'all'} onChange={() => setFilterType('all')} /> All</label>
                             <label><input type="radio" name="filter" checked={filterType === 'new'} onChange={() => setFilterType('new')} /> New</label>
                             <label><input type="radio" name="filter" checked={filterType === 'returning'} onChange={() => setFilterType('returning')} /> Returning</label>
                         </div>
                     </div>
-                    <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>
-                        {showAddForm ? "Close Form" : "+ Add Manual Booking"}
-                    </button>
+                    <button className="add-btn" onClick={() => setShowAddForm(!showAddForm)}>{showAddForm ? "Close" : "+ Manual Booking"}</button>
                 </div>
             </div>
 
-            <div className="search-bar-container">
-                <input 
-                    type="text" 
-                    className="search-input"
-                    placeholder="Search name, service, or email..." 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </div>
+            <input type="text" className="search-input" placeholder="Search appointments..." onChange={e => setSearchTerm(e.target.value)} />
 
             {showAddForm && (
                 <div className="form-overlay">
                     <form className="manual-form" onSubmit={handleManualSubmit}>
-                        <h3>Manual Call-in Entry</h3>
-                        
-                        <div className="manual-booking-search" style={{ marginBottom: '15px', position: 'relative' }}>
-                            <label style={{ color: '#aaa', fontSize: '12px' }}>Quick-Find Returning Customer:</label>
-                            <input 
-                                type="text"
-                                placeholder="Start typing name or email..."
-                                value={crmSearch}
-                                onChange={(e) => { setCrmSearch(e.target.value); setShowSuggestions(true); }}
-                                style={{ width: '100%', padding: '10px', background: '#333', color: 'white', border: '1px solid #555', borderRadius: '4px' }}
-                            />
-                            {showSuggestions && crmSearch.length > 1 && (
-                                <ul style={{ position: 'absolute', zIndex: 10, width: '100%', background: '#444', listStyle: 'none', padding: 0, margin: 0, border: '1px solid #666', borderRadius: '4px', boxShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
-                                    {searchResults.map(c => (
-                                        <li key={c.email} onClick={() => autoFillCustomer(c)} style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px solid #555', color: 'white' }}>
-                                            <strong>{c.clientName}</strong> — {c.email}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-
-                        <input type="text" placeholder="Client Name" required value={formData.clientName} onChange={e => setFormData({...formData, clientName: e.target.value})} />
-                        <input type="tel" placeholder="Phone Number" required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
-                        <input type="email" placeholder="Customer Email Address" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
-                        
-                        <label>Service Type:</label>
-                        <select className="service-dropdown" value={formData.service} required onChange={e => setFormData({...formData, service: e.target.value})}>
-                            <option value="Consultation">Consultation</option>
-                            <option value="Follow-up">Follow-up</option>
-                            <option value="Emergency">Emergency</option>
+                        <input type="text" placeholder="Quick Search CRM..." onChange={e => { setCrmSearch(e.target.value); setShowSuggestions(true); }} />
+                        {showSuggestions && crmSearch.length > 1 && (
+                            <ul className="suggestions">
+                                {customers.filter(c => c.clientName.toLowerCase().includes(crmSearch.toLowerCase())).map(c => (
+                                    <li key={c.email} onClick={() => { 
+                                        setFormData({...formData, clientName: c.clientName, email: c.email, phone: c.phone, customerType: 'returning'});
+                                        setShowSuggestions(false);
+                                    }}>{c.clientName} ({c.email})</li>
+                                ))}
+                            </ul>
+                        )}
+                        <input type="text" placeholder="Name" value={formData.clientName} required onChange={e => setFormData({...formData, clientName:e.target.value})} />
+                        <input type="email" placeholder="Email" value={formData.email} required onChange={e => setFormData({...formData, email:e.target.value})} />
+                        <input type="tel" placeholder="Phone" value={formData.phone} required onChange={e => setFormData({...formData, phone:e.target.value})} />
+                        <Calendar onChange={setSelectedDate} value={selectedDate} />
+                        <select required onChange={e => handleTimeSelection(e.target.value)}>
+                            <option value="">Select Time</option>
+                            {generateTimeSlots().map(s => <option key={s} value={s} disabled={bookedTimes.includes(s)}>{s}</option>)}
                         </select>
-                        
-                        <div className="calendar-box">
-                           <Calendar onChange={setSelectedDate} value={selectedDate} minDate={new Date()} />
-                        </div>
-
-                        <h4>Choose a Time:</h4>
-                        <select className="service-dropdown" required onChange={(e) => handleTimeSelection(e.target.value)}>
-                            <option value="">-- Choose a Time --</option>
-                            {generateTimeSlots().map(slot => (
-                                <option key={slot} value={slot} disabled={bookedTimes.includes(slot)}>
-                                    {slot} {bookedTimes.includes(slot) ? "(Full)" : ""}
-                                </option>
-                            ))}
-                        </select>
-
-                        <textarea placeholder="Admin Notes" value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})}></textarea>
-                        <button type="submit" className="save-btn">Confirm Appointment</button>
+                        <button type="submit" className="save-btn">Confirm</button>
                     </form>
                 </div>
             )}
@@ -248,47 +154,34 @@ function Dashboard() {
             <table className="admin-table">
                 <thead>
                     <tr>
-                        <th>Type</th><th>Client</th><th>Phone</th><th>Email</th><th>Service</th><th>Notes</th><th>Date & Time</th><th>Status</th><th>Actions</th>
+                        <th>Type</th>
+                        <th>Client</th>
+                        <th>Service</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredAppointments.length > 0 ? (
-                        filteredAppointments.map(apt => (
-                            <tr key={apt._id}>
-                                <td><span className={`badge ${apt.customerType || 'new'}`}>{apt.customerType || 'new'}</span></td>
-                                <td>{apt.clientName}</td>
-                                <td>{apt.phone}</td>
-                                <td>{apt.email}</td>
-                                <td>{apt.service}</td>
-                                <td>{apt.notes}</td>
-                                <td>{new Date(apt.date).toLocaleString()}</td>
-                                <td>
-                                    <select value={apt.status || 'Scheduled'} className={`status-select ${apt.status?.toLowerCase() || 'scheduled'}`} onChange={async (e) => {
-                                        const newStatus = e.target.value;
-                                        try {
-                                            await axios.patch(`http://localhost:5000/api/admin/appointments/${apt._id}/status`, { status: newStatus });
-                                            fetchData(); 
-                                        } catch (err) { alert("Failed to update status"); }
-                                    }}>
-                                        <option value="Scheduled">Scheduled</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Completed">Completed</option>
-                                        <option value="Declined">Declined</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <button className="delete-btn" onClick={async () => { 
-                                        if(window.confirm("Delete this appointment?")) { 
-                                            await axios.delete(`http://localhost:5000/api/admin/appointments/${apt._id}`); 
-                                            fetchData(); 
-                                        } 
-                                    }}>Cancel</button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr><td colSpan="9" style={{textAlign: 'center', padding: '20px'}}>No appointments found.</td></tr>
-                    )}
+                    {filteredAppointments.map(apt => (
+                        <tr key={apt._id}>
+                            <td>{apt.customerType}</td>
+                            <td>{apt.clientName}</td>
+                            <td>{apt.service}</td>
+                            <td>{new Date(apt.date).toLocaleString()}</td>
+                            <td>
+                                <select value={apt.status || 'Scheduled'} onChange={async (e) => {
+                                    await axios.patch(`http://localhost:5000/api/admin/appointments/${apt._id}/status`, { status: e.target.value });
+                                    fetchData();
+                                }}>
+                                    <option value="Scheduled">Scheduled</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Declined">Declined</option>
+                                </select>
+                            </td>
+                            <td><button onClick={async () => { if(window.confirm("Delete?")) { await axios.delete(`http://localhost:5000/api/admin/appointments/${apt._id}`); fetchData(); } }}>X</button></td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

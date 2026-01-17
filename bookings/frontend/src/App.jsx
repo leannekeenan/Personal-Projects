@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import Holidays from 'date-holidays';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard'; 
 import CRM from './components/CRM';
 import 'react-calendar/dist/Calendar.css';
@@ -80,24 +80,21 @@ function BookingForm() {
         try {
             await axios.post('http://localhost:5000/api/appointments', {
                 ...formData,
-                customerType: customerType // Pass the type chosen at the start
+                customerType: customerType 
             });
-            alert("✅ Booking Confirmed! A confirmation email has been sent.");
+            alert("✅ Booking Confirmed!");
             window.location.reload();
         } catch (err) { alert(err.response?.data?.message || "Error"); }
     };
 
+    // THIS IS THE CENTERED WELCOME SCREEN
     if (customerType === null) {
         return (
-            <div className="booking-container choice-container">
-                <h2>Welcome! Please select an option:</h2>
-                <div className="button-group">
-                    <button className="choice-btn" onClick={() => setCustomerType('new')}>
-                        I am a New Customer
-                    </button>
-                    <button className="choice-btn" onClick={() => setCustomerType('returning')}>
-                        I am a Returning Customer
-                    </button>
+            <div className="welcome-screen">
+                <h1>Welcome! Please select an option:</h1>
+                <div className="choice-container">
+                    <button onClick={() => setCustomerType('new')}>I am a New Customer</button>
+                    <button onClick={() => setCustomerType('returning')}>I am a Returning Customer</button>
                 </div>
             </div>
         );
@@ -138,7 +135,7 @@ function BookingForm() {
                     I Consent to accept a confirmation email regarding my booking
                 </label>
                 
-                <button type="submit">Confirm</button>
+                <button type="submit">Confirm Booking</button>
             </form>
         </div>
     );
@@ -148,14 +145,16 @@ function BookingForm() {
 export default function App() {
   return (
     <Router>
-      <Routes>
-        {/* Public Route */}
-        <Route path="/" element={<BookingForm />} />
-        
-        {/* Admin Routes */}
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/crm" element={<CRM />} />
-      </Routes>
+      <div className="App">
+        <Routes>
+          {/* Public Route */}
+          <Route path="/" element={<BookingForm />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/crm" element={<CRM />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

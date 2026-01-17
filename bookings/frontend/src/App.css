@@ -1,258 +1,152 @@
-/* --- Root & Layout --- */
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* --- 1. ROOT & CENTERING LOGIC --- */
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #4b5571; /* Your specific background */
+    color: #ffffff;
 }
 
-.admin-container h1, 
-.admin-container th, 
-.admin-container td {
-    color: #ffffff !important;
+/* This is the magic for the landing page */
+.welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;     
+    justify-content: center;  
+    position: fixed;         
+    top: 0;
+    left: 0;
+    width: 100vw;            
+    height: 100vh;           
+    z-index: 10;             
+    text-align: center;
 }
 
-.admin-container {
-  width: 100%;
-  margin: 0 auto;
-  text-align: left;
+.choice-container {
+    display: flex;
+    flex-direction: column; 
+    gap: 15px;              
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-/* --- Dashboard Header & Controls --- */
-.admin-header {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 15px;
-}
-
-.filter-group {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  justify-content: center;
-}
-
-.search-input {
-  display: block;
-  padding: 15px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 99vw; /* Your fix for full-width search */
-  max-width: 100%;
-  margin: 0 auto 20px auto;
-  height: 2.5rem;
-  box-sizing: border-box;
-}
-
-/* --- Buttons --- */
-.add-btn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.add-btn:hover {
-  opacity: 0.9;
-}
-
-.delete-btn {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* --- Table & Responsiveness --- */
-.table-responsive-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin-top: 10px;
-  border-radius: 8px;
-}
-
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.admin-table th, 
-.admin-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #444;
-  text-align: left;
-}
-
-/* Specific Mobile Fix for Side-Scroll */
-@media screen and (max-width: 768px) {
-  .admin-table {
-    display: table; /* Reset to table to maintain column widths */
-    min-width: 800px; /* Forces scroll without squishing */
-  }
-
-  tr {
-    font-size: 0.9rem;
-  }
-}
-
-/* --- Manual Entry Form --- */
-.manual-form {
-  background: #2a2a2a;
-  padding: 25px;
-  border-radius: 8px;
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.manual-form input, 
-.manual-form select, 
-.manual-form textarea {
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #444;
-  background: #333;
-  color: white;
-}
-
-/* --- React Calendar Styles --- */
+/* --- 2. THE CALENDAR (Back to your original colors) --- */
 .react-calendar {
-  width: 100%;
-  max-width: 400px;
-  margin: 10px auto;
-  background: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+    background: #ffffff !important; /* Original look */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .react-calendar__navigation button {
-  color: #333;
-  min-width: 44px;
-  background: none;
-  font-size: 16px;
-  font-weight: bold;
+    color: #333 !important;
+    min-width: 44px;
+    background: none;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .react-calendar__month-view__weekdays {
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.8em;
-  color: #555;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.8em;
+    color: #555;
 }
 
 .react-calendar__tile {
-  color: #000 !important;
-  font-weight: 500;
-  padding: 12px !important;
+    color: #000 !important;
+    font-weight: 500;
+    padding: 12px !important;
 }
 
 .react-calendar__tile:enabled:hover {
-  background-color: #e6e6e6;
-  border-radius: 6px;
+    background-color: #e6e6e6;
+    border-radius: 6px;
 }
 
 .react-calendar__tile--active {
-  background: #007bff !important;
-  color: white !important;
-  border-radius: 6px;
+    background: #007bff !important;
+    color: white !important;
+    border-radius: 6px;
 }
 
 .react-calendar__tile--now {
-  background: #7ee8a1 !important;
-  border-radius: 6px;
+    background: #7ee8a1 !important;
+    border-radius: 6px;
 }
 
+/* --- 3. THE BOOKING FORM & INPUTS --- */
+.booking-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
 
-/* Status Dropdown Styling */
-.status-select {
-    padding: 6px 10px;
-    border-radius: 4px;
-    background-color: #1a1a1a;
+input, select, textarea {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* --- 4. ADMIN & CRM LAYOUT --- */
+.admin-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: left;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.admin-table th, .admin-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #444;
+    text-align: left;
+    color: #ffffff !important;
+}
+
+.search-input {
+    width: 100%;
+    height: 2.5rem;
+    padding: 15px;
+    background: #333;
     color: white;
-    border: 1px solid var(--primary-color);
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+/* --- 5. BUTTONS --- */
+button {
     cursor: pointer;
-    font-size: 0.85rem;
+    transition: opacity 0.2s;
 }
 
-.status-select.scheduled { color: #ff9800; border-color: #ff9800; }
-.status-select.in-progress { color: #2196f3; border-color: #2196f3; }
-.status-select.completed { color: #4caf50; border-color: #4caf50; }
-.status-select.declined { color: #f44336; border-color: #f44336; }
+.add-btn { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; }
+.delete-btn { background-color: #ff4d4d; color: white; border: none; padding: 8px 12px; border-radius: 4px; }
 
-.status-select option {
-    background-color: #222;
+/* CRM Edit Inputs */
+.edit-input {
+    background: #333;
     color: white;
-}
-
-
-/* CRM Table Enhancements */
-.admin-table input.edit-input {
+    border: 1px solid #555;
+    padding: 5px;
     width: 90%;
-    padding: 6px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-bottom: 4px;
-    outline-color: var(--primary-color); /* Uses your existing primary color */
-}
-
-.admin-table input.edit-input.small {
-    font-size: 12px;
-    color: #666;
-    background-color: #fdfdfd;
-}
-
-/* Row transition effect */
-.admin-table tr {
-    transition: background-color 0.2s ease;
-}
-
-.admin-table tr:hover {
-    cursor: pointer;
-}
-
-/* Save and Cancel Button Adjustments */
-.add-btn {
-    background-color: #28a745; /* Green for Save */
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.delete-btn {
-    background-color: #dc3545; /* Red for Cancel/Delete */
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-/* History Section Highlight */
-.history-section {
-    animation: fadeIn 0.3s ease-in;
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
 }

@@ -195,4 +195,12 @@ app.get('/api/admin/customers', async (req, res) => {
   }
 });
 
-// ... app.listen ...
+// Get full history for a specific customer by email
+app.get('/api/admin/customers/:email/history', async (req, res) => {
+  try {
+    const history = await Appointment.find({ email: req.params.email }).sort({ date: -1 });
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});

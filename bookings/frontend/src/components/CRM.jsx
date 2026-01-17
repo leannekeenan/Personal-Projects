@@ -1,100 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import '../App.css'; 
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const nodemailer = require('nodemailer');
+const Holidays = require('date-holidays'); 
+require('dotenv').config();
 
-function CRM() {
-    const navigate = useNavigate();
-    const [customers, setCustomers] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
-    const [history, setHistory] = useState([]);
+const Appointment = require('./models/Appointment'); 
+const adminRoutes = require('./models/Admin');
 
-    useEffect(() => { fetchCustomers(); }, []);
+const app = express();
+const hd = new Holidays('US'); 
 
-    const fetchCustomers = async () => {
-        try {
-            const res = await axios.get('http://localhost:5000/api/admin/customers');
-            setCustomers(Array.isArray(res.data) ? res.data : []);
-        } catch (err) { console.error("Fetch Error", err); }
-    };
+app.use(cors());
+app.use(express.json());
 
-    const viewHistory = async (email) => {
-        try {
-            const res = await axios.get(`http://localhost:5000/api/admin/customers/${email}/history`);
-            setHistory(res.data);
-            setSelectedCustomer(email);
-        } catch (err) { console.error("History Error", err); }
-    };
+// --- BOOKING ROUTES ---
+app.get('/api/appointments/check', async (req, res) => {
+  try {
+    const { date } = req.query; 
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    const takenSlots = await Appointment.find({ date: { $gte: startOfDay, $lte: endOfDay } }).select('date -_id');
+    res.json(takenSlots);
+  } catch (err) { res.status(500).json({ message: err.message }); }
+});
 
-    const filtered = customers.filter(c => 
-        c.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.phone?.includes(searchTerm)
-    );
+app.post('/api/appointments', async (req, res) => {
+  try {
+    const bookingDate = new Date(req.body.date);
+    const holidayCheck = hd.isHoliday(bookingDate);
+    if (holidayCheck && holidayCheck.some(h => h.type === 'public')) {
+      return res.status(400).json({ message: "Closed on holidays." });
+    }
+    const newAppointment = new Appointment(req.body);
+    const saved = await newAppointment.save();
+    res.status(201).json(saved);
+  } catch (err) { res.status(400).json({ message: err.message }); }
+});
 
-    return (
-        <div className="admin-container">
-            <div className="admin-nav">
-                <button onClick={() => navigate('/admin')}>📅 Dashboard</button>
-                <button className="active-nav">👥 CRM</button>
-            </div>
+// --- CRM & ADMIN ROUTES ---
 
-            <div className="admin-header"><h1>Customer Manager</h1></div>
+// Get unique customers
+app.get('/api/admin/customers', async (req, res) => {
+  try {
+    const customers = await Appointment.aggregate([
+      {
+        $group: {
+          _id: { $toLower: "$email" }, 
+          clientName: { $first: "$clientName" },
+          phone: { $first: "$phone" },
+          email: { $first: "$email" },
+          pronouns: { $first: "$pronouns" },
+          totalBookings: { $sum: 1 },
+          lastVisit: { $max: "$date" }
+        }
+      },
+      { $sort: { lastVisit: -1 } }
+    ]);
+    res.json(customers);
+  } catch (err) { res.status(500).json({ message: err.message }); }
+});
 
-            <div className="search-bar-container">
-                <input 
-                    type="text" className="search-input" 
-                    placeholder="Search by ID/Email/Name..." 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                />
-            </div>
+// NEW: Update Customer Route (Pronouns/Phone/Name)
+app.patch('/api/admin/customers/:email', async (req, res) => {
+    try {
+        const { clientName, phone, pronouns } = req.body;
+        await Appointment.updateMany(
+            { email: { $regex: new RegExp("^" + req.params.email + "$", "i") } },
+            { $set: { clientName, phone, pronouns } }
+        );
+        res.json({ message: "Updated successfully" });
+    } catch (err) { res.status(500).json({ message: err.message }); }
+});
 
-            <table className="admin-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Primary ID (Email)</th>
-                        <th>Phone</th>
-                        <th>Total Visits</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filtered.map(c => (
-                        <tr key={c._id}>
-                            <td>{c.clientName}</td>
-                            <td>{c.email}</td>
-                            <td>{c.phone}</td>
-                            <td>{c.totalBookings}</td>
-                            <td><button className="add-btn" onClick={() => viewHistory(c.email)}>History</button></td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+app.get('/api/admin/customers/:email/history', async (req, res) => {
+  try {
+    const history = await Appointment.find({ email: { $regex: new RegExp("^" + req.params.email + "$", "i") } }).sort({ date: -1 });
+    res.json(history);
+  } catch (err) { res.status(500).json({ message: err.message }); }
+});
 
-            {selectedCustomer && (
-                <div className="history-section">
-                    <h2>History for {selectedCustomer}</h2>
-                    <button onClick={() => setSelectedCustomer(null)}>Close</button>
-                    <table className="admin-table">
-                        <thead>
-                            <tr><th>Date</th><th>Service</th><th>Status</th></tr>
-                        </thead>
-                        <tbody>
-                            {history.map(h => (
-                                <tr key={h._id}>
-                                    <td>{new Date(h.date).toLocaleDateString()}</td>
-                                    <td>{h.service}</td>
-                                    <td><span className={`badge ${h.status?.toLowerCase()}`}>{h.status || 'Scheduled'}</span></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-        </div>
-    );
-}
+app.patch('/api/admin/appointments/:id/status', async (req, res) => {
+    try {
+        const updated = await Appointment.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+        res.json(updated);
+    } catch (err) { res.status(500).json({ message: err.message }); }
+});
 
-export default CRM;
+app.use('/api/admin', adminRoutes);
+
+const PORT = process.env.PORT || 5000;
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => app.listen(PORT, () => console.log(`🚀 Server on ${PORT}`)))
+  .catch(err => console.log(err));

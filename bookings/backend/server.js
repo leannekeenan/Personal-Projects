@@ -76,3 +76,33 @@ const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGO_URI)
   .then(() => app.listen(PORT, () => console.log(`🚀 Server running with SMS enabled on port ${PORT}`)))
   .catch(err => console.error("Database connection error:", err));
+
+  app.get('/api/admin/analytics', async (req, res) => {
+    try {
+        const stats = await Appointment.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalRevenue: { $sum: "$price" },
+                    count: { $sum: 1 },
+                    avgTicket: { $avg: "$price" }
+                }
+            }
+        ]);
+
+        const revenueByService = await Appointment.aggregate([
+            { $group: { _id: "$service", value: { $sum: "$price" } } }
+        ]);
+
+        // Detailed list for the Excel Export
+        const exportData = await Appointment.find().sort({ date: -1 });
+
+        res.json({ 
+            summary: stats[0] || { totalRevenue: 0, count: 0, avgTicket: 0 }, 
+            revenueByService,
+            exportData 
+        });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});

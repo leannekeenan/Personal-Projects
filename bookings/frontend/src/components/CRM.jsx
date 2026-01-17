@@ -82,13 +82,25 @@ function CRM() {
 
     return (
         <div className="admin-container">
-            <div className="admin-nav" style={{ justifyContent: 'space-between', display: 'flex', borderBottom: '1px solid #444', paddingBottom: '15px' }}>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                    <button className="nav-btn" onClick={() => navigate('/admin')}>📅 Dashboard</button>
-                    <button className="nav-btn active">👥 CRM</button>
-                </div>
-                <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>🔒 Lock Grimoire</button>
-            </div>
+            <div className="admin-nav" style={{ 
+    justifyContent: 'space-between', 
+    display: 'flex', 
+    width: '100%', 
+    borderBottom: '1px solid white', 
+    paddingBottom: '15px' 
+}}>
+    <div style={{ display: 'flex', gap: '10px' }}>
+        <button className={`nav-btn ${window.location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => navigate('/dashboard')}>📅 Dashboard</button>
+        <button className={`nav-btn ${window.location.pathname === '/crm' ? 'active' : ''}`} onClick={() => navigate('/crm')}>👥 CRM</button>
+        <button className={`nav-btn ${window.location.pathname === '/analytics' ? 'active' : ''}`} onClick={() => navigate('/analytics')}>📈 Analytics</button>
+    </div>
+    
+    <div>
+        <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>
+            🔒 Lock Grimoire
+        </button>
+    </div>
+</div>
 
             <h1 style={{ color: 'white', marginTop: '20px' }}>Customer Manager</h1>
 

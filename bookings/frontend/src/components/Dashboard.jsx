@@ -11,7 +11,7 @@ function Dashboard() {
     
     // --- State Management ---
     const [appointments, setAppointments] = useState([]);
-    const [customers, setCustomers] = useState([]); // Needed for Auto-fill
+    const [customers, setCustomers] = useState([]); 
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [bookedTimes, setBookedTimes] = useState([]);
@@ -43,16 +43,25 @@ function Dashboard() {
 
     useEffect(() => { fetchData(); }, []);
 
+    // --- UPDATED FETCH LOGIC ---
     const fetchData = async () => {
         try {
-            // Fetch both appointments and customer list simultaneously
-            const [aptRes, custRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/admin/appointments'),
-                axios.get('http://localhost:5000/api/admin/customers')
-            ]);
+            // 1. Fetch Appointments first as priority
+            const aptRes = await axios.get('http://localhost:5000/api/admin/appointments');
             setAppointments(aptRes.data);
-            setCustomers(custRes.data);
-        } catch (err) { console.error("Fetch error:", err); }
+            
+            // 2. Try fetching customers (wrapped in own try/catch so it doesn't crash the table)
+            try {
+                const custRes = await axios.get('http://localhost:5000/api/admin/customers');
+                setCustomers(custRes.data);
+            } catch (e) { 
+                console.warn("CRM data not loaded:", e.message); 
+            }
+            
+        } catch (err) { 
+            console.error("Fetch error:", err); 
+            setAppointments([]); // Prevents infinite loading spinners
+        }
     };
 
     useEffect(() => {
@@ -93,7 +102,7 @@ function Dashboard() {
             clientName: customer.clientName || '',
             phone: customer.phone || '',
             email: customer.email || '',
-            customerType: 'returning' // Set badge to returning automatically
+            customerType: 'returning' 
         });
         setCrmSearch(''); 
         setShowSuggestions(false); 
@@ -144,10 +153,13 @@ function Dashboard() {
         <div className="admin-container">
             <div className="admin-nav" style={{ justifyContent: 'space-between', display: 'flex', width: '100%', borderBottom: '1px solid white', paddingBottom: '15px' }}>
                 <div style={{ display: 'flex', gap: '10px' }}>
-                    <button className="nav-btn active">📅 Dashboard</button>
-                    <button className="nav-btn" onClick={() => navigate('/crm')}>👥 CRM</button>
+                    <button className={`nav-btn ${window.location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => navigate('/dashboard')}>📅 Dashboard</button>
+                    <button className={`nav-btn ${window.location.pathname === '/crm' ? 'active' : ''}`} onClick={() => navigate('/crm')}>👥 CRM</button>
+                    <button className={`nav-btn ${window.location.pathname === '/analytics' ? 'active' : ''}`} onClick={() => navigate('/analytics')}>📈 Analytics</button>
                 </div>
-                <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>🔒 Lock Grimoire</button>
+                <div>
+                    <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>🔒 Lock Grimoire</button>
+                </div>
             </div>
 
             <div className="admin-header">
@@ -182,7 +194,6 @@ function Dashboard() {
                     <form className="manual-form" onSubmit={handleManualSubmit}>
                         <h3>Manual Call-in Entry</h3>
                         
-                        {/* QUICK-FIND SECTION */}
                         <div className="manual-booking-search" style={{ marginBottom: '15px', position: 'relative' }}>
                             <label style={{ color: '#aaa', fontSize: '12px' }}>Quick-Find Returning Customer:</label>
                             <input 
@@ -203,7 +214,6 @@ function Dashboard() {
                             )}
                         </div>
 
-                        {/* CORE FORM FIELDS */}
                         <input type="text" placeholder="Client Name" required value={formData.clientName} onChange={e => setFormData({...formData, clientName: e.target.value})} />
                         <input type="tel" placeholder="Phone Number" required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
                         <input type="email" placeholder="Customer Email Address" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />

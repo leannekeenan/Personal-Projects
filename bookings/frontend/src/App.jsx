@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard';
 import CRM from './components/CRM';
 import Login from './components/Login'; 
 import 'react-calendar/dist/Calendar.css';
+import Analytics from './components/Analytics.jsx';
 import './App.css';
 
 // --- CLIENT FACING BOOKING COMPONENT ---

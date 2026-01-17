@@ -172,6 +172,7 @@ export default function App() {
           {/* Admin Routes */}
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/crm" element={<CRM />} />
+          <Route path="/analytics" element={<Analytics />} />
         </Routes>
       </div>
 

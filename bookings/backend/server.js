@@ -150,8 +150,9 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`)))
   .catch(err => console.error("Database connection error:", err));
 
+// --- 5. Example update route in your backend ---
 
-  // Example update route in your backend
+
 app.patch('/api/appointments/:id', async (req, res) => {
     try {
         const updatedAppt = await Appointment.findByIdAndUpdate(req.params.id, req.body, { new: true });

@@ -6,13 +6,21 @@ const Holidays = require('date-holidays');
 require('dotenv').config();
 
 const Appointment = require('./models/Appointment'); 
-// Ensure your Appointment model in models/Appointment.js includes the 'pronouns' field.
 
 const app = express();
 const hd = new Holidays('US'); 
 
 app.use(cors());
 app.use(express.json());
+
+// --- EMAIL CONFIGURATION ---
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 // --- 1. APPOINTMENT BOOKING & AVAILABILITY ---
 
@@ -56,8 +64,6 @@ app.post('/api/appointments', async (req, res) => {
 
 // --- 2. CRM & ADMIN LOGIC ---
 
-// Main CRM List: Groups by email to show unique customers
-// Uses $last to ensure the most recently updated Name/Pronouns are displayed
 app.get('/api/admin/customers', async (req, res) => {
   try {
     const customers = await Appointment.aggregate([
@@ -80,22 +86,35 @@ app.get('/api/admin/customers', async (req, res) => {
   }
 });
 
-// Update Customer Identity (The Respectful Update)
-// Updates every historical record for this email so names like "Danni" persist everywhere
+// Update Customer Identity (The Respectful Update + Email Notification)
 app.patch('/api/admin/customers/:email', async (req, res) => {
     try {
         const { clientName, phone, pronouns } = req.body;
+        const targetEmail = req.params.email;
+
+        // 1. Update Database across all records for this email
         const result = await Appointment.updateMany(
-            { email: { $regex: new RegExp("^" + req.params.email + "$", "i") } },
+            { email: { $regex: new RegExp("^" + targetEmail + "$", "i") } },
             { $set: { clientName, phone, pronouns } }
         );
-        res.json({ message: "Customer identity updated across all records.", result });
+
+        // 2. Trigger the Notification Email
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: targetEmail,
+            subject: 'Information Updated - Confirmation',
+            text: `Hello ${clientName}, this is a confirmation that your contact information has been updated in our system.`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.json({ message: "Customer identity updated and email sent.", result });
     } catch (err) {
+        console.error("Update Error:", err);
         res.status(500).json({ message: err.message });
     }
 });
 
-// Customer History: Get all appointments for a specific email
 app.get('/api/admin/customers/:email/history', async (req, res) => {
   try {
     const history = await Appointment.find({ 
@@ -109,7 +128,6 @@ app.get('/api/admin/customers/:email/history', async (req, res) => {
 
 // --- 3. DASHBOARD CONTROLS ---
 
-// Fetch all appointments for Dashboard view
 app.get('/api/admin/appointments', async (req, res) => {
     try {
         const apps = await Appointment.find().sort({ date: -1 });
@@ -119,7 +137,6 @@ app.get('/api/admin/appointments', async (req, res) => {
     }
 });
 
-// Update Individual Appointment Status
 app.patch('/api/admin/appointments/:id/status', async (req, res) => {
     try {
         const updated = await Appointment.findByIdAndUpdate(
@@ -133,7 +150,6 @@ app.patch('/api/admin/appointments/:id/status', async (req, res) => {
     }
 });
 
-// Delete/Cancel Appointment
 app.delete('/api/admin/appointments/:id', async (req, res) => {
     try {
         await Appointment.findByIdAndDelete(req.params.id);
@@ -149,19 +165,3 @@ const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGO_URI)
   .then(() => app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`)))
   .catch(err => console.error("Database connection error:", err));
-
-// --- 5. Example update route in your backend ---
-
-
-app.patch('/api/appointments/:id', async (req, res) => {
-    try {
-        const updatedAppt = await Appointment.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        
-        // After saving, send the notification
-        await sendUpdateEmail(updatedAppt);
-        
-        res.json(updatedAppt);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});

@@ -22,6 +22,16 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// --- ADMIN AUTHENTICATION (SIMPLE) ---
+app.post('/api/admin/login', (req, res) => {
+    const { username, password } = req.body;
+    if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+        res.json({ success: true, message: "Logged In" });
+    } else {
+        res.status(401).json({ success: false, message: "Invalid Credentials" });
+    }
+});
+
 // --- 1. APPOINTMENT BOOKING & AVAILABILITY ---
 
 app.get('/api/appointments/check', async (req, res) => {
@@ -99,11 +109,33 @@ app.patch('/api/admin/customers/:email', async (req, res) => {
         );
 
         // 2. Trigger the Notification Email
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
+       const mailOptions = {
+            from: `"Customer Service" <${process.env.EMAIL_USER}>`,
             to: targetEmail,
-            subject: 'Information Updated - Confirmation',
-            text: `Hello ${clientName}, this is a confirmation that your contact information has been updated in our system.`
+            subject: 'Account Information Updated',
+            html: `
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                    <div style="background-color: #2c3e50; color: #ffffff; padding: 20px; text-align: center;">
+                        <h1 style="margin: 0; font-size: 24px;">Information Update</h1>
+                    </div>
+                    <div style="padding: 30px; color: #333333; line-height: 1.6;">
+                        <p style="font-size: 18px;">Hello <b>${clientName}</b>,</p>
+                        <p>This is a formal confirmation that your contact information has been successfully updated in our system.</p>
+                        
+                        <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #2c3e50;">
+                            <p style="margin: 5px 0;"><strong>Updated Name:</strong> ${clientName}</p>
+                            <p style="margin: 5px 0;"><strong>Updated Phone:</strong> ${phone}</p>
+                            ${pronouns ? `<p style="margin: 5px 0;"><strong>Pronouns:</strong> ${pronouns}</p>` : ''}
+                        </div>
+
+                        <p>If you did not authorize these changes, please contact our support team immediately by replying to this email.</p>
+                        <p style="margin-top: 30px;">Thank you,<br><strong>Management Team</strong></p>
+                    </div>
+                    <div style="background-color: #f4f4f4; color: #777777; padding: 15px; text-align: center; font-size: 12px;">
+                        &copy; ${new Date().getFullYear()} Your Business Name. All rights reserved.
+                    </div>
+                </div>
+            `
         };
 
         await transporter.sendMail(mailOptions);

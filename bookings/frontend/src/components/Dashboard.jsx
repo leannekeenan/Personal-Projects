@@ -120,18 +120,39 @@ function Dashboard() {
       <div className="admin-nav" style={{ 
     marginBottom: '20px', 
     display: 'flex', 
-    gap: '10px',
+    justifyContent: 'space-between', // Changed from space-around to space-between
+    alignItems: 'center',           // Keeps buttons vertically aligned
+    width: '100%',
     borderBottom: '1px solid var(--primary-color)',
     paddingBottom: '15px' 
 }}>
-    <button style={{ background: 'var(--primary-color)' }}>📅 Dashboard</button>
-    <button 
+      <div>
+        <button style={{ background: 'var(--primary-color)' }}>📅 Dashboard</button>
+        <button 
         onClick={() => navigate('/crm')} 
         style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
     >
         👥 CRM
-    </button>
-</div>
+        </button>
+      </div>
+
+        <div>
+          <button 
+              onClick={() => {
+                  localStorage.removeItem('isAdmin'); 
+                  navigate('/login'); 
+              }} 
+              className="delete-btn" 
+              style={{ 
+                  padding: '8px 15px', 
+                  fontSize: '0.85rem',
+                  margin: 0 
+              }}
+          >
+              🔒 Lock Grimoire
+          </button>
+        </div>
+      </div>
 
 <div className="filter-group">
     {/* Your Dashboard filters (Status/Date) go here */}

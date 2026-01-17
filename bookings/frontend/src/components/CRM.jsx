@@ -67,18 +67,39 @@ function CRM() {
             <div className="admin-nav" style={{ 
     marginBottom: '20px', 
     display: 'flex', 
-    gap: '10px',
+    justifyContent: 'space-between', 
+    alignItems: 'center',           
+    width: '100%',
     borderBottom: '1px solid var(--primary-color)',
     paddingBottom: '15px' 
 }}>
-    <button 
+    <div>
+        <button 
         onClick={() => navigate('/admin')} 
         style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
     >
         📅 Dashboard
     </button>
     <button style={{ background: 'var(--primary-color)' }}>👥 CRM</button>
-</div>
+
+    </div>
+    <div>
+          <button 
+              onClick={() => {
+                  localStorage.removeItem('isAdmin'); 
+                  navigate('/login'); 
+              }} 
+              className="delete-btn" 
+              style={{ 
+                  padding: '8px 15px', 
+                  fontSize: '0.85rem',
+                  margin: 0 
+              }}
+          >
+              🔒 Lock Grimoire
+          </button>
+        </div>
+            </div>
 
 <div className="admin-header"><h1>Customer Manager</h1></div>
 

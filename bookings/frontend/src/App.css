@@ -5,6 +5,12 @@
   padding: 2rem;
 }
 
+.admin-container h1, 
+.admin-container th, 
+.admin-container td {
+    color: #ffffff !important;
+}
+
 .admin-container {
   width: 100%;
   margin: 0 auto;

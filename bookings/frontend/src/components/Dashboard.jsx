@@ -4,6 +4,7 @@ import Calendar from 'react-calendar';
 import Holidays from 'date-holidays';
 import { useNavigate } from 'react-router-dom'; // Add this import
 import 'react-calendar/dist/Calendar.css'; 
+
 import '../App.css'; 
 
 function Dashboard() {

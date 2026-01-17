@@ -1,3 +1,19 @@
+const twilio = require('twilio');
+const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+const sendSMS = async (to, message) => {
+    try {
+        await client.messages.create({
+            body: message,
+            from: process.env.TWILIO_PHONE_NUMBER,
+            to: to // Must be in E.164 format (e.g., +11234567890)
+        });
+        console.log("SMS Sent Successfully");
+    } catch (error) {
+        console.error("Twilio Error:", error.message);
+    }
+};
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');

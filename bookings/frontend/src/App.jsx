@@ -5,6 +5,7 @@ import Holidays from 'date-holidays';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard'; 
 import CRM from './components/CRM';
+import Login from './components/Login'; 
 import 'react-calendar/dist/Calendar.css';
 import './App.css';
 
@@ -87,7 +88,6 @@ function BookingForm() {
         } catch (err) { alert(err.response?.data?.message || "Error"); }
     };
 
-    // THIS IS THE CENTERED WELCOME SCREEN
     if (customerType === null) {
         return (
             <div className="welcome-screen">
@@ -149,6 +149,9 @@ export default function App() {
         <Routes>
           {/* Public Route */}
           <Route path="/" element={<BookingForm />} />
+          
+          {/* LOGIN ROUTE --- ADDED THIS LINE */}
+          <Route path="/login" element={<Login />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<Dashboard />} />

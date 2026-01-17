@@ -3,12 +3,25 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../App.css'; 
 
+
+
 function CRM() {
+
+    
     const navigate = useNavigate();
     const [customers, setCustomers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [history, setHistory] = useState([]);
+
+    
+
+    useEffect(() => {
+        const loggedIn = localStorage.getItem('isAdmin');
+        if (loggedIn !== 'true') {
+            navigate('/login'); // Kick them out if they aren't logged in
+        }
+    }, [navigate]);
     
     // THESE STATES CONTROL THE EDITING TOGGLE
     const [editingEmail, setEditingEmail] = useState(null);

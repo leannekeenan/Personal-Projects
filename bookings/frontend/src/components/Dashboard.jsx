@@ -7,6 +7,8 @@ import 'react-calendar/dist/Calendar.css';
 
 import '../App.css'; 
 
+
+
 function Dashboard() {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
@@ -41,6 +43,13 @@ function Dashboard() {
     }
     return slots;
   };
+
+      useEffect(() => {
+          const loggedIn = localStorage.getItem('isAdmin');
+          if (loggedIn !== 'true') {
+              navigate('/login'); // Kick them out if they aren't logged in
+          }
+      }, [navigate]);
 
   useEffect(() => { fetchData(); }, []);
 

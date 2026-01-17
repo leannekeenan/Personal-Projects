@@ -134,6 +134,27 @@ input, select, textarea {
     width: 100%;
 }
 
+/* --- EXCEL EXPORT BUTTON --- */
+
+.export-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.export-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
 /* --- 4. ADMIN & CRM LAYOUT --- */
 .admin-container {
     width: 100%;

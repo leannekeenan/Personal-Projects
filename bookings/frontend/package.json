@@ -13,6 +13,7 @@
     "axios": "^1.13.2",
     "date-holidays": "^3.26.6",
     "lucide-react": "^0.562.0",
+    "prop-types": "^15.8.1",
     "react": "^19.2.0",
     "react-calendar": "^6.0.0",
     "react-csv": "^2.2.2",

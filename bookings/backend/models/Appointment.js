@@ -7,6 +7,7 @@ const appointmentSchema = new mongoose.Schema({
   service: { type: String, required: true },
   date: { type: Date, required: true },
   notes: { type: String },
+  price: { type: Number, default: 0 },
   customerType: { type: String, default: 'new' }, // 'new' or 'returning'
   status: { 
     type: String, 

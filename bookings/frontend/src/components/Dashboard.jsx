@@ -109,25 +109,31 @@ function Dashboard() {
   return (
     <div className="admin-container">
       <div className="admin-nav" style={{ 
-          marginBottom: '20px', 
-          display: 'flex', 
-          gap: '10px',
-          borderBottom: '1px solid var(--primary-color)',
-          paddingBottom: '15px' 
-        }}>
-          <button style={{ background: 'var(--primary-color)' }}>📅 Dashboard</button>
-          <button 
-            onClick={() => navigate('/crm')} 
-            style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
-          >
-            👥 CRM
-          </button>
-      </div>
+    marginBottom: '20px', 
+    display: 'flex', 
+    gap: '10px',
+    borderBottom: '1px solid var(--primary-color)',
+    paddingBottom: '15px' 
+}}>
+    <button style={{ background: 'var(--primary-color)' }}>📅 Dashboard</button>
+    <button 
+        onClick={() => navigate('/crm')} 
+        style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
+    >
+        👥 CRM
+    </button>
+</div>
+
+<div className="admin-header"><h1>Appointment Dashboard</h1></div>
+
+<div className="filter-group">
+    {/* Your Dashboard filters (Status/Date) go here */}
+</div>
 
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
         
-        <div className="admin-controls" style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+        <div className="admin-controls">
             <div className="filter-group">
                 <span>Filter List: </span>
                 <div>

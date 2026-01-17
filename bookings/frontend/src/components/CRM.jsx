@@ -51,21 +51,33 @@ function CRM() {
 
     return (
         <div className="admin-container">
-            <div className="admin-nav">
-                <button onClick={() => navigate('/admin')}>📅 Dashboard</button>
-                <button className="active-nav">👥 CRM</button>
-            </div>
+            <div className="admin-nav" style={{ 
+    marginBottom: '20px', 
+    display: 'flex', 
+    gap: '10px',
+    borderBottom: '1px solid var(--primary-color)',
+    paddingBottom: '15px' 
+}}>
+    <button 
+        onClick={() => navigate('/admin')} 
+        style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
+    >
+        📅 Dashboard
+    </button>
+    <button style={{ background: 'var(--primary-color)' }}>👥 CRM</button>
+</div>
 
-            <div className="admin-header"><h1>Customer Manager</h1></div>
+<div className="admin-header"><h1>Customer Manager</h1></div>
 
-            <div className="search-bar-container">
-                <input 
-                    type="text" className="search-input" 
-                    placeholder="Search by ID/Email/Name..." 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                />
-            </div>
+<div className="search-bar-container">
+    <input 
+        type="text" 
+        className="search-input" 
+        placeholder="Search by ID/Email/Name..." 
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)} 
+    />
+</div>
 
             <table className="admin-table">
                 <thead>

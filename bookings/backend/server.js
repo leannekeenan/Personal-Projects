@@ -69,23 +69,23 @@ app.get('/api/appointments/check', async (req, res) => {
 });
 
 app.post('/api/appointments', async (req, res) => {
-  try {
-    const bookingDate = new Date(req.body.date);
-    const holidayCheck = hd.isHoliday(bookingDate);
-    
-    if (holidayCheck && holidayCheck.some(h => h.type === 'public')) {
-      return res.status(400).json({ message: "Closed on holidays." });
+    try {
+        const newAppointment = new Appointment(req.body);
+        await newAppointment.save();
+
+        // --- THE SMS TRIGGER ---
+        const customerPhone = req.body.phone; // Ensure this is formatted correctly
+        const appointmentDate = new Date(req.body.date).toLocaleString();
+        
+        const smsMessage = `Hi ${req.body.clientName}, your appointment for ${req.body.service} on ${appointmentDate} is confirmed! Thank you!`;
+        
+        await sendSMS(customerPhone, smsMessage);
+        // -----------------------
+
+        res.status(201).json(newAppointment);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
     }
-
-    const existingCount = await Appointment.countDocuments({ date: bookingDate });
-    if (existingCount >= 2) return res.status(400).json({ message: "Slot full." });
-
-    const newAppointment = new Appointment(req.body);
-    const saved = await newAppointment.save();
-    res.status(201).json(saved);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
 });
 
 // --- 2. CRM & ADMIN LOGIC ---

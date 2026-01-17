@@ -131,11 +131,11 @@ function BookingForm() {
                 <textarea placeholder="Notes (optional)" onChange={e => setFormData({...formData, notes: e.target.value})}></textarea>
 
                 <label className="consent-label">
-                    <input type="checkbox" required onChange={e => setFormData({...formData, consent: e.target.checked})} /> 
+                    <input className='checkbox' type="checkbox" required onChange={e => setFormData({...formData, consent: e.target.checked})} /> 
                     I Consent to accept a confirmation email regarding my booking
                 </label>
                 
-                <button type="submit">Confirm Booking</button>
+                <button className='save-btn' type="submit">Confirm Booking</button>
             </form>
         </div>
     );
@@ -150,7 +150,7 @@ function Footer() {
         <p className="footer-logo">Grimoire CRM</p>
         <p>© {new Date().getFullYear()} • Secure Business Ledger</p>
         <p style={{ fontSize: '0.7rem', opacity: 0.5, letterSpacing: '1px' }}>
-            CRAFTED FOR MASTERS OF THE CRAFT
+            BUILT FOR MASTERS OF THE CRAFT
         </p>
       </div>
     </footer>
@@ -161,7 +161,7 @@ function Footer() {
 export default function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="App" style={{ flex: '1' }}>
         <Routes>
           {/* Public Route */}
           <Route path="/" element={<BookingForm />} />

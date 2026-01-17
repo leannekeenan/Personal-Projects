@@ -141,6 +141,22 @@ function BookingForm() {
     );
 }
 
+// --- FOOTER COMPONENT ---
+
+function Footer() {
+  return (
+    <footer className="app-footer">
+      <div className="footer-content">
+        <p className="footer-logo">Grimoire CRM</p>
+        <p>© {new Date().getFullYear()} • Secure Business Ledger</p>
+        <p style={{ fontSize: '0.7rem', opacity: 0.5, letterSpacing: '1px' }}>
+            CRAFTED FOR MASTERS OF THE CRAFT
+        </p>
+      </div>
+    </footer>
+  );
+}
+
 // --- MAIN APP ROUTER ---
 export default function App() {
   return (
@@ -158,6 +174,8 @@ export default function App() {
           <Route path="/crm" element={<CRM />} />
         </Routes>
       </div>
+
+      <Footer />
     </Router>
   );
 }

@@ -118,41 +118,26 @@ function Dashboard() {
   return (
     <div className="admin-container">
       <div className="admin-nav" style={{ 
-    marginBottom: '20px', 
+    justifyContent: 'space-between', 
     display: 'flex', 
-    justifyContent: 'space-between', // Changed from space-around to space-between
-    alignItems: 'center',           // Keeps buttons vertically aligned
-    width: '100%',
-    borderBottom: '1px solid var(--primary-color)',
+    width: '100%', 
+    borderBottom: '1px solid white', 
     paddingBottom: '15px' 
 }}>
-      <div>
-        <button style={{ background: 'var(--primary-color)' }}>📅 Dashboard</button>
-        <button 
-        onClick={() => navigate('/crm')} 
-        style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
-    >
-        👥 CRM
+    <div style={{ display: 'flex', gap: '10px' }}>
+        {/* DASHBOARD: Gets the 'active' class because we are on the dashboard */}
+        <button className="nav-btn active">📅 Dashboard</button>
+        
+        {/* CRM: Does NOT get the active class, so it stays transparent */}
+        <button className="nav-btn" onClick={() => navigate('/crm')}>👥 CRM</button>
+    </div>
+    
+    <div>
+        <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>
+            🔒 Lock Grimoire
         </button>
-      </div>
-
-        <div>
-          <button 
-              onClick={() => {
-                  localStorage.removeItem('isAdmin'); 
-                  navigate('/login'); 
-              }} 
-              className="delete-btn" 
-              style={{ 
-                  padding: '8px 15px', 
-                  fontSize: '0.85rem',
-                  margin: 0 
-              }}
-          >
-              🔒 Lock Grimoire
-          </button>
-        </div>
-      </div>
+    </div>
+</div>
 
 <div className="filter-group">
     {/* Your Dashboard filters (Status/Date) go here */}

@@ -127,6 +127,37 @@ input, select, textarea {
     margin-left: 35px; /* Space between controls */
 }
 
+/* 1. The Default Button (Transparent) */
+.nav-btn {
+    background: transparent !important; 
+    color: white !important;
+    border: 1px solid white !important;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+/* 2. THE HIGHLIGHT (Only for the page you are on) */
+/* This overrides the transparency ONLY when the .active class is present */
+.nav-btn.active {
+    background: #bc8f8f !important; /* This makes it highlighted */
+    color: #242424 !important;    /* Dark text for the highlight */
+}
+
+/* 3. THE CLICK EFFECT (The grey text you want) */
+/* This triggers ONLY during the physical click */
+.nav-btn:active {
+    color: #545353 !important; 
+    transform: translateY(1px) !important;
+}
+
+/* 4. Hover effect for the non-active button */
+.nav-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
 .admin-table {
     width: 100%;
     border-collapse: collapse;
@@ -172,6 +203,7 @@ button {
 
 .add-btn { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; }
 .delete-btn { background-color: #ff4d4d; color: white; border: none; padding: 8px 12px; border-radius: 4px; }
+
 
 
 .status-select {

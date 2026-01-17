@@ -65,41 +65,26 @@ function CRM() {
     return (
         <div className="admin-container">
             <div className="admin-nav" style={{ 
-    marginBottom: '20px', 
-    display: 'flex', 
     justifyContent: 'space-between', 
-    alignItems: 'center',           
-    width: '100%',
-    borderBottom: '1px solid var(--primary-color)',
+    display: 'flex', 
+    width: '100%', 
+    borderBottom: '1px solid white', 
     paddingBottom: '15px' 
 }}>
-    <div>
-        <button 
-        onClick={() => navigate('/admin')} 
-        style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
-    >
-        📅 Dashboard
-    </button>
-    <button style={{ background: 'var(--primary-color)' }}>👥 CRM</button>
-
+    <div style={{ display: 'flex', gap: '10px' }}>
+        {/* DASHBOARD: No active class, stays transparent */}
+        <button className="nav-btn" onClick={() => navigate('/admin')}>📅 Dashboard</button>
+        
+        {/* CRM: Gets the 'active' class because we are on the CRM page */}
+        <button className="nav-btn active">👥 CRM</button>
     </div>
+    
     <div>
-          <button 
-              onClick={() => {
-                  localStorage.removeItem('isAdmin'); 
-                  navigate('/login'); 
-              }} 
-              className="delete-btn" 
-              style={{ 
-                  padding: '8px 15px', 
-                  fontSize: '0.85rem',
-                  margin: 0 
-              }}
-          >
-              🔒 Lock Grimoire
-          </button>
-        </div>
-            </div>
+        <button className="delete-btn" onClick={() => { localStorage.removeItem('isAdmin'); navigate('/login'); }}>
+            🔒 Lock Grimoire
+        </button>
+    </div>
+</div>
 
 <div className="admin-header"><h1>Customer Manager</h1></div>
 

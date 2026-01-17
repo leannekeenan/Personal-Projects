@@ -1,108 +1,86 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import '../App.css';
 
 function CRM() {
-  const [customers, setCustomers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate();
+    const [customers, setCustomers] = useState([]);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [history, setHistory] = useState([]);
 
-  // Fetch unique customers from the new aggregation route
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/admin/customers');
-        setCustomers(res.data);
-      } catch (err) {
-        console.error("CRM Fetch Error:", err);
-      }
+    // Fetch the unique list of customers
+    useEffect(() => {
+        axios.get('http://localhost:5000/api/admin/customers')
+            .then(res => setCustomers(res.data))
+            .catch(err => console.error(err));
+    }, []);
+
+    // Fetch history when a name is clicked
+    const viewHistory = async (email) => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/admin/customers/${email}/history`);
+            setHistory(res.data);
+            setSelectedCustomer(email);
+        } catch (err) {
+            console.error("Error fetching history", err);
+        }
     };
-    fetchCustomers();
-  }, []);
 
-  // Filter by name, email, or phone using the search input
-  const filtered = customers.filter(c => 
-    c.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.phone.includes(searchTerm)
-  );
+    return (
+        <div className="admin-container">
+            <h1>Customer Relationship Manager</h1>
+            
+            {/* 1. THE MAIN CUSTOMER LIST */}
+            <table className="admin-table">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Email (ID)</th>
+                        <th>Total Visits</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {customers.map(c => (
+                        <tr key={c.email}>
+                            <td>{c.clientName}</td>
+                            <td>{c.email}</td>
+                            <td>{c.totalBookings}</td>
+                            <td>
+                                <button onClick={() => viewHistory(c.email)}>View History</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
 
-  return (
-    <div className="admin-container">
-      {/* Admin Internal Navigation */}
-      <div className="admin-nav" style={{ 
-        marginBottom: '20px', 
-        display: 'flex', 
-        gap: '10px',
-        borderBottom: '1px solid var(--primary-color)',
-        paddingBottom: '15px' 
-      }}>
-        <button 
-          onClick={() => navigate('/admin')} 
-          style={{ background: 'transparent', border: '1px solid var(--primary-color)' }}
-        >
-          📅 Dashboard
-        </button>
-        <button 
-          style={{ background: 'var(--primary-color)' }}
-        >
-          👥 CRM
-        </button>
-      </div>
-
-      <div className="admin-header">
-        <h1>Client Relationship Manager</h1>
-      </div>
-
-      <input 
-        type="text" 
-        className="search-input" 
-        placeholder="Search database by name, email, or phone..." 
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-
-      <div className="table-responsive-wrapper">
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Client Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Status</th>
-              <th>Total Bookings</th>
-              <th>Last Visit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length > 0 ? (
-              filtered.map(c => (
-                <tr key={c._id}>
-                  <td><strong>{c.clientName}</strong></td>
-                  <td>{c.email}</td>
-                  <td>{c.phone}</td>
-                  <td>
-                    <span className={`badge ${c.customerType || 'new'}`}>
-                      {c.customerType || 'new'}
-                    </span>
-                  </td>
-                  <td>{c.totalBookings}</td>
-                  <td>{new Date(c.lastVisit).toLocaleDateString()}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" style={{ textAlign: 'center', padding: '30px' }}>
-                  No clients found in the database.
-                </td>
-              </tr>
+            {/* 2. THE HISTORY VIEW (Shows up when you click a button) */}
+            {selectedCustomer && (
+                <div className="history-modal" style={{ marginTop: '40px', padding: '20px', background: '#333', borderRadius: '10px' }}>
+                    <h2>History for {selectedCustomer}</h2>
+                    <button onClick={() => setSelectedCustomer(null)}>Close History</button>
+                    <table className="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Service</th>
+                                <th>Notes</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {history.map(h => (
+                                <tr key={h._id}>
+                                    <td>{new Date(h.date).toLocaleDateString()}</td>
+                                    <td>{h.service}</td>
+                                    <td>{h.notes}</td>
+                                    <td><span className="status-badge">Completed</span></td> 
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
 
 export default CRM;

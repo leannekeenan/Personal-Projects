@@ -204,3 +204,18 @@ app.get('/api/admin/customers/:email/history', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Update Appointment Status (Dashboard)
+app.patch('/api/admin/appointments/:id/status', async (req, res) => {
+    try {
+        const { status } = req.body;
+        const updated = await Appointment.findByIdAndUpdate(
+            req.params.id, 
+            { status }, 
+            { new: true }
+        );
+        res.json(updated);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});

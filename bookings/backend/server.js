@@ -74,6 +74,7 @@ app.post('/api/appointments', async (req, res) => {
 
 // --- 2. CRM & ADMIN LOGIC ---
 
+// FETCH CUSTOMERS WITH NESTED HISTORY FOR EXPORT
 app.get('/api/admin/customers', async (req, res) => {
   try {
     const customers = await Appointment.aggregate([
@@ -85,7 +86,16 @@ app.get('/api/admin/customers', async (req, res) => {
           email: { $first: "$email" },
           pronouns: { $last: "$pronouns" },
           totalBookings: { $sum: 1 },
-          lastVisit: { $max: "$date" }
+          lastVisit: { $max: "$date" },
+          // This creates the list of visits for the Excel export
+          history: { 
+            $push: { 
+                date: "$date", 
+                service: "$service", 
+                status: "$status",
+                notes: "$notes"
+            } 
+          }
         }
       },
       { $sort: { lastVisit: -1 } }
@@ -96,19 +106,17 @@ app.get('/api/admin/customers', async (req, res) => {
   }
 });
 
-// Update Customer Identity (The Respectful Update + Email Notification)
+// Update Customer Identity
 app.patch('/api/admin/customers/:email', async (req, res) => {
     try {
         const { clientName, phone, pronouns } = req.body;
         const targetEmail = req.params.email;
 
-        // 1. Update Database across all records for this email
         const result = await Appointment.updateMany(
             { email: { $regex: new RegExp("^" + targetEmail + "$", "i") } },
             { $set: { clientName, phone, pronouns } }
         );
 
-        // 2. Trigger the Notification Email
        const mailOptions = {
             from: `"Customer Service" <${process.env.EMAIL_USER}>`,
             to: targetEmail,
@@ -128,21 +136,19 @@ app.patch('/api/admin/customers/:email', async (req, res) => {
                             ${pronouns ? `<p style="margin: 5px 0;"><strong>Pronouns:</strong> ${pronouns}</p>` : ''}
                         </div>
 
-                        <p>If you did not authorize these changes, please contact our support team immediately by replying to this email.</p>
+                        <p>If you did not authorize these changes, please contact our support team immediately.</p>
                         <p style="margin-top: 30px;">Thank you,<br><strong>Management Team</strong></p>
                     </div>
                     <div style="background-color: #f4f4f4; color: #777777; padding: 15px; text-align: center; font-size: 12px;">
-                        &copy; ${new Date().getFullYear()} Your Business Name. All rights reserved.
+                        &copy; ${new Date().getFullYear()} Grimoire CRM. All rights reserved.
                     </div>
                 </div>
             `
         };
 
         await transporter.sendMail(mailOptions);
-
         res.json({ message: "Customer identity updated and email sent.", result });
     } catch (err) {
-        console.error("Update Error:", err);
         res.status(500).json({ message: err.message });
     }
 });

@@ -54,7 +54,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// --- 1. INTEGRATED BOOKING ROUTE (HTML EMAILS RESTORED) ---
+// --- 1. INTEGRATED BOOKING ROUTE ---
 app.post('/api/appointments', async (req, res) => {
     try {
         const { clientName, email, phone, service, date, notes, customerType } = req.body;
@@ -94,13 +94,13 @@ app.post('/api/appointments', async (req, res) => {
                 <p>Your appointment for <strong>${service}</strong> is scheduled for <strong>${dateString}</strong>.</p>
                 <hr style="border: 0; border-top: 1px solid #eee;" />
                 <p><strong>Notes:</strong> ${notes || 'N/A'}</p>
-                <p>We look forward to seeing you at Grimoire.</p>
+                <p>We look forward to seeing you.</p>
             </div>
         `;
 
         const companyHtml = `
             <div style="background: #f4f4f4; padding: 20px; font-family: sans-serif;">
-                <h3 style="margin-top: 0;">New Manual Booking Alert</h3>
+                <h3 style="margin-top: 0;">New Booking Alert</h3>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr><td style="padding: 5px;"><strong>Client:</strong></td><td>${clientName}</td></tr>
                     <tr><td style="padding: 5px;"><strong>Service:</strong></td><td>${service}</td></tr>
@@ -112,41 +112,33 @@ app.post('/api/appointments', async (req, res) => {
         `;
 
         // 4. Dispatch Communications
-        // Send SMS
         await sendSMS(phone, `Hi ${clientName}, your ${service} at Grimoire is confirmed for ${dateString}.`);
 
-        // Send Email to Client
-        const mailOptionsClient = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Appointment Confirmed - Grimoire',
-            html: clientHtml 
-        };
+        try {
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Appointment Confirmed - Grimoire',
+                html: clientHtml 
+            });
+        } catch (err) { console.error("❌ Client Email Error:", err); }
 
-        // Send Email to Company
-        const mailOptionsCompany = {
-            from: process.env.EMAIL_USER,
-            to: process.env.COMPANY_EMAIL,
-            subject: 'ALERT: New Booking Received',
-            html: companyHtml
-        };
-
-        transporter.sendMail(mailOptionsClient, (err) => {
-            if (err) console.error("❌ Client Email Error:", err);
-        });
-
-        transporter.sendMail(mailOptionsCompany, (err) => {
-            if (err) console.error("❌ Company Email Error:", err);
-        });
+        try {
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: process.env.COMPANY_EMAIL || process.env.EMAIL_USER,
+                subject: `ALERT: New Manual Booking - ${clientName}`,
+                html: companyHtml
+            });
+        } catch (err) { console.error("❌ Company Email Error:", err); }
 
         res.status(201).json(saved);
     } catch (err) {
-        console.error("Booking Error:", err);
         res.status(400).json({ message: err.message });
     }
 });
 
-// --- 2. ADMIN: FETCH ALL ---
+// --- 5. ADMIN: FETCH ALL ---
 app.get('/api/admin/appointments', async (req, res) => {
     try {
         const appointments = await Appointment.find().sort({ date: -1 });
@@ -154,23 +146,26 @@ app.get('/api/admin/appointments', async (req, res) => {
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// --- 3. ADMIN: FETCH CUSTOMERS (CRM) ---
+// --- 6. ADMIN: FETCH CUSTOMERS (CRM) - FIXED FOR EDDIE ---
 app.get('/api/admin/customers', async (req, res) => {
     try {
         const customers = await Appointment.aggregate([
             { $sort: { date: -1 } },
-            { $group: {
-                _id: "$email",
-                clientName: { $first: "$clientName" },
-                phone: { $first: "$phone" },
-                email: { $first: "$email" }
-            }}
+            { 
+                $group: {
+                    // Grouping by BOTH name and email so shared emails don't hide names
+                    _id: { email: "$email", name: "$clientName" },
+                    clientName: { $first: "$clientName" },
+                    phone: { $first: "$phone" },
+                    email: { $first: "$email" }
+                } 
+            }
         ]);
         res.json(customers);
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// --- 4. AVAILABILITY CHECK ---
+// --- 7. AVAILABILITY CHECK ---
 app.get('/api/appointments/check', async (req, res) => {
     try {
         const { date } = req.query; 
@@ -181,7 +176,7 @@ app.get('/api/appointments/check', async (req, res) => {
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// --- 5. UPDATE STATUS ---
+// --- 8. UPDATE STATUS ---
 app.patch('/api/admin/appointments/:id/status', async (req, res) => {
     try {
         const updated = await Appointment.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
@@ -189,7 +184,7 @@ app.patch('/api/admin/appointments/:id/status', async (req, res) => {
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// --- 6. DELETE ---
+// --- 9. DELETE ---
 app.delete('/api/admin/appointments/:id', async (req, res) => {
     try {
         await Appointment.findByIdAndDelete(req.params.id);
@@ -197,7 +192,7 @@ app.delete('/api/admin/appointments/:id', async (req, res) => {
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// --- 7. ANALYTICS ---
+// --- 10. ANALYTICS ---
 app.get('/api/admin/analytics', async (req, res) => {
     try {
         const appointments = await Appointment.find();
@@ -216,7 +211,7 @@ app.get('/api/admin/analytics', async (req, res) => {
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// --- 8. CUSTOMER HISTORY ---
+// --- 11. CUSTOMER HISTORY ---
 app.get('/api/admin/customers/:email/history', async (req, res) => {
     try {
         const history = await Appointment.find({ email: req.params.email }).sort({ date: -1 });
@@ -224,7 +219,7 @@ app.get('/api/admin/customers/:email/history', async (req, res) => {
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// --- 9. UPDATE CUSTOMER IDENTITY ---
+// --- 12. UPDATE CUSTOMER IDENTITY ---
 app.patch('/api/admin/customers/:email', async (req, res) => {
     try {
         await Appointment.updateMany(
@@ -235,7 +230,7 @@ app.patch('/api/admin/customers/:email', async (req, res) => {
     } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// --- 10. TEST SMS ---
+// --- 13. TEST SMS ---
 app.post('/api/admin/test-sms', async (req, res) => {
     try {
         await sendSMS(req.body.phone, req.body.message || "Test Message");

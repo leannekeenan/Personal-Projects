@@ -1879,8 +1879,8 @@ input, select, textarea {
 		input[type="button"]:hover,
 		button:hover,
 		.button:hover {
-			box-shadow: inset 0 0 0 2px #2ee4bb;
-			color: #2ee4bb !important;
+			box-shadow: inset 0 0 0 2px #36594A;
+			color: #36594A !important;
 		}
 
 		input[type="submit"]:active,
@@ -1889,8 +1889,8 @@ input, select, textarea {
 		button:active,
 		.button:active {
 			background-color: rgba(73, 252, 212, 0.25);
-			box-shadow: inset 0 0 0 2px #2ee4bb;
-			color: #2ee4bb !important;
+			box-shadow: inset 0 0 0 2px #36594A;
+			color: #36594A !important;
 		}
 
 		input[type="submit"].small,
@@ -2131,7 +2131,7 @@ input, select, textarea {
 		input[type="url"]:focus,
 		select:focus,
 		textarea:focus {
-			border-color: #2ee4bb;
+			border-color: #36594A;
 		}
 
 	label {
@@ -3287,7 +3287,7 @@ input, select, textarea {
 		}
 
 			#wrapper > section > header:before {
-				background: #43d9b8;
+				background: #36594A;
 				content: '';
 				display: block;
 				margin-top: 1rem;
@@ -3300,7 +3300,7 @@ input, select, textarea {
 			}
 
 				#wrapper > section > header h1:before, #wrapper > section > header h2:before {
-					background: #43d9b8;
+					background: #36594A;
 					content: '';
 					display: block;
 					height: 2px;
@@ -3309,7 +3309,7 @@ input, select, textarea {
 				}
 
 				#wrapper > section > header h1:after, #wrapper > section > header h2:after {
-					background: #43d9b8;
+					background: #36594A;
 					border-radius: 0.5rem;
 					content: '';
 					display: block;
@@ -3366,7 +3366,7 @@ input, select, textarea {
 			}
 
 			#wrapper > section:last-of-type > header:after {
-				background: #43d9b8;
+				background: #36594A;
 				border-radius: 0.5rem;
 				bottom: -1.5rem;
 				content: '';

@@ -1,0 +1,11 @@
+PORT=5000
+MONGO_URI=mongodb+srv://leannekeenan1:2X7NQs97D5SIKPkN@cluster0.8my0xqu.mongodb.net/?appName=Cluster0
+
+
+SQUARE_ACCESS_TOKEN=your_square_token
+
+
+TWILIO_ACCOUNT_SID=AC3dde615a920a4d295f42d0175cffc831
+TWILIO_AUTH_TOKEN=866e79caf57e218ee042ee7fb81bd249
+TWILIO_PHONE_NUMBER=+16504819508
+BUSINESS_EMAIL=sweetadventuresclub@gmail.com

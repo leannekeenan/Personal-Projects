@@ -1,9 +1,18 @@
 const express = require('express');
 const router = express.Router();
-// This matches the "Preordering.js" file I see in your models folder
 const Preorder = require('../models/Preordering'); 
+const nodemailer = require('nodemailer');
 
-// 1. GET ALL PREORDERS (The "Clipboard" view)
+// 1. Set up the Email Transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS  
+  }
+});
+
+// GET ALL PREORDERS
 router.get('/', async (req, res) => {
     try {
         const preorders = await Preorder.find().sort({ createdAt: -1 });
@@ -13,35 +22,56 @@ router.get('/', async (req, res) => {
     }
 });
 
-// 2. CREATE NEW PREORDER (The "Signup" action)
-/*
+// CREATE NEW PREORDER & SEND EMAIL
 router.post('/', async (req, res) => {
-    const newEntry = new Preorder({
-        customerName: req.body.customerName,
-        email: req.body.email,
-        phone: req.body.phone,
-        productName: req.body.productName,
-        quantity: req.body.quantity
+  try {
+    // Save to Database
+    const newOrder = new Preorder(req.body);
+    const savedOrder = await newOrder.save();
+
+    // Build the Order List for the Email
+    // This loops through your items and only lists things people actually ordered
+    let itemsList = '';
+    for (const [flavor, sizes] of Object.entries(savedOrder.items)) {
+        const counts = [];
+        if (sizes.traveler > 0) counts.push(`${sizes.traveler} Traveler`);
+        if (sizes.adventurer > 0) counts.push(`${sizes.adventurer} Adventurer`);
+        if (sizes.explorer > 0) counts.push(`${sizes.explorer} Explorer`);
+        if (sizes.quest > 0) counts.push(`${sizes.quest} Quest`);
+        
+        if (counts.length > 0) {
+            itemsList += `<li><strong>${flavor.replace('_', ' ')}:</strong> ${counts.join(', ')}</li>`;
+        }
+    }
+
+    const emailHTML = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; border: 1px solid #eee; padding: 20px;">
+        <h2 style="color: #d4a373;">Order Confirmed!</h2>
+        <p>Hi ${savedOrder.customer_name},</p>
+        <p>We've received your preorder! Here are your details:</p>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
+            <p><strong>Pickup Window:</strong> ${savedOrder.delivery_time}</p>
+            <p><strong>Address:</strong> ${savedOrder.delivery_address}</p>
+        </div>
+        <h3>Your Treats:</h3>
+        <ul>${itemsList}</ul>
+        <p>See you next week!</p>
+      </div>
+    `;
+
+    // Send Email to Customer AND You
+    await transporter.sendMail({
+      from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
+      to: [savedOrder.customer_email, process.env.EMAIL_USER], 
+      subject: `Order Confirmation - ${savedOrder.customer_name}`,
+      html: emailHTML
     });
 
-    try {
-        const savedPreorder = await newEntry.save();
-        res.status(201).json(savedPreorder);
-    } catch (err) {
-        res.status(400).json({ message: "Error saving preorder", error: err.message });
-    }
+    res.status(201).json(savedOrder);
+  } catch (err) {
+    console.error("Error details:", err);
+    res.status(400).json({ message: "Process failed", error: err.message });
+  }
 });
-*/
 
-
-router.post('/', async (req, res) => {
-    try {
-        // This takes the entire object from React and saves it
-        const newOrder = new Preorder(req.body); 
-        const savedOrder = await newOrder.save();
-        res.status(201).json(savedOrder);
-    } catch (err) {
-        res.status(400).json({ message: "Validation Error", error: err.message });
-    }
-});
 module.exports = router;

@@ -21,8 +21,6 @@ function App() {
     delivery_address: '',
     phone_number: '',
     delivery_time: '',
-    delivery_date: '',
-    special_instructions: '',
     items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest:0 } }), {})
   });
 
@@ -89,13 +87,16 @@ function App() {
           
           <select required onChange={e => setFormData({...formData, delivery_time: e.target.value})}>
             <option value="">Select Delivery Window</option>
+            <option value="9AM-10AM">9AM-10AM</option>
             <option value="10AM-11AM">10AM-11AM</option>
             <option value="11AM-12PM">11AM-12PM</option>
-            {/* Add other options here */}
+            <option value="12PM-1PM">12AM-1PM</option>
           </select>
 
-          {/*<input type="date" required onChange={e => setFormData({...formData, delivery_date: e.target.value})} />
-          <textarea placeholder="Special Instructions" onChange={e => setFormData({...formData, special_instructions: e.target.value})} />*/}
+          {
+          /*<input type="date" required onChange={e => setFormData({...formData, delivery_date: e.target.value})} />
+          <textarea placeholder="Special Instructions" onChange={e => setFormData({...formData, special_instructions: e.target.value})} />*/
+          }
         </div>
 
         <button type="submit" className="primary">Submit Your Order</button>

@@ -7,20 +7,19 @@ const PreorderingSchema = new mongoose.Schema({
   delivery_address: { type: String, required: true },
   phone_number: { type: String, required: true },
   delivery_time: { type: String, required: true },
-  delivery_date: { type: Date, required: true },
   special_instructions: { type: String },
 
   // Order Items (Matches your HTML input names)
   items: {
-    vanilla_veil: { half: Number, full: Number, cake: Number },
-    cosmic_chocolate: { half: Number, full: Number, cake: Number },
-    cinnasphere: { half: Number, full: Number, cake: Number },
-    pb_portal: { half: Number, full: Number, cake: Number },
-    cookies_clouds: { half: Number, full: Number, cake: Number },
-    spice_gourdmand: { half: Number, full: Number, cake: Number },
-    aethereal_apple: { half: Number, full: Number, cake: Number },
-    strawberry_starlight: { half: Number, full: Number, cake: Number },
-    pineapple_express: { half: Number, full: Number, cake: Number }
+    vanilla_veil: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    cosmic_chocolate: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    cinnasphere: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    pb_portal: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    cookies_clouds: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    spice_gourdmand: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    aethereal_apple: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    strawberry_starlight: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    pineapple_express: { traveler: Number, adventurer: Number, explorer: Number, quest: Number }
   },
   
   status: { type: String, default: 'New Order' },

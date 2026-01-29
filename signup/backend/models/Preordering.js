@@ -4,7 +4,6 @@ const PreorderingSchema = new mongoose.Schema({
   // Customer Details
   customer_name: { type: String, required: true },
   customer_email: { type: String, required: true },
-  delivery_address: { type: String, required: true },
   phone_number: { type: String, required: true },
   delivery_time: { type: String, required: true },
   special_instructions: { type: String },

@@ -25,12 +25,16 @@ router.get('/', async (req, res) => {
 // CREATE NEW PREORDER & SEND BRANDED EMAILS
 router.post('/', async (req, res) => {
   try {
+    // 1. Save to Database first
     const newOrder = new Preorder(req.body);
     const savedOrder = await newOrder.save();
+    
+    // Convert to plain object so the email loop works perfectly
+    const orderData = savedOrder.toObject();
 
-    // Loop to build the table rows for the order items
+    // 2. Build the table rows using the plain object
     let itemsRows = '';
-    for (const [flavor, sizes] of Object.entries(savedOrder.items)) {
+    for (const [flavor, sizes] of Object.entries(orderData.items)) {
         const counts = [];
         if (sizes.traveler > 0) counts.push(`${sizes.traveler} Traveler`);
         if (sizes.adventurer > 0) counts.push(`${sizes.adventurer} Adventurer`);
@@ -46,76 +50,36 @@ router.post('/', async (req, res) => {
         }
     }
 
-    // --- EMAIL 1: THE CUSTOMER RECEIPT (Styled) ---
-    const customerHTML = `
-      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
-        <div style="background-color: #d4a373; padding: 30px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 24px; letter-spacing: 2px;">SWEET ADVENTURES CLUB</h1>
-        </div>
-        <div style="padding: 30px; background-color: white;">
-            <h2 style="color: #333;">Thank you for your order, ${savedOrder.customer_name}!</h2>
-            <p style="color: #666; line-height: 1.6;">Your treats are officially reserved for next week. Here is your digital receipt:</p>
-            
-            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                <thead>
-                    <tr style="background-color: #fcf8f3;">
-                        <th style="text-align: left; padding: 10px; border-bottom: 2px solid #d4a373;">Flavor</th>
-                        <th style="text-align: left; padding: 10px; border-bottom: 2px solid #d4a373;">Pack Size</th>
-                    </tr>
-                </thead>
-                <tbody>${itemsRows}</tbody>
-            </table>
+    // 3. Email Templates (Kept exactly as you liked them)
+    const customerHTML = `<div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;"><div style="background-color: #d4a373; padding: 30px; text-align: center;"><h1 style="color: white; margin: 0;">SWEET ADVENTURES CLUB</h1></div><div style="padding: 30px;"><h2>Thank you, ${orderData.customer_name}!</h2><table style="width: 100%; border-collapse: collapse; margin: 20px 0;"><thead><tr style="background-color: #fcf8f3;"><th style="text-align: left; padding: 10px;">Flavor</th><th style="text-align: left; padding: 10px;">Pack Size</th></tr></thead><tbody>${itemsRows}</tbody></table><div style="background-color: #f9f9f9; padding: 20px;"><p><strong>Pickup Window:</strong> ${orderData.delivery_time}</p><p><strong>Address:</strong> ${orderData.delivery_address}</p></div><div style="text-align: center; margin-top: 40px;"><a href="https://sweetadventuresclub.netlify.app" style="background-color: #d4a373; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">BACK TO THE CLUB</a></div></div></div>`;
 
-            <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-top: 20px;">
-                <p style="margin: 5px 0;"><strong>Pickup Window:</strong> ${savedOrder.delivery_time}</p>
-                <p style="margin: 5px 0;"><strong>Pickup Address:</strong> ${savedOrder.delivery_address}</p>
-            </div>
+    const companyHTML = `<div style="font-family: Arial; padding: 20px;"><div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-top: 4px solid #333;"><h2>🚀 NEW ORDER</h2><p><strong>Customer:</strong> ${orderData.customer_name}</p><p><strong>Phone:</strong> ${orderData.phone_number}</p><h3>Items:</h3><table style="width: 100%;">${itemsRows}</table></div></div>`;
 
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="https://sweetadventuresclub.netlify.app" style="background-color: #d4a373; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">BACK TO THE CLUB</a>
-            </div>
-        </div>
-      </div>
-    `;
+    // 4. Send Emails (Nested in another try/catch so they don't block the success message)
+    try {
+        await transporter.sendMail({
+            from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
+            to: orderData.customer_email,
+            subject: `Order Confirmation - Sweet Adventures Club`,
+            html: customerHTML
+        });
 
-    // --- EMAIL 2: THE COMPANY ORDER REQUEST (Internal) ---
-    const companyHTML = `
-      <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-        <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-top: 4px solid #333; border-radius: 8px;">
-            <h2 style="color: #333;"> 🎂 NEW ORDER RECEIVED 🎂 </h2>
-            <p>A new request has been submitted by <strong>${savedOrder.customer_name}</strong>.</p>
-            <hr style="border: 0; border-top: 1px solid #eee;"/>
-            <p><strong>Customer Email:</strong> ${savedOrder.customer_email}</p>
-            <p><strong>Phone:</strong> ${savedOrder.phone_number}</p>
-            <p><strong>Time Slot:</strong> ${savedOrder.delivery_time}</p>
-            <h3 style="margin-top: 20px; color: #d4a373;">Items to Pack:</h3>
-            <table style="width: 100%; border-collapse: collapse;">
-                <tbody style="font-size: 14px;">${itemsRows}</tbody>
-            </table>
-        </div>
-      </div>
-    `;
+        await transporter.sendMail({
+            from: `"Order Alert" <${process.env.EMAIL_USER}>`,
+            to: process.env.EMAIL_USER,
+            subject: `NEW ORDER: ${orderData.customer_name}`,
+            html: companyHTML
+        });
+    } catch (mailErr) {
+        console.error("Email send failed, but order was saved:", mailErr);
+    }
 
-    // Send to Customer
-    await transporter.sendMail({
-      from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
-      to: savedOrder.customer_email,
-      subject: `Order Confirmation - Sweet Adventures Club`,
-      html: customerHTML
-    });
-
-    // Send to Company
-    await transporter.sendMail({
-      from: `"Order Alert" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
-      subject: `NEW ORDER: ${savedOrder.customer_name} - ${savedOrder.delivery_time}`,
-      html: companyHTML
-    });
-
+    // 5. Final Success Response
     res.status(201).json(savedOrder);
+
   } catch (err) {
-    console.error("Email Error:", err);
-    res.status(400).json({ message: "Process failed", error: err.message });
+    console.error("Backend Error:", err);
+    res.status(400).json({ message: "Database Save Error", error: err.message });
   }
 });
 

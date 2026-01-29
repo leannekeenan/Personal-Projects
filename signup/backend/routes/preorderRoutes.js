@@ -14,6 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // 2. CREATE NEW PREORDER (The "Signup" action)
+/*
 router.post('/', async (req, res) => {
     const newEntry = new Preorder({
         customerName: req.body.customerName,
@@ -30,5 +31,17 @@ router.post('/', async (req, res) => {
         res.status(400).json({ message: "Error saving preorder", error: err.message });
     }
 });
+*/
 
+
+router.post('/', async (req, res) => {
+    try {
+        // This takes the entire object from React and saves it
+        const newOrder = new Preorder(req.body); 
+        const savedOrder = await newOrder.save();
+        res.status(201).json(savedOrder);
+    } catch (err) {
+        res.status(400).json({ message: "Validation Error", error: err.message });
+    }
+});
 module.exports = router;

@@ -18,7 +18,6 @@ function App() {
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
-    delivery_address: '',
     phone_number: '',
     delivery_time: '',
     items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest:0 } }), {})
@@ -82,7 +81,6 @@ function App() {
         <div className="row">
           <input type="text" placeholder="Name" required onChange={e => setFormData({...formData, customer_name: e.target.value})} />
           <input type="email" placeholder="Email" required onChange={e => setFormData({...formData, customer_email: e.target.value})} />
-          <input type="text" placeholder="Delivery Address" required onChange={e => setFormData({...formData, delivery_address: e.target.value})} />
           <input type="tel" placeholder="Phone Number" required onChange={e => setFormData({...formData, phone_number: e.target.value})} />
           
           <select required onChange={e => setFormData({...formData, delivery_time: e.target.value})}>

@@ -23,7 +23,7 @@ function App() {
     delivery_time: '',
     delivery_date: '',
     special_instructions: '',
-    items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { half: 0, full: 0, cake: 0 } }), {})
+    items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest:0 } }), {})
   });
 
   const handleQtyChange = (productId, size, value) => {
@@ -57,18 +57,23 @@ function App() {
             <thead>
               <tr>
                 <th>Product</th>
-                <th>Half Dozen ($42)</th>
-                <th>Full Dozen ($80)</th>
-                <th>9" Cake ($80)</th>
+                <th>Travelers Treat ($8)</th>
+                <th>Adventurers Pack ($22)</th>
+                <th>Explorers Pack($42)</th>
+                <th>Quest Pack ($80)</th>
               </tr>
             </thead>
             <tbody>
               {PRODUCTS.map(product => (
                 <tr key={product.id}>
                   <td>{product.name}</td>
-                  <td><input type="number" min="0" value={formData.items[product.id].half} onChange={(e) => handleQtyChange(product.id, 'half', e.target.value)} /></td>
-                  <td><input type="number" min="0" value={formData.items[product.id].full} onChange={(e) => handleQtyChange(product.id, 'full', e.target.value)} /></td>
-                  <td><input type="number" min="0" value={formData.items[product.id].cake} onChange={(e) => handleQtyChange(product.id, 'cake', e.target.value)} /></td>
+                  <td><input type="number" min="0" value={formData.items[product.id].traveler} onChange={(e) => handleQtyChange(product.id, 'traveler', e.target.value)} /></td>
+
+                  <td><input type="number" min="0" value={formData.items[product.id].adventurer} onChange={(e) => handleQtyChange(product.id, 'adventurer', e.target.value)} /></td>
+
+                  <td><input type="number" min="0" value={formData.items[product.id].explorer} onChange={(e) => handleQtyChange(product.id, 'explorer', e.target.value)} /></td>
+
+                  <td><input type="number" min="0" value={formData.items[product.id].quest} onChange={(e) => handleQtyChange(product.id, 'quest', e.target.value)} /></td>
                 </tr>
               ))}
             </tbody>
@@ -89,8 +94,8 @@ function App() {
             {/* Add other options here */}
           </select>
 
-          <input type="date" required onChange={e => setFormData({...formData, delivery_date: e.target.value})} />
-          <textarea placeholder="Special Instructions" onChange={e => setFormData({...formData, special_instructions: e.target.value})} />
+          {/*<input type="date" required onChange={e => setFormData({...formData, delivery_date: e.target.value})} />
+          <textarea placeholder="Special Instructions" onChange={e => setFormData({...formData, special_instructions: e.target.value})} />*/}
         </div>
 
         <button type="submit" className="primary">Submit Your Order</button>

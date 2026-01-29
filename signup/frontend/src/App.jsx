@@ -49,15 +49,21 @@ function App() {
     <div className="container">
       <form onSubmit={handleSubmit}>
         <h5>Choose from the menu below</h5>
+        <ul>
+          <li>Travelers Treat: A single sweet treat ($8)</li>
+          <li>Adventurers Pack: 3 individual treats ($22)</li>
+          <li>Explorers Pack: 6 individual treats ($42)</li>
+          <li>Quest Pack: 12 individual treats ($80)</li>
+        </ul>
         <div className="table-wrapper">
           <table className="ordering-table">
             <thead>
               <tr>
                 <th>Product</th>
-                <th>Travelers Treat ($8)</th>
-                <th>Adventurers Pack ($22)</th>
-                <th>Explorers Pack($42)</th>
-                <th>Quest Pack ($80)</th>
+                <th>Travelers Treat</th>
+                <th>Adventurers Pack</th>
+                <th>Explorers Pack</th>
+                <th>Quest Pack</th>
               </tr>
             </thead>
             <tbody>

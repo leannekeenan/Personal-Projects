@@ -21,3 +21,9 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server spinning on port ${PORT}`));
+
+//Preorder Routes
+const preorderRoutes = require('./routes/preorderRoutes');
+
+// This tells Express: "Any request starting with /api/preorders, use the preorderRoutes file"
+app.use('/api/preorders', preorderRoutes);

@@ -52,9 +52,18 @@ function App() {
 
       <p>please follow the instructions below to complete your preorder</p>
 
-      <ul>
-        <li></li>
-      </ul>
+      <ol>
+        <li>Choose your favorite treats from the menu below</li>
+        <li>Enter your pickup contact details</li>
+        <li>Submit your order</li>
+        <li>Check your email for confirmation and payment instructions</li>
+        <li>Show your confirmation email to our vendor on site</li>
+        <li>Pre-pay for your order</li>
+        <li>Pick up your order next week during your chosen delivery window </li>
+        <li>Enjoy your sweet treats!</li>
+      </ol>
+
+      
       <form onSubmit={handleSubmit}>
         <h5>Choose from the menu below</h5>
         <ul>

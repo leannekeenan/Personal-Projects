@@ -135,7 +135,7 @@ function App() {
           <table className="ordering-table">
             <thead>
               <tr>
-                <th>Flavor</th>
+                <th></th>
                 <th>Traveler</th>
                 <th>Adventurer</th>
                 <th>Explorer</th>
@@ -164,10 +164,10 @@ function App() {
           
           <select required onChange={e => setFormData({...formData, delivery_time: e.target.value})}>
             <option value="">Select Your Arrival Window</option>
-            <option value="9AM-10AM">The Dawn Watch (9AM-10AM)</option>
-            <option value="10AM-11AM">Mid-Morning Rest (10AM-11AM)</option>
-            <option value="11AM-12PM">High Noon Gathering (11AM-12PM)</option>
-            <option value="12PM-1PM">Early Afternoon Respite (12PM-1PM)</option>
+            <option value="9AM-10AM">9AM-10AM</option>
+            <option value="10AM-11AM">10AM-11AM</option>
+            <option value="11AM-12PM">11AM-12PM</option>
+            <option value="12PM-1PM">12PM-1PM</option>
           </select>
         </div>
 

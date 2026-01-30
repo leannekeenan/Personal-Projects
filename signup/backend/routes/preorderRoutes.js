@@ -11,7 +11,7 @@ let MARKET_CAPACITY = 42;
 // --- SQUARE SETUP ---
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Sandbox, // Switch to Environment.Production when ready for real gold
+  environment: Environment.Sandbox, 
 });
 
 // --- EMAIL SETUP ---
@@ -57,20 +57,20 @@ router.get('/stock-level', async (req, res) => {
 });
 
 /**
- * CREATE NEW PREORDER & SQUARE PAYMENT LINK
+ * CREATE NEW PREORDER
+ * Now generates a Square Checkout Link
  */
 router.post('/', async (req, res) => {
   try {
-    // 1. TIME GATE: 2:00 PM (14) until 9:00 AM (9)
     const now = new Date();
     const currentHour = now.getHours(); 
+    
     if (currentHour >= 14 || currentHour < 9) { 
         return res.status(403).json({ 
             message: "The tavern is closed for the day! Preordering resets next week at 9AM." 
         });
     }
 
-    // 2. CAPACITY CHECK
     const activeOrders = await Preorder.find({ status: 'active' });
     let currentSold = 0;
     activeOrders.forEach(order => { currentSold += calculateUnits(order.items); });
@@ -80,10 +80,10 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ message: "Out of Provisions for this Journey!" });
     }
 
-    // 3. PREPARE SQUARE LINE ITEMS
+    // Prepare Square Line Items
     const lineItems = [];
     const { items } = req.body;
-    const prices = { traveler: 800, adventurer: 2200, explorer: 4200, quest: 8000 }; // In cents
+    const prices = { traveler: 800, adventurer: 2200, explorer: 4200, quest: 8000 };
 
     Object.entries(items).forEach(([flavor, sizes]) => {
       Object.entries(sizes).forEach(([size, qty]) => {
@@ -99,7 +99,7 @@ router.post('/', async (req, res) => {
 
     if (lineItems.length === 0) return res.status(400).json({ message: "No items selected!" });
 
-    // 4. CREATE SQUARE CHECKOUT LINK
+    // Create Square Checkout Link
     const { result } = await client.checkoutApi.createPaymentLink({
       idempotencyKey: require('crypto').randomBytes(12).toString('hex'),
       order: {
@@ -112,25 +112,85 @@ router.post('/', async (req, res) => {
       }
     });
 
-    // 5. SAVE ORDER AS 'PENDING'
+    // Save the order as 'PENDING'
     const newOrder = new Preorder({ 
       ...req.body, 
       status: 'pending', 
       paymentId: result.paymentLink.id 
     });
-    await newOrder.save();
+    const savedOrder = await newOrder.save();
 
-    // 6. RETURN LINK TO FRONTEND
+    // Send the link back to the frontend
     res.status(201).json({ checkoutUrl: result.paymentLink.url });
 
   } catch (err) {
-    console.error("Order processing error:", err);
-    res.status(500).json({ message: "The Gold Portal failed to open.", error: err.message });
+    console.error("Square Error:", err);
+    res.status(500).json({ message: "Gold Portal Failed", error: err.message });
   }
 });
 
-// --- 2:00 PM: SEND THE GRAND LEDGER ONLY ---
+/**
+ * WEBHOOK: FINALIZE ORDER & SEND RECEIPT
+ */
+router.post('/webhook', async (req, res) => {
+    const { type, data } = req.body;
+    if (type === 'payment_link.completed') {
+        try {
+            const savedOrder = await Preorder.findOneAndUpdate(
+                { paymentId: data.object.payment_link.id },
+                { status: 'active' },
+                { new: true }
+            );
+
+            if (savedOrder) {
+                // GENERATE ORIGINAL TABLE ROWS
+                let itemsRows = '';
+                for (const [flavor, sizes] of Object.entries(savedOrder.items)) {
+                    const counts = [];
+                    if (sizes.traveler > 0) counts.push(`${sizes.traveler} Traveler`);
+                    if (sizes.adventurer > 0) counts.push(`${sizes.adventurer} Adventurer`);
+                    if (sizes.explorer > 0) counts.push(`${sizes.explorer} Explorer`);
+                    if (sizes.quest > 0) counts.push(`${sizes.quest} Quest`);
+                    
+                    if (counts.length > 0) {
+                        const fName = flavor.replace(/_/g, ' ').toUpperCase();
+                        itemsRows += `<tr><td style="padding:10px; border-bottom:1px solid #eee;"><strong>${fName}</strong></td><td style="padding:10px; border-bottom:1px solid #eee;">${counts.join(', ')}</td></tr>`;
+                    }
+                }
+
+                // SEND ORIGINAL RECEIPT EMAIL
+                await transporter.sendMail({
+                    from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
+                    to: savedOrder.customer_email,
+                    bcc: process.env.EMAIL_USER, 
+                    subject: "📜 Your Provision Receipt",
+                    html: `
+                        <div style="font-family: serif; border: 2px solid #d4a373; padding: 20px; background-color: #fdf5e6; max-width: 600px; margin: auto;">
+                            <h1 style="color: #5D4037; text-align: center;">Greetings, ${savedOrder.customer_name}!</h1>
+                            <p style="font-size: 1.1rem;">Your request has been recorded in the Grand Ledger. We are preparing the following rations for your journey:</p>
+                            <table style="width: 100%; border-collapse: collapse; margin: 20px 0; background: white; border-radius: 8px; overflow: hidden;">
+                                <thead style="background:#f0decc;"><tr><th style="text-align:left; padding:10px;">Item</th><th style="text-align:left; padding:10px;">Quantity</th></tr></thead>
+                                <tbody>${itemsRows}</tbody>
+                            </table>
+                            <p style="font-size: 1.1rem;"><strong>Arrival Window:</strong> ${savedOrder.delivery_time || 'Next Event'}</p>
+                            <div style="text-align: center; margin-top: 30px;">
+                                <a href="https://sweetadventuresclub.netlify.app" 
+                                   style="background-color: #d4a373; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 1.2rem; display: inline-block;">
+                                   Visit our Virtual Tavern
+                                </a>
+                            </div>
+                            <p style="text-align: center; margin-top: 20px; color: #8b5e3c;">Happy Trails, adventurer.</p>
+                        </div>`
+                });
+            }
+        } catch (err) { console.error("Webhook Error:", err); }
+    }
+    res.sendStatus(200);
+});
+
+// --- 2:00 PM: SEND THE GRAND LEDGER ---
 cron.schedule('0 14 * * *', async () => {
+    // ... [Your original 2:00 PM cron logic restored here] ...
     console.log("14:00 PM: Compiling Flavor-Specific Grand Ledger...");
     try {
         const todaysOrders = await Preorder.find({ status: 'active' });
@@ -187,56 +247,16 @@ cron.schedule('0 14 * * *', async () => {
                 subject: `📜 GRAND LEDGER: ${new Date().toLocaleDateString()} Bake Report`,
                 html: reportHTML
             });
-            console.log("2:00 PM: Grand Ledger sent to the baker.");
         }
-    } catch (err) {
-        console.error("The 2PM ledger failed:", err);
-    }
+    } catch (err) { console.error(err); }
 });
 
-// --- 9:00 AM: RESET THE BOARD FOR THE NEW DAY ---
+// --- 9:00 AM: RESET ---
 cron.schedule('0 9 * * *', async () => {
     try {
-        // Move current active orders to completed and open the tavern
         await Preorder.updateMany({ status: 'active' }, { $set: { status: 'completed' } });
-        console.log("9:00 AM: Inventory reset. Tavern is now open for orders!");
-    } catch (err) {
-        console.error("The 9AM reset failed:", err);
-    }
-});
-
-/**
- * SQUARE WEBHOOK LISTENER
- * Square calls this when a payment link is completed
- */
-router.post('/webhook', async (req, res) => {
-  const { type, data } = req.body;
-
-  // We are looking for the 'payment_link.completed' event
-  if (type === 'payment_link.completed') {
-    const paymentLinkId = data.object.payment_link.id;
-
-    try {
-      // Find the pending order and activate it
-      const order = await Preorder.findOneAndUpdate(
-        { paymentId: paymentLinkId },
-        { status: 'active' },
-        { new: true }
-      );
-
-      if (order) {
-        console.log(`✅ Order Activated: ${order.customer_name}'s quest is funded!`);
-        
-        // OPTIONAL: Send the email receipt here now that payment is confirmed
-        // (You can move your transporter.sendMail logic here if you want)
-      }
-    } catch (err) {
-      console.error("Webhook Database Error:", err);
-    }
-  }
-
-  // Always send a 200 OK back to Square so they stop retrying
-  res.sendStatus(200);
+        console.log("9:00 AM: Inventory reset.");
+    } catch (err) { console.error(err); }
 });
 
 module.exports = router;

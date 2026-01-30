@@ -6,6 +6,18 @@
   --ivory-input: #fffdfa; /* This is the warm off-white color */
 }
 
+.adventure-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo {
+  max-width: 250px;
+  height: auto;
+  display: block;
+  margin: 30px auto;
+}
+
 .order-container {
   max-width: 1100px;
   margin: 20px auto;

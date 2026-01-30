@@ -55,7 +55,7 @@ router.get('/stock-level', async (req, res) => {
 
 /**
  * CREATE NEW PREORDER
- * Validates capacity against 'active' orders before saving.
+ * Validates capacity against 'active' orders and sends a stylized receipt.
  */
 router.post('/', async (req, res) => {
   try {
@@ -76,12 +76,59 @@ router.post('/', async (req, res) => {
     
     const savedOrder = await newOrder.save();
 
-    // CUSTOMER CONFIRMATION EMAIL
-    const customerHTML = `<h1>Confirmation for ${savedOrder.customer_name}</h1><p>Your provisions are reserved!</p>`;
-    
+    // 1. Build the HTML Table Rows for the items ordered
+    let itemsRows = '';
+    for (const [flavor, sizes] of Object.entries(savedOrder.items)) {
+        const counts = [];
+        if (sizes.traveler > 0) counts.push(`${sizes.traveler} Traveler`);
+        if (sizes.adventurer > 0) counts.push(`${sizes.adventurer} Adventurer`);
+        if (sizes.explorer > 0) counts.push(`${sizes.explorer} Explorer`);
+        if (sizes.quest > 0) counts.push(`${sizes.quest} Quest`);
+        
+        if (counts.length > 0) {
+            const flavorName = flavor.replace(/_/g, ' ').toUpperCase();
+            itemsRows += `
+                <tr>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>${flavorName}</strong></td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee; color: #666;">${counts.join(', ')}</td>
+                </tr>`;
+        }
+    }
+
+    // 2. The Fully Stylized HTML Template
+    const customerHTML = `
+        <div style="font-family: 'Georgia', serif; background-color: #fdf5e6; padding: 40px; color: #5D4037;">
+            <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 3px solid #d4a373; border-radius: 10px; padding: 20px;">
+                <h1 style="text-align: center; color: #d4a373;">📜 PROVISION RECEIPT</h1>
+                <p style="font-size: 18px;">Greetings, <strong>${savedOrder.customer_name}</strong>!</p>
+                <p>Your request has been recorded in the Grand Ledger. We are preparing the following rations for your journey:</p>
+                
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
+                        <tr style="background-color: #f0decc; text-align: left;">
+                            <th style="padding: 10px;">Item</th>
+                            <th style="padding: 10px;">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsRows}
+                    </tbody>
+                </table>
+
+                <div style="background: #fdf5e6; padding: 15px; border-radius: 5px; border-left: 5px solid #d4a373;">
+                    <p style="margin: 0;"><strong>Arrival Window:</strong> ${savedOrder.arrival_window || 'Next Event'}</p>
+                </div>
+
+                <p style="text-align: center; margin-top: 30px; font-style: italic;">
+                    Keep moving, traveler. Your treats await.
+                </p>
+            </div>
+        </div>`;
+
     await transporter.sendMail({
         from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
         to: savedOrder.customer_email,
+        bcc: process.env.EMAIL_USER, // Sends a copy to you
         subject: "📜 Your Provision Receipt",
         html: customerHTML
     });
@@ -94,14 +141,14 @@ router.post('/', async (req, res) => {
 
 // --- THE 8PM AUTOMATION (The Night Watchman) ---
 /**
- * Cron schedule: '0 20 * * *' (8:00 PM)
+ * Cron schedule: '0 21 * * *' (9:00 PM)
  * 1. Collects all 'active' orders.
  * 2. Totals up every unit for the bake list.
  * 3. Emails the "Grand Ledger" to you.
  * 4. Marks orders as 'completed' so inventory resets to 42.
  */
-cron.schedule('0 20 * * *', async () => {
-    console.log("8:00 PM: Compiling the Grand Ledger and Resetting Inventory...");
+cron.schedule('0 21 * * *', async () => {
+    console.log("9:00 PM: Compiling the Grand Ledger and Resetting Inventory...");
     
     try {
         const todaysOrders = await Preorder.find({ status: 'active' });

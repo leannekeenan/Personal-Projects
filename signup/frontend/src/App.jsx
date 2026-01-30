@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
+import logo from './assets/SWEET ADVENTURES CLUB (2).png';
 
 const PRODUCTS = [
   { id: 'vanilla_veil', name: 'Vanilla Veil' },
@@ -85,7 +86,8 @@ function App() {
   return (
     <div className="container">
       <header className="adventure-header">
-        <h1>Sweet Adventures Club</h1>
+        <img src={logo} alt="Sweet Adventures Club Logo" className="logo"/>
+        <h1 className="app-title">Sweet Adventures Club Preorder Form</h1>
         <p className="tagline">Hand-Held Rations for the Road Ahead</p>
       </header>
       
@@ -100,7 +102,7 @@ function App() {
             borderRadius: '8px',
             display: 'inline-block'
           }}>
-            ⚔️ Only {stockRemaining} rations remaining for the next gathering!
+            ⚔️ Only {stockRemaining} left for preorder!
           </p>
         ) : (
           <h2 className="sold-out-msg" style={{ color: 'red' }}>OUT OF PROVISIONS FOR THIS JOURNEY</h2>
@@ -108,7 +110,7 @@ function App() {
       </div>
 
       <section className="mission-statement">
-        <p>Life is more than the daily grind—it is a grand quest. Step into our sanctuary and find road-ready cheesecakes meticulously crafted for your journey.</p>
+        <p>Life is more than the daily grind—it is a grand quest. Step into our sanctuary and find road-ready treasures meticulously crafted for your journey.</p>
       </section>
 
       <div className="quest-steps">

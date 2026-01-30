@@ -64,7 +64,7 @@ router.post('/', async (req, res) => {
     // 1. TIME GATE: 2:00 PM Cutoff
     const now = new Date();
     const currentHour = now.getHours(); 
-    if (currentHour >= 14 || currentHour < 9) { 
+    if (currentHour >=23 || currentHour < 9) {  // ----------------------------------------------------------------------------------- CHANGE CUT OFF TIME BACK TO 2pm
         return res.status(403).json({ message: "The tavern is closed for the day!" });
     }
 

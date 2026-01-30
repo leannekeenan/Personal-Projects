@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react'; // Added useMemo and useCallback
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
@@ -27,7 +27,8 @@ function TavernForm({ stockRemaining }) {
     items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest: 0 } }), {})
   });
 
-  const handleQtyChange = (productId, size, value) => {
+  // useCallback prevents this function from being "re-created" on every scroll or keystroke
+  const handleQtyChange = useCallback((productId, size, value) => {
     const qty = parseInt(value, 10);
     setFormData(prev => ({
       ...prev,
@@ -39,9 +40,10 @@ function TavernForm({ stockRemaining }) {
         }
       }
     }));
-  };
+  }, []);
 
-  const calculateTotal = () => {
+  // useMemo ensures the total is "sticky" and only changes if formData.items changes
+  const totals = useMemo(() => {
     let subtotal = 0;
     Object.values(formData.items).forEach(item => {
       subtotal += (Number(item.traveler) || 0) * 8;
@@ -59,17 +61,14 @@ function TavernForm({ stockRemaining }) {
       tax: taxAmount.toFixed(2),
       total: grandTotal.toFixed(2)
     };
-  };
-
-  // --- THE INTEGRATED TOTALS ---
-  const totals = calculateTotal();
+  }, [formData.items]); // Only re-calculate if items change
 
   const handlePayment = async (token) => {
     try {
       const response = await axios.post('http://localhost:5000/api/preorders', {
         ...formData,
         sourceId: token,
-        amount: totals.total // Sending the specific total string to the backend
+        amount: totals.total 
       });
       if (response.status === 201) {
         window.location.href = '/order-success';
@@ -145,10 +144,10 @@ function TavernForm({ stockRemaining }) {
 
         <h2 className="section-title">ADVENTURER DETAILS</h2>
         <div className="delivery-details">
-          <input type="text" placeholder="Adventurer Name" required onChange={e => setFormData({...formData, customer_name: e.target.value})} />
-          <input type="email" placeholder="Adventurer Email Address" required onChange={e => setFormData({...formData, customer_email: e.target.value})} />
-          <input type="tel" placeholder="Mobile Frequency (Phone Number)" required onChange={e => setFormData({...formData, phone_number: e.target.value})} />
-          <select required onChange={e => setFormData({...formData, delivery_time: e.target.value})}>
+          <input type="text" placeholder="Adventurer Name" required value={formData.customer_name} onChange={e => setFormData({...formData, customer_name: e.target.value})} />
+          <input type="email" placeholder="Adventurer Email Address" required value={formData.customer_email} onChange={e => setFormData({...formData, customer_email: e.target.value})} />
+          <input type="tel" placeholder="Mobile Frequency (Phone Number)" required value={formData.phone_number} onChange={e => setFormData({...formData, phone_number: e.target.value})} />
+          <select required value={formData.delivery_time} onChange={e => setFormData({...formData, delivery_time: e.target.value})}>
             <option value="">Select Your Arrival Window</option>
             <option value="9AM-10AM">9AM - 10AM</option>
             <option value="10AM-11AM">10AM - 11AM</option>
@@ -171,7 +170,11 @@ function TavernForm({ stockRemaining }) {
             <h3 className="grand-total-text">Quest Total: ${totals.total}</h3>
           </div>
 
-          <SquarePayment onTokenReceived={handlePayment} />
+          <div id="payment-form-container">
+            <SquarePayment key="stable-square-field" onTokenReceived={handlePayment} />
+          </div>
+
+         
         </div>
       </form>
 

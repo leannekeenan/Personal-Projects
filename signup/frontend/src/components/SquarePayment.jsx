@@ -1,81 +1,78 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const SquarePayment = ({ onTokenReceived }) => {
-  const isInitialized = useRef(false);
-  const cardInstance = useRef(null); // Keep track of the card object itself
+  const paymentInstance = useRef(null);
+  const cardInstance = useRef(null);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    // If already initialized, do nothing
-    if (isInitialized.current) return;
-
     const initializeSquare = async () => {
-      // 1. CLEAR THE DIV COMPLETELY
-      const cardContainer = document.getElementById('card');
-      if (cardContainer) cardContainer.innerHTML = ''; 
-
+      // 1. Safety check: Don't initialize if Square isn't on the window yet
       if (!window.Square) {
-        console.error("Square SDK not loaded in index.html");
+        console.error("Square SDK not found");
         return;
       }
 
-      const appId = import.meta.env.VITE_SQUARE_APPLICATION_ID;
-      const locationId = import.meta.env.VITE_SQUARE_LOCATION_ID;
+      // 2. Prevent double-initialization
+      if (paymentInstance.current) return;
 
       try {
+        // Replace with your actual Sandbox App ID if not using env variables
+        const appId = import.meta.env.VITE_SQUARE_APP_ID || 'YOUR_APP_ID_HERE';
+        const locationId = import.meta.env.VITE_SQUARE_LOCATION_ID || 'YOUR_LOCATION_ID_HERE';
+
         const payments = window.Square.payments(appId, locationId);
-        const card = await payments.card({
-          style: {
-            input: { fontSize: '16px', color: '#3e2723' }
-          }
-        });
+        paymentInstance.current = payments;
 
-        await card.attach("#card");
-        
-        // Save references
+        const card = await payments.card();
+        // 3. Attach to the div ID. Ensure this ID exists in your HTML/CSS
+        await card.attach('#card-container');
         cardInstance.current = card;
-        isInitialized.current = true;
-
-        const payButton = document.getElementById("pay-button");
-        if (payButton) {
-          payButton.onclick = async (event) => {
-            event.preventDefault();
-            payButton.disabled = true; // Prevent double clicking
-            try {
-              const result = await card.tokenize();
-              if (result.status === "OK") {
-                onTokenReceived(result.token);
-              } else {
-                console.error("Tokenization error", result.errors);
-                payButton.disabled = false;
-              }
-            } catch (e) {
-              console.error(e);
-              payButton.disabled = false;
-            }
-          };
-        }
+        
+        setIsError(false);
       } catch (e) {
         console.error("Square Initialization Failed:", e);
+        setIsError(true);
       }
     };
 
     initializeSquare();
 
-    // 2. THE CLEANUP FUNCTION (Crucial for fixing the triple input)
+    // 4. CLEANUP: This kills the old card box when the component re-renders
     return () => {
       if (cardInstance.current) {
-        cardInstance.current.destroy(); // Explicitly kill the square instance
+        cardInstance.current.destroy();
         cardInstance.current = null;
-        isInitialized.current = false;
+        paymentInstance.current = null;
       }
     };
-  }, [onTokenReceived]);
+  }, []);
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    if (!cardInstance.current) return;
+
+    try {
+      const result = await cardInstance.current.tokenize();
+      if (result.status === 'OK') {
+        onTokenReceived(result.token);
+      } else {
+        alert(`Validation Error: ${result.errors[0].message}`);
+      }
+    } catch (e) {
+      console.error("Tokenization failed", e);
+    }
+  };
 
   return (
-    <div className="payment-area">
-      {/* The container MUST be empty here */}
-      <div id="card" style={{ minHeight: '120px', margin: '20px 0' }}></div>
-      <button id="pay-button" className="submit-btn" type="button">
+    <div className="payment-box">
+      {isError && <p style={{color: 'red'}}>⚠️ Payment portal failed to load. Please refresh.</p>}
+      <div id="card-container"></div>
+      <button 
+        type="button" 
+        className="finalize-button" 
+        onClick={handlePayment}
+      >
         Finalize Your Preorder
       </button>
     </div>

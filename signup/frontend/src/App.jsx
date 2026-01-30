@@ -47,10 +47,18 @@ function App() {
 
   return (
     <div className="container">
+      <h1>Sweet Adventures Club - Preorder Form</h1>
+      <p>Preorder your favorite treats for pick up next week!</p>
+
+      <p>please follow the instructions below to complete your preorder</p>
+
+      <ul>
+        <li></li>
+      </ul>
       <form onSubmit={handleSubmit}>
         <h5>Choose from the menu below</h5>
         <ul>
-          <li>Travelers Treat: A single sweet treat ($8)</li>
+          <li>Travelers Treat: 1 individual treat ($8)</li>
           <li>Adventurers Pack: 3 individual treats ($22)</li>
           <li>Explorers Pack: 6 individual treats ($42)</li>
           <li>Quest Pack: 12 individual treats ($80)</li>
@@ -59,7 +67,7 @@ function App() {
           <table className="ordering-table">
             <thead>
               <tr>
-                <th>Product</th>
+                <th></th>
                 <th>Travelers Treat</th>
                 <th>Adventurers Pack</th>
                 <th>Explorers Pack</th>
@@ -103,8 +111,24 @@ function App() {
           }
         </div>
 
-        <button type="submit" className="primary">Submit Your Order</button>
+        <button type="submit" className="submit-btn">Submit Your Order</button>
       </form>
+      <footer>
+        <p>Thank you for choosing Sweet Adventures Club! We appreciate you supporting our small local business!
+        </p>
+
+        <p>
+          Follow us on social media:
+          <br />
+          Instagram: <a href="https://www.instagram.com/sweetadventuresclub/" target="_blank" rel="noopener noreferrer">@sweetadventuresclub</a>
+        </p>
+
+        <p>
+          and check out all out flavors on our website:
+          <br />
+          Website: <a href="https://www.sweetadventuresclub.com" target="_blank" rel="noopener noreferrer">sweetadventuresclub.com</a>
+        </p>
+      </footer>
     </div>
   );
 }

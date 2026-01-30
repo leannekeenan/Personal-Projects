@@ -1,42 +1,142 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* App.css */
+:root {
+  --crust: #d4a373;      
+  --filling: #ffffff;    
+  --accent: #bc8a5f;     
+  --ivory-input: #fffdfa; /* This is the warm off-white color */
+}
+
+.order-container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 25px;
+  background: var(--filling);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(212, 163, 115, 0.1);
+}
+
+/* --- TABLE STYLING --- */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border: 2px solid #f0e6db;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+th {
+  background-color: var(--crust);
+  color: white;
+  padding: 18px;
+  text-align: left;
+}
+
+td {
+  padding: 15px;
+  border-bottom: 1px solid #f0e6db;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.row {
+  display:flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 0 auto;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* --- THE INPUTS (Anti-Gray Overrides) --- */
+input[type="number"],
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select {
+  /* This kills the default browser gray/recessed look */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none; 
+  
+  background-color: var(--ivory-input) !important;
+  border: 2px solid var(--crust) !important;
+  color: var(--text-main);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  outline: none;
+  margin: 3px;
+}
+
+/* Table Number Inputs */
+input[type="number"] {
+  width: 100px;
+  text-align: center;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- DELIVERY SECTION (Fixing the Squish) --- */
+.delivery-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 25px;
+  background-color: #fcf8f3;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  margin-bottom: 30px;
+}
+
+.delivery-details div {
+  display: flex;
+  flex-direction: column;
+}
+
+.delivery-details label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--crust);
+}
+
+/* Make bottom inputs fill their space and look big */
+.delivery-details input,
+.delivery-details select {
+  width: 100%;
+  min-height: 45px;
+}
+
+/* --- SUBMIT BUTTON --- */
+.submit-btn {
+  background-color: var(--crust);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  margin: 0 auto
+}
+
+.submit-btn:hover {
+  background-color: var(--accent);
+  letter-spacing: 1px;
+}
+
+/* Mobile Tweaks */
+@media (max-width: 600px) {
+  .order-container {
+    margin: 10px;
+    padding: 15px;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }

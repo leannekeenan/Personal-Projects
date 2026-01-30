@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -15,13 +15,40 @@ const PRODUCTS = [
 ];
 
 function App() {
+  // --- 1. NEW STATE FOR STOCK ---
+  const [stockRemaining, setStockRemaining] = useState(48);
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
     phone_number: '',
     delivery_time: '',
-    items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest:0 } }), {})
+    items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest: 0 } }), {})
   });
+
+  // --- 2. FETCH STOCK ON LOAD ---
+  useEffect(() => {
+    const checkStock = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/preorders/stock-level');
+        setStockRemaining(res.data.remaining);
+      } catch (err) {
+        console.error("Could not fetch stock level", err);
+      }
+    };
+    checkStock();
+  }, []);
+
+  // --- 3. HELPER TO COUNT UNITS ---
+  const calculateTotalUnits = (items) => {
+    let totalUnits = 0;
+    Object.values(items).forEach(sizes => {
+      totalUnits += (Number(sizes.traveler) * 1) + 
+                    (Number(sizes.adventurer) * 3) + 
+                    (Number(sizes.explorer) * 6) + 
+                    (Number(sizes.quest) * 12);
+    });
+    return totalUnits;
+  };
 
   const handleQtyChange = (productId, size, value) => {
     setFormData(prev => ({
@@ -35,12 +62,29 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // --- 4. SAFETY CHECKS ---
+    const totalInOrder = calculateTotalUnits(formData.items);
+
+    if (totalInOrder === 0) {
+      alert("Please select at least one treat!");
+      return;
+    }
+
+    if (totalInOrder > stockRemaining) {
+      alert(`⚠️ Capacity Alert: We only have ${stockRemaining} units left. Your current selection is ${totalInOrder} units. Please adjust your order.`);
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:5000/api/preorders', formData);
-      alert('Order Submitted Successfully!');
-      console.log(response.data);
+      alert('Order Submitted Successfully! Check your email for next steps.');
+      
+      // Refresh stock level after success
+      const res = await axios.get('http://localhost:5000/api/preorders/stock-level');
+      setStockRemaining(res.data.remaining);
     } catch (err) {
-      alert('Error submitting order. Check console.');
+      alert('Error submitting order.');
       console.error(err);
     }
   };
@@ -48,9 +92,20 @@ function App() {
   return (
     <div className="container">
       <h1>Sweet Adventures Club - Preorder Form</h1>
-      <p>Preorder your favorite treats for pick up next week!</p>
+      
+      {/* STOCK WARNING VIEW */}
+      <div className="stock-info" style={{ textAlign: 'center', margin: '20px 0' }}>
+        {stockRemaining <= 15 && stockRemaining > 0 && (
+          <p className="hurry-up" style={{ color: '#d4a373', fontWeight: 'bold' }}>
+            🔥 Limited Capacity: Only {stockRemaining} treats left for this event!
+          </p>
+        )}
+        {stockRemaining <= 0 && (
+          <h2 className="sold-out-msg" style={{ color: 'red' }}>SOLD OUT FOR THIS BAKE</h2>
+        )}
+      </div>
 
-      <p>please follow the instructions below to complete your preorder</p>
+      <p>Preorder your favorite treats for pick up next week!</p>
 
       <ol>
         <li>Choose your favorite treats from the menu below</li>
@@ -63,7 +118,6 @@ function App() {
         <li>Enjoy your sweet treats!</li>
       </ol>
 
-      
       <form onSubmit={handleSubmit}>
         <h5>Choose from the menu below</h5>
         <ul>
@@ -72,11 +126,12 @@ function App() {
           <li>Explorers Pack: 6 individual treats ($42)</li>
           <li>Quest Pack: 12 individual treats ($80)</li>
         </ul>
+
         <div className="table-wrapper">
           <table className="ordering-table">
             <thead>
               <tr>
-                <th></th>
+                <th>Product</th>
                 <th>Travelers Treat</th>
                 <th>Adventurers Pack</th>
                 <th>Explorers Pack</th>
@@ -88,11 +143,8 @@ function App() {
                 <tr key={product.id}>
                   <td>{product.name}</td>
                   <td><input type="number" min="0" value={formData.items[product.id].traveler} onChange={(e) => handleQtyChange(product.id, 'traveler', e.target.value)} /></td>
-
                   <td><input type="number" min="0" value={formData.items[product.id].adventurer} onChange={(e) => handleQtyChange(product.id, 'adventurer', e.target.value)} /></td>
-
                   <td><input type="number" min="0" value={formData.items[product.id].explorer} onChange={(e) => handleQtyChange(product.id, 'explorer', e.target.value)} /></td>
-
                   <td><input type="number" min="0" value={formData.items[product.id].quest} onChange={(e) => handleQtyChange(product.id, 'quest', e.target.value)} /></td>
                 </tr>
               ))}
@@ -101,7 +153,7 @@ function App() {
         </div>
 
         <h5>Delivery Details</h5>
-        <div className="row">
+        <div className="delivery-details">
           <input type="text" placeholder="Name" required onChange={e => setFormData({...formData, customer_name: e.target.value})} />
           <input type="email" placeholder="Email" required onChange={e => setFormData({...formData, customer_email: e.target.value})} />
           <input type="tel" placeholder="Phone Number" required onChange={e => setFormData({...formData, phone_number: e.target.value})} />
@@ -111,32 +163,23 @@ function App() {
             <option value="9AM-10AM">9AM-10AM</option>
             <option value="10AM-11AM">10AM-11AM</option>
             <option value="11AM-12PM">11AM-12PM</option>
-            <option value="12PM-1PM">12AM-1PM</option>
+            <option value="12PM-1PM">12PM-1PM</option>
           </select>
-
-          {
-          /*<input type="date" required onChange={e => setFormData({...formData, delivery_date: e.target.value})} />
-          <textarea placeholder="Special Instructions" onChange={e => setFormData({...formData, special_instructions: e.target.value})} />*/
-          }
         </div>
 
-        <button type="submit" className="submit-btn">Submit Your Order</button>
+        <button 
+          type="submit" 
+          className="submit-btn" 
+          disabled={stockRemaining <= 0}
+        >
+          {stockRemaining <= 0 ? "SOLD OUT" : "Submit Your Order"}
+        </button>
       </form>
+
       <footer>
-        <p>Thank you for choosing Sweet Adventures Club! We appreciate you supporting our small local business!
-        </p>
-
-        <p>
-          Follow us on social media:
-          <br />
-          Instagram: <a href="https://www.instagram.com/sweetadventuresclub/" target="_blank" rel="noopener noreferrer">@sweetadventuresclub</a>
-        </p>
-
-        <p>
-          and check out all out flavors on our website:
-          <br />
-          Website: <a href="https://www.sweetadventuresclub.com" target="_blank" rel="noopener noreferrer">sweetadventuresclub.com</a>
-        </p>
+        <p>Thank you for choosing Sweet Adventures Club! We appreciate you supporting our small local business!</p>
+        <p>Follow us on Instagram: <a href="https://www.instagram.com/sweet_adventures_club/" target="_blank" rel="noopener noreferrer">@sweetadventuresclub</a></p>
+        <p>Website: <a href="https://www.sweetadventuresclub.cnetlify.app" target="_blank" rel="noopener noreferrer">sweetadventuresclub.com</a></p>
       </footer>
     </div>
   );

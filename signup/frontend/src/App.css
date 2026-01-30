@@ -140,3 +140,25 @@ input[type="number"] {
     padding: 15px;
   }
 }
+
+.stock-bar-container {
+  width: 60%;
+  background: #eee;
+  height: 10px;
+  border-radius: 5px;
+  margin: 10px auto 30px;
+  overflow: hidden;
+}
+
+.stock-bar-fill {
+  height: 100%;
+  background-color: var(--crust);
+  transition: width 0.5s ease;
+}
+
+.sold-out-msg {
+  color: #d9534f;
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.5rem;
+}

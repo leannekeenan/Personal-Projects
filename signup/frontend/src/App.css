@@ -82,15 +82,36 @@ input[type="number"] {
 }
 
 /* --- DELIVERY SECTION (Fixing the Squish) --- */
+/* Ensure the container itself spans the full width of the form */
 .delivery-details {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  padding: 25px;
-  background-color: #fcf8f3;
-  border-radius: 12px;
-  border: 1px solid #eee;
-  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column; /* Stack them vertically */
+  gap: 15px;             /* Add space between each 'scroll' */
+  width: 100%;           /* Full width of the container */
+  box-sizing: border-box;
+}
+
+/* Force inputs and select boxes to fill the width */
+.delivery-details input,
+.delivery-details select {
+  width: 100%;           /* Stretch to 100% of .delivery-details */
+  box-sizing: border-box; /* Ensures padding doesn't push it off-screen */
+  padding: 12px;         /* Make them easier for travelers to tap on mobile */
+  font-size: 1rem;
+  border: 2px solid var(--crust); /* Matches your existing theme */
+  border-radius: 8px;
+}
+
+/* Ensure the form container itself doesn't have too much padding on mobile */
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto; /* Allows horizontal swipe for the large treat table */
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .delivery-details div {
@@ -110,6 +131,8 @@ input[type="number"] {
   width: 100%;
   min-height: 45px;
 }
+
+
 
 /* --- SUBMIT BUTTON --- */
 .submit-btn {
@@ -138,6 +161,11 @@ input[type="number"] {
   .order-container {
     margin: 10px;
     padding: 15px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 3px;
   }
 }
 

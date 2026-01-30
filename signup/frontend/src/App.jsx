@@ -176,16 +176,16 @@ function App() {
           className="submit-btn" 
           disabled={stockRemaining <= 0}
         >
-          {stockRemaining <= 0 ? "SANCTUARY FULL" : "Finalize Your Provisioning"}
+          {stockRemaining <= 0 ? "SANCTUARY FULL" : "Finalize Your Preorder"}
         </button>
       </form>
 
       <footer>
-        <p>Thank you for letting Sweet Adventures Club fuel your story. Keep moving, traveler.</p>
+        <p>Thank you for letting Sweet Adventures Club fuel your story. Happy trails, adventurer.</p>
         <div className="social-links">
           <a href="https://www.instagram.com/sweet_adventures_club/" target="_blank" rel="noopener noreferrer">Instagram</a>
           <span> | </span>
-          <a href="https://sweetadventuresclub.netlify.app" target="_blank" rel="noopener noreferrer">The Great Hall (Website)</a>
+          <a href="https://sweetadventuresclub.netlify.app" target="_blank" rel="noopener noreferrer">SACAT.com</a>
         </div>
       </footer>
     </div>

@@ -3,20 +3,20 @@ const router = express.Router();
 const Preorder = require('../models/Preordering'); 
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
-const square = require('square'); 
+const { Client, Environment } = require('square'); // Standard for v30
 const crypto = require('crypto');
 
-// --- SQUARE SETUP FOR VERSION 44.0.0 ---
-// We pull the Client from the default export and manually set the environment string
-const Client = square.default ? square.default.Client : square.Client;
-
+// --- SQUARE SETUP (Stable v30) ---
 const client = new Client({
     accessToken: process.env.SQUARE_ACCESS_TOKEN,
-    environment: 'sandbox' // We use the string directly to stop the 'Sandbox' undefined error
+    environment: Environment.Sandbox
 });
+
+console.log("✅ Square Client initialized");
 
 // BigInt serialization fix
 BigInt.prototype.toJSON = function() { return this.toString() };
+
 // --- EMAIL SETUP ---
 const transporter = nodemailer.createTransport({
     service: 'gmail',

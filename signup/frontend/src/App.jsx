@@ -88,7 +88,7 @@ function App() {
       <header className="adventure-header">
         <img src={logo} alt="Sweet Adventures Club Logo" className="logo"/>
         <h1 className="app-title">Sweet Adventures Club Preorder Form</h1>
-        <p className="tagline">Hand-Held Rations for the Road Ahead</p>
+        <p className="tagline">Rations for the Road Ahead</p>
       </header>
       
       <div className="stock-info" style={{ textAlign: 'center', margin: '20px 0' }}>
@@ -110,14 +110,14 @@ function App() {
       </div>
 
       <section className="mission-statement">
-        <p>Life is more than the daily grind—it is a grand quest. Step into our sanctuary and find road-ready treasures meticulously crafted for your journey.</p>
+        <p>Life is more than the daily grind—it is a grand quest. Come and explore our road-ready treasures meticulously crafted for your journey.</p>
       </section>
 
       <div className="quest-steps">
-        <h3>Your Preorder Quest Log</h3>
+        <h3>Preordering Instructions</h3>
         <ol>
-          <li>Select your loot from the menu below</li>
-          <li>Enter Adventurer Details</li>
+          <li>Select the flavors and pack sizes you'd like to preorder</li>
+          <li>Enter your adventurer details (name, email, phone)</li>
           <li>Commit your order to our baking bards</li>
           <li>Prepay for your provisions at our vendors tavern</li>
           <li>Claim your loot next week during your chosen pick up window</li>
@@ -125,12 +125,12 @@ function App() {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <h5 className="section-title">Provision Packs</h5>
+        <h5 className="section-title">Provision Pack Options</h5>
         <ul className="pack-legend">
-          <li><strong>Traveler’s Treat:</strong> 1 Individual Cheesecake ($8)</li>
+          <li><strong>Traveler’s Treat:</strong> 1 Individual Indulgence ($8)</li>
           <li><strong>Adventurer’s Pack:</strong> 3 Road-Ready Rations ($22)</li>
-          <li><strong>Explorer’s Pack:</strong> 6 Decadent Treats ($42)</li>
-          <li><strong>Quest Pack:</strong> 12 Legendary Portables ($80)</li>
+          <li><strong>Explorer’s Pack:</strong> 6 Decadent Delights ($42)</li>
+          <li><strong>Quest Pack:</strong> 12 Legendary Luxuries ($80)</li>
         </ul>
 
         <div className="table-wrapper">

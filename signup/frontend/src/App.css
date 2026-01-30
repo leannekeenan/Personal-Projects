@@ -1,9 +1,22 @@
-/* App.css */
+/* --- THEME VARIABLES --- */
 :root {
   --crust: #d4a373;      
   --filling: #ffffff;    
   --accent: #bc8a5f;     
-  --ivory-input: #fffdfa; /* This is the warm off-white color */
+  --ivory-input: #fffdfa;
+  --parchment: #fdf5e6;
+  --deep-brown: #5d4037;
+  --text-main: #3e2723;
+}
+
+/* --- LAYOUT & CONTAINERS --- */
+.order-container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 25px;
+  background: var(--filling);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(212, 163, 115, 0.1);
 }
 
 .adventure-header {
@@ -18,61 +31,149 @@
   margin: 30px auto;
 }
 
-.order-container {
-  max-width: 1100px;
-  margin: 20px auto;
-  padding: 25px;
-  background: var(--filling);
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(212, 163, 115, 0.1);
+/* --- MISSION & QUEST LOG --- */
+.mission-statement {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  text-align: center;
+  border-top: 2px solid var(--crust);
+  border-bottom: 2px solid var(--crust);
+}
+
+.mission-statement p {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--deep-brown);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.quest-steps {
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: var(--parchment);
+  border: 3px solid var(--crust);
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.quest-steps h3 {
+  font-family: 'Georgia', serif;
+  color: var(--deep-brown);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 0;
+  border-bottom: 1px solid var(--crust);
+  padding-bottom: 10px;
+}
+
+.quest-steps ol {
+  counter-reset: quest-counter;
+  list-style: none;
+  padding-left: 0;
+}
+
+.quest-steps li {
+  counter-increment: quest-counter;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  color: var(--text-main);
+  display: flex;
+  align-items: flex-start;
+}
+
+.quest-steps li::before {
+  content: "Step " counter(quest-counter) ":";
+  font-weight: bold;
+  color: var(--crust);
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+/* --- FORM COMPONENTS --- */
+.section-title {
+  font-family: 'Georgia', serif;
+  color: var(--deep-brown);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--crust);
+  padding-bottom: 5px;
+  margin-top: 40px;
+}
+
+.pack-legend {
+  list-style: none;
+  padding: 15px;
+  background-color: var(--parchment);
+  border-left: 4px solid var(--crust);
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.pack-legend li {
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.pack-legend strong {
+  color: var(--accent);
+  display: block;
 }
 
 /* --- TABLE STYLING --- */
-.table-responsive {
+.table-wrapper {
   width: 100%;
   overflow-x: auto;
   border: 2px solid #f0e6db;
   border-radius: 10px;
-  margin-bottom: 40px;
+  margin: 20px 0 40px;
+  -webkit-overflow-scrolling: touch;
 }
 
-table {
+.ordering-table {
   width: 100%;
   border-collapse: collapse;
   min-width: 800px;
+  background: white;
 }
 
-th {
+.ordering-table th {
   background-color: var(--crust);
   color: white;
   padding: 18px;
-  text-align: left;
-}
-
-td {
-  padding: 15px;
-  border-bottom: 1px solid #f0e6db;
+  font-family: 'Georgia', serif;
   text-align: center;
 }
 
-.row {
-  display:flex;
-  flex-direction: column;
-  width: 80%;
-  margin: 0 auto;
+.ordering-table td {
+  padding: 15px;
+  border-bottom: 1px solid #f0e6db;
+  border-right: 1px solid #f0e6db;
+  text-align: center;
 }
 
-/* --- THE INPUTS (Anti-Gray Overrides) --- */
+.flavor-name {
+  text-align: left !important;
+  font-weight: bold;
+  background-color: var(--parchment);
+  color: var(--deep-brown);
+  min-width: 180px;
+}
+
+/* --- INPUTS & SELECTS --- */
 input[type="number"],
 input[type="text"],
 input[type="email"],
 input[type="tel"],
 select {
-  /* This kills the default browser gray/recessed look */
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none; 
-  
   background-color: var(--ivory-input) !important;
   border: 2px solid var(--crust) !important;
   color: var(--text-main);
@@ -80,105 +181,56 @@ select {
   padding: 12px;
   font-size: 1rem;
   outline: none;
-  margin: 3px;
 }
 
-/* Table Number Inputs */
 input[type="number"] {
-  width: 100px;
+  width: 80px;
   text-align: center;
   font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-/* --- DELIVERY SECTION (Fixing the Squish) --- */
-/* Ensure the container itself spans the full width of the form */
 .delivery-details {
   display: flex;
-  flex-direction: column; /* Stack them vertically */
-  gap: 15px;             /* Add space between each 'scroll' */
-  width: 100%;           /* Full width of the container */
-  box-sizing: border-box;
-}
-
-/* Force inputs and select boxes to fill the width */
-.delivery-details input,
-.delivery-details select {
-  width: 100%;           /* Stretch to 100% of .delivery-details */
-  box-sizing: border-box; /* Ensures padding doesn't push it off-screen */
-  padding: 12px;         /* Make them easier for travelers to tap on mobile */
-  font-size: 1rem;
-  border: 2px solid var(--crust); /* Matches your existing theme */
-  border-radius: 8px;
-}
-
-/* Ensure the form container itself doesn't have too much padding on mobile */
-@media (max-width: 600px) {
-  .container {
-    padding: 10px;
-  }
-  
-  .table-wrapper {
-    overflow-x: auto; /* Allows horizontal swipe for the large treat table */
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-.delivery-details div {
-  display: flex;
   flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  margin: 20px 0;
 }
 
-.delivery-details label {
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: var(--crust);
-}
-
-/* Make bottom inputs fill their space and look big */
 .delivery-details input,
 .delivery-details select {
   width: 100%;
-  min-height: 45px;
+  box-sizing: border-box;
+  min-height: 48px;
 }
 
-
-
-/* --- SUBMIT BUTTON --- */
+/* --- BUTTONS & BARS --- */
 .submit-btn {
   background-color: var(--crust);
   color: white;
-  padding: 10px 20px;
+  padding: 15px 30px;
   border: none;
   border-radius: 50px;
   font-size: 1.3rem;
   font-weight: bold;
+  font-family: 'Georgia', serif;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   justify-content: center;
-  width: 50%;
-  margin: 0 auto
+  width: fit-content;
+  min-width: 50%;
+  margin: 30px auto;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   background-color: var(--accent);
   letter-spacing: 1px;
 }
 
-/* Mobile Tweaks */
-@media (max-width: 600px) {
-  .order-container {
-    margin: 10px;
-    padding: 15px;
-  }
-
-  .submit-btn {
-    width: 100%;
-    margin-top: 3px;
-  }
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .stock-bar-container {
@@ -203,10 +255,36 @@ input[type="number"] {
   font-size: 1.5rem;
 }
 
+/* --- FOOTER --- */
 footer {
   text-align: center;
   margin: 40px 0;
   padding-top: 20px;
   border-top: 1px solid #f0e6db;
   color: var(--crust);
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 600px) {
+  .mission-statement p {
+    font-size: 1.1rem;
+  }
+  
+  .quest-steps {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .order-container {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .submit-btn {
+    width: 100%;
+  }
+
+  .stock-bar-container {
+    width: 90%;
+  }
 }

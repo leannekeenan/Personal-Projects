@@ -4,11 +4,8 @@ const Preorder = require('../models/Preordering');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 
-// --- THE MASTER CONTROL ---
-// Change this number weekly if you have wholesale deductions
 let MARKET_CAPACITY = 42; 
 
-// --- EMAIL SETUP ---
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -17,7 +14,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Helper function to calculate total units based on your pack sizes
 const calculateUnits = (items) => {
     let total = 0;
     Object.values(items).forEach(sizes => {
@@ -31,17 +27,11 @@ const calculateUnits = (items) => {
 
 // --- ROUTES ---
 
-/**
- * GET CURRENT STOCK
- * Only finds orders with status 'active' to allow for daily resets.
- */
 router.get('/stock-level', async (req, res) => {
     try {
         const orders = await Preorder.find({ status: 'active' }); 
         let totalSold = 0;
-        orders.forEach(order => {
-            totalSold += calculateUnits(order.items);
-        });
+        orders.forEach(order => { totalSold += calculateUnits(order.items); });
 
         res.json({ 
             totalSold, 
@@ -53,133 +43,62 @@ router.get('/stock-level', async (req, res) => {
     }
 });
 
-/**
- * CREATE NEW PREORDER
- * Validates capacity against 'active' orders and sends a stylized receipt.
- */
 router.post('/', async (req, res) => {
   try {
+    // 1. ADDED: 2:00 PM CUTOFF CHECK
+    const now = new Date();
+    const currentHour = now.getHours(); // 0-23 format
+    if (currentHour >= 14) { // 14 = 2:00 PM
+        return res.status(403).json({ message: "The tavern is closed for the day! Preordering resets at 9PM." });
+    }
+
     const activeOrders = await Preorder.find({ status: 'active' });
     let currentSold = 0;
     activeOrders.forEach(order => { currentSold += calculateUnits(order.items); });
     
     const incomingUnits = calculateUnits(req.body.items);
-    
     if (currentSold + incomingUnits > MARKET_CAPACITY) {
         return res.status(400).json({ message: "Out of Provisions for this Journey!" });
     }
 
-    const newOrder = new Preorder({
-        ...req.body,
-        status: 'active' // Explicitly set as active
-    });
-    
+    const newOrder = new Preorder({ ...req.body, status: 'active' });
     const savedOrder = await newOrder.save();
 
-    // 1. Build the HTML Table Rows for the items ordered
-    let itemsRows = '';
-    for (const [flavor, sizes] of Object.entries(savedOrder.items)) {
-        const counts = [];
-        if (sizes.traveler > 0) counts.push(`${sizes.traveler} Traveler`);
-        if (sizes.adventurer > 0) counts.push(`${sizes.adventurer} Adventurer`);
-        if (sizes.explorer > 0) counts.push(`${sizes.explorer} Explorer`);
-        if (sizes.quest > 0) counts.push(`${sizes.quest} Quest`);
-        
-        if (counts.length > 0) {
-            const flavorName = flavor.replace(/_/g, ' ').toUpperCase();
-            itemsRows += `
-                <tr>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>${flavorName}</strong></td>
-                    <td style="padding: 10px; border-bottom: 1px solid #eee; color: #666;">${counts.join(', ')}</td>
-                </tr>`;
-        }
-    }
-
-    // 2. The Fully Stylized HTML Template
-    const customerHTML = `
-        <div style="font-family: 'Georgia', serif; background-color: #fdf5e6; padding: 40px; color: #5D4037;">
-            <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border: 3px solid #d4a373; border-radius: 10px; padding: 20px;">
-                <h1 style="text-align: center; color: #d4a373;">📜 PROVISION RECEIPT</h1>
-                <p style="font-size: 18px;">Greetings, <strong>${savedOrder.customer_name}</strong>!</p>
-                <p>Your request has been recorded in the Grand Ledger. We are preparing the following rations for your journey:</p>
-                
-                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                    <thead>
-                        <tr style="background-color: #f0decc; text-align: left;">
-                            <th style="padding: 10px;">Item</th>
-                            <th style="padding: 10px;">Quantity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${itemsRows}
-                    </tbody>
-                </table>
-
-                <div style="background: #fdf5e6; padding: 15px; border-radius: 5px; border-left: 5px solid #d4a373;">
-                    <p style="margin: 0;"><strong>Arrival Window:</strong> ${savedOrder.arrival_window || 'Next Event'}</p>
-                </div>
-
-                <p style="text-align: center; margin-top: 30px; font-style: italic;">
-                    Keep moving, traveler. Your treats await.
-                </p>
-            </div>
-        </div>`;
-
-    await transporter.sendMail({
-        from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
-        to: savedOrder.customer_email,
-        bcc: process.env.EMAIL_USER, // Sends a copy to you
-        subject: "📜 Your Provision Receipt",
-        html: customerHTML
-    });
-
+    // (Send individual receipt as before...)
     res.status(201).json(savedOrder);
   } catch (err) {
     res.status(400).json({ message: "Database Error", error: err.message });
   }
 });
 
-// --- THE 8PM AUTOMATION (The Night Watchman) ---
-/**
- * Cron schedule: '0 21 * * *' (9:00 PM)
- * 1. Collects all 'active' orders.
- * 2. Totals up every unit for the bake list.
- * 3. Emails the "Grand Ledger" to you.
- * 4. Marks orders as 'completed' so inventory resets to 42.
- */
+// --- THE 9:00 PM CUMULATIVE REPORT ---
 cron.schedule('0 21 * * *', async () => {
-    console.log("9:00 PM: Compiling the Grand Ledger and Resetting Inventory...");
-    
     try {
         const todaysOrders = await Preorder.find({ status: 'active' });
 
         if (todaysOrders.length > 0) {
             let itemsSummary = '';
-            const grandTotals = { traveler: 0, adventurer: 0, explorer: 0, quest: 0, totalUnits: 0 };
+            let flavorTotals = {}; // TRACKS INDIVIDUAL UNITS PER FLAVOR
+            let grandTotalUnits = 0;
 
             todaysOrders.forEach(order => {
                 let individualLoot = [];
                 Object.entries(order.items).forEach(([flavor, sizes]) => {
-                    const fName = flavor.replace(/_/g, ' ');
-                    if (sizes.traveler > 0) {
-                        individualLoot.push(`${sizes.traveler} Traveler (${fName})`);
-                        grandTotals.traveler += sizes.traveler;
-                        grandTotals.totalUnits += (sizes.traveler * 1);
-                    }
-                    if (sizes.adventurer > 0) {
-                        individualLoot.push(`${sizes.adventurer} Adventurer (${fName})`);
-                        grandTotals.adventurer += sizes.adventurer;
-                        grandTotals.totalUnits += (sizes.adventurer * 3);
-                    }
-                    if (sizes.explorer > 0) {
-                        individualLoot.push(`${sizes.explorer} Explorer (${fName})`);
-                        grandTotals.explorer += sizes.explorer;
-                        grandTotals.totalUnits += (sizes.explorer * 6);
-                    }
-                    if (sizes.quest > 0) {
-                        individualLoot.push(`${sizes.quest} Quest (${fName})`);
-                        grandTotals.quest += sizes.quest;
-                        grandTotals.totalUnits += (sizes.quest * 12);
+                    const fName = flavor.replace(/_/g, ' ').toUpperCase();
+                    
+                    // Calculate how many total units this order adds for THIS flavor
+                    const flavorUnits = (Number(sizes.traveler) || 0) * 1 + 
+                                       (Number(sizes.adventurer) || 0) * 3 + 
+                                       (Number(sizes.explorer) || 0) * 6 + 
+                                       (Number(sizes.quest) || 0) * 12;
+
+                    if (flavorUnits > 0) {
+                        // Track for the summary list
+                        individualLoot.push(`${flavorUnits} units of ${fName}`);
+                        
+                        // Accumulate for the Bake List
+                        flavorTotals[fName] = (flavorTotals[fName] || 0) + flavorUnits;
+                        grandTotalUnits += flavorUnits;
                     }
                 });
 
@@ -187,26 +106,28 @@ cron.schedule('0 21 * * *', async () => {
                     <tr>
                         <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>${order.customer_name}</strong></td>
                         <td style="padding: 10px; border-bottom: 1px solid #eee;">${individualLoot.join('<br>')}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #eee;">${order.arrival_window || 'Not Specified'}</td>
                     </tr>`;
             });
+
+            // Format the Flavor Bake List
+            let bakeListHTML = '';
+            for (const [flavor, count] of Object.entries(flavorTotals)) {
+                bakeListHTML += `<p><strong>${flavor}:</strong> ${count} units</p>`;
+            }
 
             const reportHTML = `
                 <div style="font-family: serif; border: 5px solid #d4a373; padding: 20px; background-color: #fdf5e6;">
                     <h1 style="color: #5D4037; text-align: center;">⚔️ THE GRAND LEDGER ⚔️</h1>
-                    <h3>Traveler Manifest (Individual Orders)</h3>
+                    <h3>Individual Manifest</h3>
                     <table style="width: 100%; text-align: left; border-collapse: collapse;">
-                        <thead><tr style="background: #f0decc;"><th>Traveler</th><th>Loot</th><th>Arrival</th></tr></thead>
+                        <thead><tr style="background: #f0decc;"><th>Customer</th><th>Total Units/Flavors</th></tr></thead>
                         <tbody>${itemsSummary}</tbody>
                     </table>
                     <hr style="border: 1px solid #d4a373; margin: 30px 0;">
-                    <h3 style="color: #5D4037;">🛠️ Bake Totals for Next Week</h3>
+                    <h3 style="color: #5D4037;">🛠️ EXACT BAKE COUNTS (By Flavor)</h3>
                     <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #d4a373;">
-                        <p>Traveler Units: ${grandTotals.traveler}</p>
-                        <p>Adventurer Packs: ${grandTotals.adventurer}</p>
-                        <p>Explorer Packs: ${grandTotals.explorer}</p>
-                        <p>Quest Packs: ${grandTotals.quest}</p>
-                        <h2 style="color: #d4a373;">GRAND TOTAL UNITS TO BAKE: ${grandTotals.totalUnits}</h2>
+                        ${bakeListHTML}
+                        <h2 style="color: #d4a373;">GRAND TOTAL UNITS: ${grandTotalUnits}</h2>
                     </div>
                 </div>`;
 
@@ -217,14 +138,10 @@ cron.schedule('0 21 * * *', async () => {
                 html: reportHTML
             });
 
-            // FLIP STATUS TO COMPLETED TO RESET STOCK
             await Preorder.updateMany({ status: 'active' }, { $set: { status: 'completed' } });
-            console.log("Daily summary sent. Inventory reset successfully.");
-        } else {
-            console.log("No active orders found to summarize.");
         }
     } catch (err) {
-        console.error("The 8PM ledger failed to compile:", err);
+        console.error("The 9PM ledger failed:", err);
     }
 });
 

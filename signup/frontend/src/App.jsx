@@ -94,16 +94,24 @@ function App() {
       <h1>Sweet Adventures Club - Preorder Form</h1>
       
       {/* STOCK WARNING VIEW */}
-      <div className="stock-info" style={{ textAlign: 'center', margin: '20px 0' }}>
-        {stockRemaining <= 15 && stockRemaining > 0 && (
-          <p className="hurry-up" style={{ color: '#d4a373', fontWeight: 'bold' }}>
-            🔥 Limited Capacity: Only {stockRemaining} treats left for this event!
-          </p>
-        )}
-        {stockRemaining <= 0 && (
-          <h2 className="sold-out-msg" style={{ color: 'red' }}>SOLD OUT FOR THIS BAKE</h2>
-        )}
-      </div>
+      {/* VISUAL FEEDBACK FOR CUSTOMER */}
+<div className="stock-info" style={{ textAlign: 'center', margin: '20px 0' }}>
+  {stockRemaining > 0 ? (
+    <p className="hurry-up" style={{ 
+      color: '#d4a373', 
+      fontWeight: 'bold', 
+      fontSize: '1.2rem',
+      padding: '10px',
+      border: '2px solid #d4a373',
+      borderRadius: '8px',
+      display: 'inline-block'
+    }}>
+      🔥 Only {stockRemaining} units left for next week's preorder!
+    </p>
+  ) : (
+    <h2 className="sold-out-msg" style={{ color: 'red' }}>SOLD OUT FOR THIS BAKE</h2>
+  )}
+</div>
 
       <p>Preorder your favorite treats for pick up next week!</p>
 

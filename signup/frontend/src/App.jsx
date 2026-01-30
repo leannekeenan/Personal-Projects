@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 import logo from './assets/SWEET ADVENTURES CLUB (2).png';
+import OrderSuccess from './components/OrderSuccess';
 
 const PRODUCTS = [
   { id: 'vanilla_veil', name: 'Vanilla Veil' },

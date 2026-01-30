@@ -1,170 +1,121 @@
-const express = require('express');
-const router = express.Router();
-const Preorder = require('../models/Preordering'); 
-const nodemailer = require('nodemailer');
-const cron = require('node-cron');
-const { Client } = require('square'); 
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
+import './App.css';
+import logo from './assets/SWEET ADVENTURES CLUB (2).png';
+import OrderSuccess from './components/OrderSuccess';
+import SquarePayment from './components/SquarePayment';
 
-// --- THE MASTER CONTROL ---
-let MARKET_CAPACITY = 42; 
+const PRODUCTS = [
+  { id: 'vanilla_veil', name: 'Vanilla Veil' },
+  { id: 'cosmic_chocolate', name: 'Cosmic Chocolate' },
+  { id: 'cinnasphere', name: 'Cinnasphere' },
+  { id: 'pb_portal', name: 'Peanut Butter Portal' },
+  { id: 'cookies_clouds', name: 'Cookies & Clouds' },
+  { id: 'spice_gourdmand', name: 'Spice Gourdmand' },
+  { id: 'aethereal_apple', name: 'Aethereal Apple' },
+  { id: 'strawberry_starlight', name: 'Strawberry Starlight' },
+  { id: 'pineapple_express', name: 'Pineapple Express' }
+];
 
-// --- SQUARE SETUP ---
-const client = new Client({
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: 'sandbox', // Use 'production' when you go live
-});
+function TavernForm({ stockRemaining }) {
+  const [formData, setFormData] = useState({
+    customer_name: '',
+    customer_email: '',
+    phone_number: '',
+    delivery_time: '',
+    items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest: 0 } }), {})
+  });
 
-// --- EMAIL SETUP ---
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+  const handleQtyChange = (productId, size, value) => {
+    setFormData(prev => ({
+      ...prev,
+      items: {
+        ...prev.items,
+        [productId]: { ...prev.items[productId], [size]: parseInt(value) || 0 }
+      }
+    }));
+  };
 
-// Helper: Converts pack sizes into total individual cheesecake units
-const calculateUnits = (items) => {
-    let total = 0;
-    if (!items) return 0;
-    Object.values(items).forEach(sizes => {
-        total += (Number(sizes.traveler) || 0) * 1 + 
-                 (Number(sizes.adventurer) || 0) * 3 + 
-                 (Number(sizes.explorer) || 0) * 6 + 
-                 (Number(sizes.quest) || 0) * 12;
-    });
-    return total;
-};
-
-// --- ROUTES ---
-
-/**
- * GET CURRENT STOCK
- */
-router.get('/stock-level', async (req, res) => {
+  const handlePayment = async (token) => {
     try {
-        const orders = await Preorder.find({ status: 'active' }); 
-        let totalSold = 0;
-        orders.forEach(order => { totalSold += calculateUnits(order.items); });
+      // This sends the Square Token + all your form data to the backend in one request
+      const response = await axios.post('http://localhost:5000/api/preorders', {
+        ...formData,
+        sourceId: token // Passing the token string directly to your backend
+      });
 
-        res.json({ 
-            totalSold, 
-            remaining: Math.max(0, MARKET_CAPACITY - totalSold),
-            maxCap: MARKET_CAPACITY 
-        });
+      if (response.status === 201) {
+        window.location.href = '/order-success';
+      }
     } catch (err) {
-        res.status(500).json({ error: err.message });
+      alert(err.response?.data?.message || 'The payment portal failed. Please try again.');
     }
-});
+  };
 
-/**
- * CREATE NEW PREORDER & PROCESS PAYMENT
- * This handles the token sent from your React Square SDK
- */
-router.post('/', async (req, res) => {
-  try {
-    const { sourceId, items, customer_name, customer_email, delivery_time } = req.body;
+  return (
+    <div className="container">
+      <header className="adventure-header">
+        <img src={logo} alt="Logo" className="logo"/>
+        <h1 className="app-title">Sweet Adventures Club Preorder Form</h1>
+      </header>
+      
+      <div className="stock-info">
+        <p className="hurry-up">⚔️ Only {stockRemaining} left for preorder!</p>
+      </div>
 
-    // 1. TIME GATE: 2:00 PM Cutoff
-    const now = new Date();
-    const currentHour = now.getHours(); 
-    if (currentHour >= 14 || currentHour < 9) { 
-        return res.status(403).json({ message: "The tavern is closed for the day!" });
-    }
+      <form onSubmit={(e) => e.preventDefault()}>
+        <div className="table-wrapper">
+          <table className="ordering-table">
+            <thead>
+              <tr><th>Flavor</th><th>Traveler</th><th>Adventurer</th><th>Explorer</th><th>Quest</th></tr>
+            </thead>
+            <tbody>
+              {PRODUCTS.map(product => (
+                <tr key={product.id}>
+                  <td className="flavor-name">{product.name}</td>
+                  <td><input type="number" min="0" value={formData.items[product.id].traveler} onChange={(e) => handleQtyChange(product.id, 'traveler', e.target.value)} /></td>
+                  <td><input type="number" min="0" value={formData.items[product.id].adventurer} onChange={(e) => handleQtyChange(product.id, 'adventurer', e.target.value)} /></td>
+                  <td><input type="number" min="0" value={formData.items[product.id].explorer} onChange={(e) => handleQtyChange(product.id, 'explorer', e.target.value)} /></td>
+                  <td><input type="number" min="0" value={formData.items[product.id].quest} onChange={(e) => handleQtyChange(product.id, 'quest', e.target.value)} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-    // 2. CAPACITY CHECK
-    const activeOrders = await Preorder.find({ status: 'active' });
-    let currentSold = 0;
-    activeOrders.forEach(order => { currentSold += calculateUnits(order.items); });
-    
-    const incomingUnits = calculateUnits(items);
-    if (currentSold + incomingUnits > MARKET_CAPACITY) {
-        return res.status(400).json({ message: "Out of Provisions for this Journey!" });
-    }
+        <div className="delivery-details">
+          <input type="text" placeholder="Adventurer Name" required onChange={e => setFormData({...formData, customer_name: e.target.value})} />
+          <input type="email" placeholder="Email Address" required onChange={e => setFormData({...formData, customer_email: e.target.value})} />
+          <input type="tel" placeholder="Phone Number" required onChange={e => setFormData({...formData, phone_number: e.target.value})} />
+          <select required onChange={e => setFormData({...formData, delivery_time: e.target.value})}>
+            <option value="">Select Arrival Window</option>
+            <option value="9AM-10AM">9AM-10AM</option>
+            <option value="10AM-11AM">10AM-11AM</option>
+          </select>
+        </div>
 
-    // 3. CALCULATE TOTAL PRICE (In Cents)
-    const prices = { traveler: 800, adventurer: 2200, explorer: 4200, quest: 8000 };
-    let totalCents = 0;
-    Object.entries(items).forEach(([flavor, sizes]) => {
-        totalCents += (Number(sizes.traveler) || 0) * prices.traveler +
-                     (Number(sizes.adventurer) || 0) * prices.adventurer +
-                     (Number(sizes.explorer) || 0) * prices.explorer +
-                     (Number(sizes.quest) || 0) * prices.quest;
-    });
+        {/* Updated to pass the handlePayment function as a prop */}
+        <SquarePayment onTokenReceived={handlePayment} />
+      </form>
+    </div>
+  );
+}
 
-    // 4. CHARGE THE CARD USING THE TOKEN FROM REACT
-    const { result } = await client.paymentsApi.createPayment({
-        sourceId: sourceId, // The 'token' generated by your React frontend
-        idempotencyKey: require('crypto').randomBytes(12).toString('hex'),
-        amountMoney: {
-            amount: BigInt(totalCents),
-            currency: 'USD'
-        }
-    });
+function App() {
+  const [stockRemaining, setStockRemaining] = useState(0);
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/preorders/stock-level').then(res => setStockRemaining(res.data.remaining));
+  }, []);
 
-    // 5. SAVE ORDER TO DATABASE (Status: Active because payment succeeded)
-    const newOrder = new Preorder({ 
-        ...req.body, 
-        status: 'active',
-        paymentId: result.payment.id 
-    });
-    const savedOrder = await newOrder.save();
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<TavernForm stockRemaining={stockRemaining} />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+      </Routes>
+    </Router>
+  );
+}
 
-    // 6. BUILD EMAIL TABLE
-    let itemsRows = '';
-    for (const [flavor, sizes] of Object.entries(savedOrder.items)) {
-        const counts = [];
-        if (sizes.traveler > 0) counts.push(`${sizes.traveler} Traveler`);
-        if (sizes.adventurer > 0) counts.push(`${sizes.adventurer} Adventurer`);
-        if (sizes.explorer > 0) counts.push(`${sizes.explorer} Explorer`);
-        if (sizes.quest > 0) counts.push(`${sizes.quest} Quest`);
-        
-        if (counts.length > 0) {
-            const fName = flavor.replace(/_/g, ' ').toUpperCase();
-            itemsRows += `<tr><td style="padding:10px; border-bottom:1px solid #eee;"><strong>${fName}</strong></td><td style="padding:10px; border-bottom:1px solid #eee;">${counts.join(', ')}</td></tr>`;
-        }
-    }
-
-    // 7. SEND INSTANT RECEIPT
-    await transporter.sendMail({
-        from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
-        to: savedOrder.customer_email,
-        bcc: process.env.EMAIL_USER, 
-        subject: "📜 Your Provision Receipt",
-        html: `
-            <div style="font-family: serif; border: 2px solid #d4a373; padding: 20px; background-color: #fdf5e6; max-width: 600px; margin: auto;">
-                <h1 style="color: #5D4037; text-align: center;">Greetings, ${savedOrder.customer_name}!</h1>
-                <p>Payment successful. We are preparing the following rations:</p>
-                <table style="width: 100%; border-collapse: collapse; margin: 20px 0; background: white; border-radius: 8px;">
-                    <thead style="background:#f0decc;"><tr><th style="padding:10px;">Item</th><th style="padding:10px;">Quantity</th></tr></thead>
-                    <tbody>${itemsRows}</tbody>
-                </table>
-                <p><strong>Arrival Window:</strong> ${savedOrder.delivery_time || 'Next Event'}</p>
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="https://sweetadventuresclub.netlify.app" style="background-color: #d4a373; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px;">Visit our Virtual Tavern</a>
-                </div>
-            </div>`
-    });
-
-    res.status(201).json(savedOrder);
-
-  } catch (err) {
-    console.error("Payment Process Error:", err);
-    res.status(400).json({ message: "Payment failed", error: err.message });
-  }
-});
-
-// --- THE 2:00 PM CUMULATIVE REPORT & RESET ---
-cron.schedule('0 14 * * *', async () => {
-    try {
-        const todaysOrders = await Preorder.find({ status: 'active' });
-        if (todaysOrders.length > 0) {
-            // ... (Your existing Bake Report logic from the previous versions)
-            await Preorder.updateMany({ status: 'active' }, { $set: { status: 'completed' } });
-        }
-    } catch (err) {
-        console.error("The 2PM ledger failed:", err);
-    }
-});
-
-module.exports = router;
+export default App;

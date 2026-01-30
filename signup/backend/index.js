@@ -6,6 +6,7 @@ const cors = require('cors');
 const app = express();
 
 // 1. Middleware
+// CORS is configured to allow requests from your React/Vite frontend
 app.use(cors());
 app.use(express.json());
 
@@ -18,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI)
 const preorderRoutes = require('./routes/preorderRoutes');
 
 // 4. Register Routes
-// Put these BEFORE app.listen
+// This matches the axios.post('http://localhost:5000/api/preorders', ...) call in App.jsx
 app.use('/api/preorders', preorderRoutes);
 
 // Test Route

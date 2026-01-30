@@ -8,8 +8,9 @@
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.13",
     "react-square-web-payments-sdk": "^3.3.0",
-    "square": "^44.0.0",
-    "twilio": "^5.12.0"
+    "square": "^v30.0.0.",
+    "twilio": "^5.12.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

@@ -183,9 +183,9 @@ function App() {
       <footer>
         <p>Thank you for letting Sweet Adventures Club fuel your story. Happy trails, adventurer.</p>
         <div className="social-links">
-          <a href="https://www.instagram.com/sweet_adventures_club/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.instagram.com/sweet_adventures_club/" target="_blank" rel="noopener noreferrer">@sweet_adventures_club</a>
           <span> | </span>
-          <a href="https://sweetadventuresclub.netlify.app" target="_blank" rel="noopener noreferrer">SACAT.com</a>
+          <a href="https://sweetadventuresclub.netlify.app" target="_blank" rel="noopener noreferrer">sweetadventuresclub.netlify.app</a>
         </div>
       </footer>
     </div>

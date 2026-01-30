@@ -109,6 +109,8 @@ router.post('/', async (req, res) => {
 
                 <p style="font-size: 1.1rem;"><strong>Arrival Window:</strong> ${savedOrder.delivery_time || 'Next Event'}</p>
                 
+                <p>Want to learn more lore about our Sweet Adventures Club, or place an order for further in the future? Visit our Virtual Tavern today!</a>.</p>
+
                 <div style="text-align: center; margin-top: 30px;">
                     <a href="https://sweetadventuresclub.netlify.app" 
                        style="background-color: #d4a373; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 1.2rem; display: inline-block;">

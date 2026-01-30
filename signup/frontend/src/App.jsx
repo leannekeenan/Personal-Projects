@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 import logo from './assets/SWEET ADVENTURES CLUB (2).png';
@@ -16,8 +17,8 @@ const PRODUCTS = [
   { id: 'pineapple_express', name: 'Pineapple Express' }
 ];
 
-function App() {
-  const [stockRemaining, setStockRemaining] = useState(null); 
+// --- TAVERN FORM COMPONENT ---
+function TavernForm({ stockRemaining, setStockRemaining }) {
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
@@ -25,18 +26,6 @@ function App() {
     delivery_time: '',
     items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest: 0 } }), {})
   });
-
-  useEffect(() => {
-    const checkStock = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/preorders/stock-level');
-        setStockRemaining(res.data.remaining);
-      } catch (err) {
-        console.error("The archive is incomplete. Could not fetch stock levels.", err);
-      }
-    };
-    checkStock();
-  }, []);
 
   const calculateTotalUnits = (items) => {
     let totalUnits = 0;
@@ -74,12 +63,15 @@ function App() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/preorders', formData);
-      alert('Order Recorded! Check your scroll (email) for the next steps of your journey.');
-      const res = await axios.get('http://localhost:5000/api/preorders/stock-level');
-      setStockRemaining(res.data.remaining);
+      // 1. Post to backend to get the Square Checkout URL
+      const res = await axios.post('http://localhost:5000/api/preorders', formData);
+      
+      // 2. Redirect the user to the Square Magic Portal
+      if (res.data.checkoutUrl) {
+        window.location.href = res.data.checkoutUrl;
+      }
     } catch (err) {
-      alert('The messenger was intercepted. Please try again.');
+      alert(err.response?.data?.message || 'The messenger was intercepted. Please try again.');
       console.error(err);
     }
   };
@@ -95,13 +87,9 @@ function App() {
       <div className="stock-info" style={{ textAlign: 'center', margin: '20px 0' }}>
         {stockRemaining > 0 ? (
           <p className="hurry-up" style={{ 
-            color: '#d4a373', 
-            fontWeight: 'bold', 
-            fontSize: '1.2rem',
-            padding: '10px',
-            border: '2px dotted #d4a373',
-            borderRadius: '8px',
-            display: 'inline-block'
+            color: '#d4a373', fontWeight: 'bold', fontSize: '1.2rem',
+            padding: '10px', border: '2px dotted #d4a373',
+            borderRadius: '8px', display: 'inline-block'
           }}>
             ⚔️ Only {stockRemaining} left for preorder!
           </p>
@@ -110,18 +98,14 @@ function App() {
         )}
       </div>
 
-      <section className="mission-statement">
-        <p>Life is more than the daily grind—it is a grand quest. Come and explore our road-ready treasures meticulously crafted for your journey.</p>
-      </section>
-
       <div className="quest-steps">
         <h3>Preordering Instructions</h3>
         <ol>
           <li>Select the flavors and pack sizes you'd like to preorder</li>
           <li>Enter your adventurer details (name, email, phone)</li>
-          <li>Commit your order to our baking bards</li>
-          <li>Prepay for your provisions at our vendors tavern</li>
-          <li>Claim your loot next week during your chosen pick up window</li>
+          <li>Finalize your order to open the secure magic portal</li>
+          <li><strong>Pay for your provisions via Square to secure your loot</strong></li>
+          <li>Claim your rations next week during your chosen pick up window</li>
         </ol>
       </div>
 
@@ -174,12 +158,8 @@ function App() {
           </select>
         </div>
 
-        <button 
-          type="submit" 
-          className="submit-btn" 
-          disabled={stockRemaining <= 0}
-        >
-          {stockRemaining <= 0 ? "SANCTUARY FULL" : "Finalize Your Preorder"}
+        <button type="submit" className="submit-btn" disabled={stockRemaining <= 0}>
+          {stockRemaining <= 0 ? "SANCTUARY FULL" : "Finalize & Pay via Square"}
         </button>
       </form>
 
@@ -192,6 +172,32 @@ function App() {
         </div>
       </footer>
     </div>
+  );
+}
+
+// --- MAIN APP ROUTER ---
+function App() {
+  const [stockRemaining, setStockRemaining] = useState(null);
+
+  useEffect(() => {
+    const checkStock = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/preorders/stock-level');
+        setStockRemaining(res.data.remaining);
+      } catch (err) {
+        console.error("The archive is incomplete.", err);
+      }
+    };
+    checkStock();
+  }, []);
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<TavernForm stockRemaining={stockRemaining} setStockRemaining={setStockRemaining} />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+      </Routes>
+    </Router>
   );
 }
 

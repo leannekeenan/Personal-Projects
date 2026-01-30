@@ -205,4 +205,38 @@ cron.schedule('0 9 * * *', async () => {
     }
 });
 
+/**
+ * SQUARE WEBHOOK LISTENER
+ * Square calls this when a payment link is completed
+ */
+router.post('/webhook', async (req, res) => {
+  const { type, data } = req.body;
+
+  // We are looking for the 'payment_link.completed' event
+  if (type === 'payment_link.completed') {
+    const paymentLinkId = data.object.payment_link.id;
+
+    try {
+      // Find the pending order and activate it
+      const order = await Preorder.findOneAndUpdate(
+        { paymentId: paymentLinkId },
+        { status: 'active' },
+        { new: true }
+      );
+
+      if (order) {
+        console.log(`✅ Order Activated: ${order.customer_name}'s quest is funded!`);
+        
+        // OPTIONAL: Send the email receipt here now that payment is confirmed
+        // (You can move your transporter.sendMail logic here if you want)
+      }
+    } catch (err) {
+      console.error("Webhook Database Error:", err);
+    }
+  }
+
+  // Always send a 200 OK back to Square so they stop retrying
+  res.sendStatus(200);
+});
+
 module.exports = router;

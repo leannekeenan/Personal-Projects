@@ -108,18 +108,19 @@
 
 .pack-legend {
   list-style: none;
-  padding: 15px;
+  padding: 15px 0;
   background-color: var(--parchment);
   border-left: 4px solid var(--crust);
-  margin: 20px 0;
+  margin: 20px auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 2fr));
+  gap: 15px 0;
 }
 
 .pack-legend li {
   font-size: 0.95rem;
   color: var(--text-main);
+  text-align: center;
 }
 
 .pack-legend strong {
@@ -287,4 +288,13 @@ footer {
   .stock-bar-container {
     width: 90%;
   }
+}
+
+.payment-container {
+  background: var(--ivory-input);
+  border: 2px solid var(--crust);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 30px auto;
+  max-width: 600px;
 }

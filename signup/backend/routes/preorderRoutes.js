@@ -78,15 +78,22 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ message: "Out of Provisions for this Journey!" });
     }
 
-    // 3. CALCULATE TOTAL PRICE (In Cents)
-    const prices = { traveler: 800, adventurer: 2200, explorer: 4200, quest: 8000 };
-    let totalCents = 0;
-    Object.entries(items).forEach(([flavor, sizes]) => {
-        totalCents += (Number(sizes.traveler) || 0) * prices.traveler +
+    // --- SECTION 3: CALCULATE TOTAL PRICE ---
+const prices = { traveler: 800, adventurer: 2200, explorer: 4200, quest: 8000 };
+let subtotalCents = 0;
+
+Object.entries(items).forEach(([flavor, sizes]) => {
+    subtotalCents += (Number(sizes.traveler) || 0) * prices.traveler +
                      (Number(sizes.adventurer) || 0) * prices.adventurer +
                      (Number(sizes.explorer) || 0) * prices.explorer +
                      (Number(sizes.quest) || 0) * prices.quest;
-    });
+});
+
+// Apply the same 9.875% tax
+const taxMultiplier = 1.09875;
+const totalWithTaxCents = BigInt(Math.round(subtotalCents * taxMultiplier));
+const totalCents = totalWithTaxCents;
+    console.log(`💰 Calculated total: $${(Number(totalCents) / 100).toFixed(2)}`);
 
     // 4. PROCESS SQUARE PAYMENT
     const { result } = await client.paymentsApi.createPayment({

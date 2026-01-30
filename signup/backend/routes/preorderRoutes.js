@@ -87,22 +87,21 @@ router.post('/', async (req, res) => {
 router.get('/stock-level', async (req, res) => {
     try {
         const orders = await Preorder.find();
-        let totalSold = 0;
+        let totalUnitsSold = 0;
 
         orders.forEach(order => {
-            // Logic to sum every traveler, adventurer, etc. in the items object
             Object.values(order.items).forEach(sizes => {
-                totalSold += (sizes.traveler || 0) + 
-                             (sizes.adventurers || 0) + 
-                             (sizes.explorers || 0) + 
-                             (sizes.quest || 0);
+                totalUnitsSold += (sizes.traveler || 0) * 1 + 
+                                  (sizes.adventurer || 0) * 3 + 
+                                  (sizes.explorer || 0) * 6 + 
+                                  (sizes.quest || 0) * 12;
             });
         });
 
-        res.json({ totalSold, remaining: 48 - totalSold });
+        res.json({ totalSold: totalUnitsSold, remaining: 48 - totalUnitsSold });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-});
+});;
 
 module.exports = router;

@@ -116,7 +116,7 @@ router.post('/', async (req, res) => {
                     </a>
                 </div>
                 
-                <p style="text-align: center; margin-top: 20px; color: #8b5e3c;">Keep moving, traveler.</p>
+                <p style="text-align: center; margin-top: 20px; color: #8b5e3c;">Happy Trails, adventurer.</p>
             </div>`
     });
 

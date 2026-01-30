@@ -28,55 +28,48 @@ function TavernForm({ stockRemaining }) {
   });
 
   const handleQtyChange = (productId, size, value) => {
-  // 1. Convert the input string to a base-10 integer
-  const qty = parseInt(value, 10);
-  
-  setFormData(prev => ({
-    ...prev,
-    items: {
-      ...prev.items,
-      [productId]: { 
-        ...prev.items[productId], 
-        // 2. If the box is empty (NaN), set it to 0. Otherwise, use the number.
-        [size]: isNaN(qty) ? 0 : qty 
+    const qty = parseInt(value, 10);
+    setFormData(prev => ({
+      ...prev,
+      items: {
+        ...prev.items,
+        [productId]: { 
+          ...prev.items[productId], 
+          [size]: isNaN(qty) ? 0 : qty 
+        }
       }
-    }
-  }));
-};
-
-  // Math perfectly aligned with your Legend text
-const calculateTotal = () => {
-  let subtotal = 0;
-  
-  Object.values(formData.items).forEach(item => {
-    subtotal += (Number(item.traveler) || 0) * 8;
-    subtotal += (Number(item.adventurer) || 0) * 22;
-    subtotal += (Number(item.explorer) || 0) * 42;
-    subtotal += (Number(item.quest) || 0) * 80;
-  });
-
-  // Calculate tax (9.875% based on your $0.79 per $8 example)
-  const taxRate = 0.09875; 
-  const taxAmount = subtotal * taxRate;
-  const grandTotal = subtotal + taxAmount;
-
-  return {
-    subtotal: subtotal.toFixed(2),
-    tax: taxAmount.toFixed(2),
-    total: grandTotal.toFixed(2)
+    }));
   };
-};
 
-const totals = calculateTotal();
+  const calculateTotal = () => {
+    let subtotal = 0;
+    Object.values(formData.items).forEach(item => {
+      subtotal += (Number(item.traveler) || 0) * 8;
+      subtotal += (Number(item.adventurer) || 0) * 22;
+      subtotal += (Number(item.explorer) || 0) * 42;
+      subtotal += (Number(item.quest) || 0) * 80;
+    });
 
-  const grandTotal = calculateTotal();
+    const taxRate = 0.09875; 
+    const taxAmount = subtotal * taxRate;
+    const grandTotal = subtotal + taxAmount;
+
+    return {
+      subtotal: subtotal.toFixed(2),
+      tax: taxAmount.toFixed(2),
+      total: grandTotal.toFixed(2)
+    };
+  };
+
+  // --- THE INTEGRATED TOTALS ---
+  const totals = calculateTotal();
 
   const handlePayment = async (token) => {
     try {
       const response = await axios.post('http://localhost:5000/api/preorders', {
         ...formData,
         sourceId: token,
-        amount: grandTotal // Sending the total to the backend
+        amount: totals.total // Sending the specific total string to the backend
       });
       if (response.status === 201) {
         window.location.href = '/order-success';
@@ -96,7 +89,7 @@ const totals = calculateTotal();
       <div className="stock-section">
          <p className="sold-out-msg">⚔️ Only {stockRemaining} left for preorder!</p>
          <div className="stock-bar-container">
-            <div className="stock-bar-fill" style={{ width: `${(stockRemaining / 50) * 100}%` }}></div>
+            <div className="stock-bar-fill" style={{ width: `${(stockRemaining / 42) * 100}%` }}></div>
          </div>
       </div>
 
@@ -164,9 +157,7 @@ const totals = calculateTotal();
           </select>
         </div>
 
-      
         <div className="payment-container">
-
           <div className="total-display">
             <div className="summary-line">
               <span>Subtotal: </span>
@@ -181,7 +172,6 @@ const totals = calculateTotal();
           </div>
 
           <SquarePayment onTokenReceived={handlePayment} />
-          
         </div>
       </form>
 

@@ -15,8 +15,7 @@ const PRODUCTS = [
 ];
 
 function App() {
-  // --- 1. NEW STATE FOR STOCK ---
-  const [stockRemaining, setStockRemaining] = useState(48);
+  const [stockRemaining, setStockRemaining] = useState(null); 
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
@@ -25,20 +24,18 @@ function App() {
     items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest: 0 } }), {})
   });
 
-  // --- 2. FETCH STOCK ON LOAD ---
   useEffect(() => {
     const checkStock = async () => {
       try {
         const res = await axios.get('http://localhost:5000/api/preorders/stock-level');
         setStockRemaining(res.data.remaining);
       } catch (err) {
-        console.error("Could not fetch stock level", err);
+        console.error("The archive is incomplete. Could not fetch stock levels.", err);
       }
     };
     checkStock();
   }, []);
 
-  // --- 3. HELPER TO COUNT UNITS ---
   const calculateTotalUnits = (items) => {
     let totalUnits = 0;
     Object.values(items).forEach(sizes => {
@@ -62,94 +59,93 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // --- 4. SAFETY CHECKS ---
     const totalInOrder = calculateTotalUnits(formData.items);
 
     if (totalInOrder === 0) {
-      alert("Please select at least one treat!");
+      alert("An adventurer cannot set out with an empty pack! Please select a treat.");
       return;
     }
 
     if (totalInOrder > stockRemaining) {
-      alert(`⚠️ Capacity Alert: We only have ${stockRemaining} units left. Your current selection is ${totalInOrder} units. Please adjust your order.`);
+      alert(`⚠️ Alas! We only have ${stockRemaining} rations remaining. Your party is requesting ${totalInOrder}. Please adjust your loot.`);
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/preorders', formData);
-      alert('Order Submitted Successfully! Check your email for next steps.');
-      
-      // Refresh stock level after success
+      await axios.post('http://localhost:5000/api/preorders', formData);
+      alert('Order Recorded! Check your scroll (email) for the next steps of your journey.');
       const res = await axios.get('http://localhost:5000/api/preorders/stock-level');
       setStockRemaining(res.data.remaining);
     } catch (err) {
-      alert('Error submitting order.');
+      alert('The messenger was intercepted. Please try again.');
       console.error(err);
     }
   };
 
   return (
     <div className="container">
-      <h1>Sweet Adventures Club - Preorder Form</h1>
+      <header className="adventure-header">
+        <h1>Sweet Adventures Club</h1>
+        <p className="tagline">Hand-Held Rations for the Road Ahead</p>
+      </header>
       
-      {/* STOCK WARNING VIEW */}
-      {/* VISUAL FEEDBACK FOR CUSTOMER */}
-<div className="stock-info" style={{ textAlign: 'center', margin: '20px 0' }}>
-  {stockRemaining > 0 ? (
-    <p className="hurry-up" style={{ 
-      color: '#d4a373', 
-      fontWeight: 'bold', 
-      fontSize: '1.2rem',
-      padding: '10px',
-      border: '2px solid #d4a373',
-      borderRadius: '8px',
-      display: 'inline-block'
-    }}>
-      🔥 Only {stockRemaining} units left for next week's preorder!
-    </p>
-  ) : (
-    <h2 className="sold-out-msg" style={{ color: 'red' }}>SOLD OUT FOR THIS BAKE</h2>
-  )}
-</div>
+      <div className="stock-info" style={{ textAlign: 'center', margin: '20px 0' }}>
+        {stockRemaining > 0 ? (
+          <p className="hurry-up" style={{ 
+            color: '#d4a373', 
+            fontWeight: 'bold', 
+            fontSize: '1.2rem',
+            padding: '10px',
+            border: '2px dotted #d4a373',
+            borderRadius: '8px',
+            display: 'inline-block'
+          }}>
+            ⚔️ Only {stockRemaining} rations remaining for the next gathering!
+          </p>
+        ) : (
+          <h2 className="sold-out-msg" style={{ color: 'red' }}>OUT OF PROVISIONS FOR THIS JOURNEY</h2>
+        )}
+      </div>
 
-      <p>Preorder your favorite treats for pick up next week!</p>
+      <section className="mission-statement">
+        <p>Life is more than the daily grind—it is a grand quest. Step into our sanctuary and find road-ready cheesecakes meticulously crafted for your journey.</p>
+      </section>
 
-      <ol>
-        <li>Choose your favorite treats from the menu below</li>
-        <li>Enter your pickup contact details</li>
-        <li>Submit your order</li>
-        <li>Check your email for confirmation and payment instructions</li>
-        <li>Show your confirmation email to our vendor on site</li>
-        <li>Pre-pay for your order</li>
-        <li>Pick up your order next week during your chosen delivery window </li>
-        <li>Enjoy your sweet treats!</li>
-      </ol>
+      <div className="quest-steps">
+        <h3>Your Preorder Quest Log</h3>
+        <ol>
+          <li>Select your loot from the menu below</li>
+          <li>Enter Adventurer Details</li>
+          <li>Commit your order to our baking bards</li>
+          <li>Prepay for your provisions at our vendors tavern</li>
+          <li>Claim your loot next week during your chosen pick up window</li>
+        </ol>
+      </div>
 
       <form onSubmit={handleSubmit}>
-        <h5>Choose from the menu below</h5>
-        <ul>
-          <li>Travelers Treat: 1 individual treat ($8)</li>
-          <li>Adventurers Pack: 3 individual treats ($22)</li>
-          <li>Explorers Pack: 6 individual treats ($42)</li>
-          <li>Quest Pack: 12 individual treats ($80)</li>
+        <h5 className="section-title">Provision Packs</h5>
+        <ul className="pack-legend">
+          <li><strong>Traveler’s Treat:</strong> 1 Individual Cheesecake ($8)</li>
+          <li><strong>Adventurer’s Pack:</strong> 3 Road-Ready Rations ($22)</li>
+          <li><strong>Explorer’s Pack:</strong> 6 Decadent Treats ($42)</li>
+          <li><strong>Quest Pack:</strong> 12 Legendary Portables ($80)</li>
         </ul>
 
         <div className="table-wrapper">
           <table className="ordering-table">
             <thead>
               <tr>
-                <th>Product</th>
-                <th>Travelers Treat</th>
-                <th>Adventurers Pack</th>
-                <th>Explorers Pack</th>
-                <th>Quest Pack</th>
+                <th>Flavor</th>
+                <th>Traveler</th>
+                <th>Adventurer</th>
+                <th>Explorer</th>
+                <th>Quest</th>
               </tr>
             </thead>
             <tbody>
               {PRODUCTS.map(product => (
                 <tr key={product.id}>
-                  <td>{product.name}</td>
+                  <td className="flavor-name">{product.name}</td>
                   <td><input type="number" min="0" value={formData.items[product.id].traveler} onChange={(e) => handleQtyChange(product.id, 'traveler', e.target.value)} /></td>
                   <td><input type="number" min="0" value={formData.items[product.id].adventurer} onChange={(e) => handleQtyChange(product.id, 'adventurer', e.target.value)} /></td>
                   <td><input type="number" min="0" value={formData.items[product.id].explorer} onChange={(e) => handleQtyChange(product.id, 'explorer', e.target.value)} /></td>
@@ -160,18 +156,18 @@ function App() {
           </table>
         </div>
 
-        <h5>Delivery Details</h5>
+        <h5 className="section-title">Adventurer Details</h5>
         <div className="delivery-details">
-          <input type="text" placeholder="Name" required onChange={e => setFormData({...formData, customer_name: e.target.value})} />
-          <input type="email" placeholder="Email" required onChange={e => setFormData({...formData, customer_email: e.target.value})} />
-          <input type="tel" placeholder="Phone Number" required onChange={e => setFormData({...formData, phone_number: e.target.value})} />
+          <input type="text" placeholder="Adventurer Name" required onChange={e => setFormData({...formData, customer_name: e.target.value})} />
+          <input type="email" placeholder="Communication Scroll (Email)" required onChange={e => setFormData({...formData, customer_email: e.target.value})} />
+          <input type="tel" placeholder="Mobile Frequency (Phone)" required onChange={e => setFormData({...formData, phone_number: e.target.value})} />
           
           <select required onChange={e => setFormData({...formData, delivery_time: e.target.value})}>
-            <option value="">Select Delivery Window</option>
-            <option value="9AM-10AM">9AM-10AM</option>
-            <option value="10AM-11AM">10AM-11AM</option>
-            <option value="11AM-12PM">11AM-12PM</option>
-            <option value="12PM-1PM">12PM-1PM</option>
+            <option value="">Select Your Arrival Window</option>
+            <option value="9AM-10AM">The Dawn Watch (9AM-10AM)</option>
+            <option value="10AM-11AM">Mid-Morning Rest (10AM-11AM)</option>
+            <option value="11AM-12PM">High Noon Gathering (11AM-12PM)</option>
+            <option value="12PM-1PM">Early Afternoon Respite (12PM-1PM)</option>
           </select>
         </div>
 
@@ -180,14 +176,17 @@ function App() {
           className="submit-btn" 
           disabled={stockRemaining <= 0}
         >
-          {stockRemaining <= 0 ? "SOLD OUT" : "Submit Your Order"}
+          {stockRemaining <= 0 ? "SANCTUARY FULL" : "Finalize Your Provisioning"}
         </button>
       </form>
 
       <footer>
-        <p>Thank you for choosing Sweet Adventures Club! We appreciate you supporting our small local business!</p>
-        <p>Follow us on Instagram: <a href="https://www.instagram.com/sweet_adventures_club/" target="_blank" rel="noopener noreferrer">@sweetadventuresclub</a></p>
-        <p>Website: <a href="https://www.sweetadventuresclub.cnetlify.app" target="_blank" rel="noopener noreferrer">sweetadventuresclub.com</a></p>
+        <p>Thank you for letting Sweet Adventures Club fuel your story. Keep moving, traveler.</p>
+        <div className="social-links">
+          <a href="https://www.instagram.com/sweet_adventures_club/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <span> | </span>
+          <a href="https://sweetadventuresclub.netlify.app" target="_blank" rel="noopener noreferrer">The Great Hall (Website)</a>
+        </div>
       </footer>
     </div>
   );

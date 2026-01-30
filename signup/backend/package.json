@@ -5,6 +5,7 @@
     "express": "^5.2.1",
     "json2csv": "^6.0.0-alpha.2",
     "mongoose": "^9.1.5",
+    "node-cron": "^4.2.1",
     "nodemailer": "^7.0.13",
     "square": "^44.0.0",
     "twilio": "^5.12.0"

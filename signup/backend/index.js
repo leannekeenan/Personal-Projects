@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI)
 const preorderRoutes = require('./routes/preorderRoutes');
 
 // 4. Register Routes
-// This matches the axios.post('http://localhost:5000/api/preorders', ...) call in App.jsx
+// This matches the axios.post('https://localhost:5000/api/preorders', ...) call in App.jsx
 app.use('/api/preorders', preorderRoutes);
 
 // Test Route

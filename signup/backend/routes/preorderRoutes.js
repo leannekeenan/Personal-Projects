@@ -3,18 +3,18 @@ const router = express.Router();
 const Preorder = require('../models/Preordering'); 
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
-const { Client, Environment } = require('square'); // Standard for v30
+const { Client, Environment } = require('square'); 
 const crypto = require('crypto');
 
-// --- SQUARE SETUP (Stable v30) ---
+// --- SQUARE SETUP ---
 const client = new Client({
     accessToken: process.env.SQUARE_ACCESS_TOKEN,
-    environment: Environment.Sandbox
+    environment: Environment.Production
 });
 
 console.log("✅ Square Client initialized");
 
-// BigInt serialization fix
+// BigInt serialization fix for Square responses
 BigInt.prototype.toJSON = function() { return this.toString() };
 
 // --- EMAIL SETUP ---
@@ -61,14 +61,38 @@ router.post('/', async (req, res) => {
   try {
     const { sourceId, items, customer_name, customer_email, delivery_time } = req.body;
 
-    // 1. TIME GATE: 2:00 PM Cutoff
-    const now = new Date();
-    const currentHour = now.getHours(); 
-    if (currentHour >=23 || currentHour < 9) {  // ----------------------------------------------------------------------------------- CHANGE CUT OFF TIME BACK TO 2pm
-        return res.status(403).json({ message: "The tavern is closed for the day!" });
-    }
+    // DEBUG: Verifying the token is actually loading from .env
+    console.log("Token check:", process.env.SQUARE_ACCESS_TOKEN ? "Token Found" : "TOKEN MISSING");
 
-    // 2. CAPACITY CHECK
+    
+    // TIME GATE: Custom Schedule
+const now = new Date();
+// Get local time (or adjust for PST specifically if server is in UTC)
+const pstDate = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    hour: 'numeric',
+    weekday: 'long',
+    hour12: false
+}).formatToParts(now);
+
+const day = pstDate.find(p => p.type === 'weekday').value; // e.g., "Thursday"
+const hour = parseInt(pstDate.find(p => p.type === 'hour').value); // e.g., 15
+
+let isOpen = false;
+
+if (day === 'Thursday') {
+    if (hour >= 14 && hour < 20) isOpen = true; // 2 PM - 8 PM
+} else if (['Friday', 'Saturday', 'Sunday'].includes(day)) {
+    if (hour >= 9 && hour < 22) isOpen = true; // 9 AM - 10 PM ------------------------------------------------------------------------------------------------------------------------------- change back to 13 (1pm) asap
+}
+
+if (!isOpen) {
+    return res.status(403).json({ 
+        message: `The tavern is closed! We open Thursdays 2pm-8pm and Fri-Sun 9am-1pm PST. Current server time: ${day} at ${hour}:00` 
+    });
+}
+
+    // CAPACITY CHECK
     const activeOrders = await Preorder.find({ status: 'active' });
     let currentSold = 0;
     activeOrders.forEach(order => { currentSold += calculateUnits(order.items); });
@@ -78,42 +102,40 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ message: "Out of Provisions for this Journey!" });
     }
 
-    // --- SECTION 3: CALCULATE TOTAL PRICE ---
-const prices = { traveler: 800, adventurer: 2200, explorer: 4200, quest: 8000 };
-let subtotalCents = 0;
+    // 3. CALCULATE TOTAL PRICE (Cents-based integer calculation)
+    const prices = { traveler: 800, adventurer: 2200, explorer: 4200, quest: 8000 };
+    let subtotalCents = 0;
 
-Object.entries(items).forEach(([flavor, sizes]) => {
-    subtotalCents += (Number(sizes.traveler) || 0) * prices.traveler +
-                     (Number(sizes.adventurer) || 0) * prices.adventurer +
-                     (Number(sizes.explorer) || 0) * prices.explorer +
-                     (Number(sizes.quest) || 0) * prices.quest;
-});
+    Object.entries(items).forEach(([flavor, sizes]) => {
+        subtotalCents += (Number(sizes.traveler) || 0) * prices.traveler +
+                         (Number(sizes.adventurer) || 0) * prices.adventurer +
+                         (Number(sizes.explorer) || 0) * prices.explorer +
+                         (Number(sizes.quest) || 0) * prices.quest;
+    });
 
-// Apply the same 9.875% tax
-const taxMultiplier = 1.09875;
-const totalWithTaxCents = BigInt(Math.round(subtotalCents * taxMultiplier));
-const totalCents = totalWithTaxCents;
-    console.log(`💰 Calculated total: $${(Number(totalCents) / 100).toFixed(2)}`);
+    const taxMultiplier = 1.09875;
+    const totalCents = Math.round(subtotalCents * taxMultiplier);
+    console.log(`💰 Charging: ${totalCents} cents ($${(totalCents / 100).toFixed(2)})`);
 
-    // 4. PROCESS SQUARE PAYMENT
-    const { result } = await client.paymentsApi.createPayment({
+    // PROCESS SQUARE PAYMENT
+    const response = await client.paymentsApi.createPayment({
         sourceId: sourceId,
         idempotencyKey: crypto.randomBytes(12).toString('hex'),
         amountMoney: {
-            amount: BigInt(totalCents),
+            amount: totalCents,
             currency: 'USD'
         }
     });
 
-    // 5. SAVE ORDER TO DATABASE
+    // SAVE ORDER TO DATABASE
     const newOrder = new Preorder({ 
         ...req.body, 
         status: 'active',
-        paymentId: result.payment.id 
+        paymentId: response.result.payment.id 
     });
     const savedOrder = await newOrder.save();
 
-    // 6. BUILD EMAIL TABLE
+    // BUILD EMAIL TABLE
     let itemsRows = '';
     for (const [flavor, sizes] of Object.entries(savedOrder.items)) {
         const counts = [];
@@ -128,7 +150,7 @@ const totalCents = totalWithTaxCents;
         }
     }
 
-    // 7. SEND INSTANT RECEIPT
+    // SEND INSTANT RECEIPT
     await transporter.sendMail({
         from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
         to: savedOrder.customer_email,
@@ -153,12 +175,15 @@ const totalCents = totalWithTaxCents;
 
   } catch (err) {
     console.error("Payment Process Error:", err);
-    res.status(400).json({ message: "Payment failed", error: err.message });
+    res.status(400).json({ 
+        message: "Payment failed", 
+        error: err.errors ? err.errors[0].detail : err.message 
+    });
   }
 });
 
-// --- THE 2:00 PM CUMULATIVE REPORT ---
-cron.schedule('0 14 * * *', async () => {
+// --- THE 8:00 PM CUMULATIVE REPORT ---
+cron.schedule('0 20 * * *', async () => {
     try {
         const todaysOrders = await Preorder.find({ status: 'active' });
         if (todaysOrders.length > 0) {
@@ -170,7 +195,10 @@ cron.schedule('0 14 * * *', async () => {
                 let individualLoot = [];
                 Object.entries(order.items).forEach(([flavor, sizes]) => {
                     const fName = flavor.replace(/_/g, ' ').toUpperCase();
-                    const units = (Number(sizes.traveler) || 0) * 1 + (Number(sizes.adventurer) || 0) * 3 + (Number(sizes.explorer) || 0) * 6 + (Number(sizes.quest) || 0) * 12;
+                    const units = (Number(sizes.traveler) || 0) * 1 + 
+                                  (Number(sizes.adventurer) || 0) * 3 + 
+                                  (Number(sizes.explorer) || 0) * 6 + 
+                                  (Number(sizes.quest) || 0) * 12;
                     if (units > 0) {
                         individualLoot.push(`${units} units of ${fName}`);
                         flavorTotals[fName] = (flavorTotals[fName] || 0) + units;
@@ -203,8 +231,9 @@ cron.schedule('0 14 * * *', async () => {
             await Preorder.updateMany({ status: 'active' }, { $set: { status: 'completed' } });
         }
     } catch (err) {
-        console.error("The 2PM ledger failed:", err);
+        console.error("The 8PM ledger failed:", err);
     }
 });
 
 module.exports = router;
+

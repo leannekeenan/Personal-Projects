@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'; // Added useMemo and useCallback
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 import logo from './assets/SWEET ADVENTURES CLUB (2).png';
@@ -19,6 +19,11 @@ const PRODUCTS = [
 ];
 
 function TavernForm({ stockRemaining }) {
+  const navigate = useNavigate();
+  
+  // 1. Added isProcessing state
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
@@ -27,7 +32,6 @@ function TavernForm({ stockRemaining }) {
     items: PRODUCTS.reduce((acc, p) => ({ ...acc, [p.id]: { traveler: 0, adventurer: 0, explorer: 0, quest: 0 } }), {})
   });
 
-  // useCallback prevents this function from being "re-created" on every scroll or keystroke
   const handleQtyChange = useCallback((productId, size, value) => {
     const qty = parseInt(value, 10);
     setFormData(prev => ({
@@ -42,7 +46,6 @@ function TavernForm({ stockRemaining }) {
     }));
   }, []);
 
-  // useMemo ensures the total is "sticky" and only changes if formData.items changes
   const totals = useMemo(() => {
     let subtotal = 0;
     Object.values(formData.items).forEach(item => {
@@ -61,20 +64,36 @@ function TavernForm({ stockRemaining }) {
       tax: taxAmount.toFixed(2),
       total: grandTotal.toFixed(2)
     };
-  }, [formData.items]); // Only re-calculate if items change
+  }, [formData.items]);
 
+  // 2. Updated handlePayment with Processing state and fetch logic
   const handlePayment = async (token) => {
+    setIsProcessing(true); // Start loading
+    const orderData = {
+      sourceId: token,
+      ...formData 
+    };
+
     try {
-      const response = await axios.post('http://localhost:5000/api/preorders', {
-        ...formData,
-        sourceId: token,
-        amount: totals.total 
+      const response = await fetch('https://localhost:5000/api/preorders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
       });
-      if (response.status === 201) {
-        window.location.href = '/order-success';
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Success!', data);
+        navigate('/order-success');
+      } else {
+        alert(`Adventure Halted: ${data.message || 'Payment failed'}`);
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'The payment portal failed.');
+      console.error('Network error:', err);
+      alert("The connection to the tavern was lost. Please try again.");
+    } finally {
+      setIsProcessing(false); // Stop loading regardless of outcome
     }
   };
 
@@ -171,10 +190,13 @@ function TavernForm({ stockRemaining }) {
           </div>
 
           <div id="payment-form-container">
-            <SquarePayment key="stable-square-field" onTokenReceived={handlePayment} />
+            {/* 3. Added isProcessing prop to SquarePayment */}
+            <SquarePayment 
+              key="stable-square-field" 
+              onTokenReceived={handlePayment} 
+              isProcessing={isProcessing}
+            />
           </div>
-
-         
         </div>
       </form>
 
@@ -189,7 +211,7 @@ function App() {
   const [stockRemaining, setStockRemaining] = useState(0);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/preorders/stock-level')
+    axios.get('https://localhost:5000/api/preorders/stock-level')
       .then(res => setStockRemaining(res.data.remaining))
       .catch(err => console.log("Stock fetch error:", err));
   }, []);

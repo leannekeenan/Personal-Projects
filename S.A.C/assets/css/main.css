@@ -4334,6 +4334,25 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	}
 }
 
+.nutritional_info {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-image: url('/S.A.C/assets/css/images/parchment.png');
+}
+
+.nutritional_info .image img {
+	max-width: 250px;
+}
+
+.nutritional_info .facts > img {
+	max-width: 600px;
+	margin-top: 1em;
+}
+
+
+
 /* Footer */
 
 	#footer {

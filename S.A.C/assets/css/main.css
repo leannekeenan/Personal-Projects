@@ -4339,13 +4339,13 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	background-image: url('/S.A.C/assets/css/images/parchment.png');
+	background-image: url('/assets/css/images/parchment.png');
 }
 
 .nutritional_info .image, 
 .nutritional_info .facts {
     flex: 1 1 300px; /* Allows them to shrink on mobile but grow on desktop */
-    max-width: 500px;
+    max-width: 300px;
     text-align: center;
 }
 

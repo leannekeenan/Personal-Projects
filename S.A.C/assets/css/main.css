@@ -4342,13 +4342,26 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	background-image: url('/S.A.C/assets/css/images/parchment.png');
 }
 
-.nutritional_info .image img {
-	max-width: 250px;
+.nutritional_info .image, 
+.nutritional_info .facts {
+    flex: 1 1 300px; /* Allows them to shrink on mobile but grow on desktop */
+    max-width: 500px;
+    text-align: center;
 }
 
-.nutritional_info .facts > img {
-	max-width: 600px;
-	margin-top: 1em;
+.nutritional_info img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Mobile adjustments so the quest log stays readable */
+@media screen and (max-width: 736px) {
+    .nutritional_info {
+        flex-direction: column;
+        padding: 2em 1em;
+    }
 }
 
 

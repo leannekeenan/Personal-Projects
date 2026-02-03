@@ -93,7 +93,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
+                                                <tr class="vanilla">
                                                     <td>Vanilla Veil</td>
                                                     <td>$42.00</td>
                                                     <td>
@@ -109,7 +109,7 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="chocolate">
                                                     <td>Cosmic Chocolate</td>
                                                     <td>$42.00</td>
                                                     <td>
@@ -125,7 +125,7 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="cinnamon">
                                                     <td>Cinnasphere</td>
                                                     <td>$42.00</td>
                                                     <td>
@@ -141,7 +141,7 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="peanut_butter">
                                                     <td>Peanut Butter Portal</td>
                                                     <td>$42.00</td>
                                                     <td>
@@ -157,7 +157,7 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="cookies">
                                                     <td>Cookies & Clouds</td>
                                                     <td>$42.00</td>
                                                     <td>
@@ -173,7 +173,23 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="caramel">
+                                                    <td>Caramel Cascade</td>
+                                                    <td>$42.00</td>
+                                                    <td>
+                                                        <input type="number" name="caramel_cascade_half_dozen_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                    </td>
+                                                    <td>$80.00</td>
+                                                    <td>
+                                                        <input type="number" name="caramel_cascade_full_dozen_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                    </td>
+                                                    <td>$80.00</td>
+                                                    <td>
+                                                        <input type="number" name="caramel_cascade_cake_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="pumpkin">
                                                     <td>Spice Gourdmand</td>
                                                     <td>$42.00</td>
                                                     <td>
@@ -189,7 +205,7 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="apple">
                                                     <td>Aethereal Apple</td>
                                                     <td>$42.00</td>
                                                     <td>
@@ -205,35 +221,68 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="strawberry">
                                                     <td>Strawberry Starlight</td>
                                                     <td>$42.00</td>
                                                     <td>
-                                                        <input type="number" name="strawberry_starlight_half_dozen_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                        <input type="number" name="strawberry_starlight_half_dozen_qty" value="0" min="0" max="99" style="width: 60px;" disabled/>
                                                     </td>
                                                     <td>$80.00</td>
                                                     <td>
-                                                        <input type="number" name="strawberry_starlight_full_dozen_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                        <input type="number" name="strawberry_starlight_full_dozen_qty" value="0" min="0" max="99" style="width: 60px;" disabled/>
                                                     </td>
                                                     <td>$80.00</td>
                                                     <td>
-                                                        <input type="number" name="strawberry_starlight_cake_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                        <input type="number" name="strawberry_starlight_cake_qty" value="0" min="0" max="99" style="width: 60px;" disabled/>
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="pineapple">
                                                     <td>Pineapple Express</td>
                                                     <td>$42.00</td>
                                                     <td>
-                                                        <input type="number" name="pineapple_half_dozen_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                        <input type="number" name="pineapple_half_dozen_qty" value="0" min="0" max="99" style="width: 60px;" disabled/>
                                                     </td>
                                                     <td>$80.00</td>
                                                     <td>
-                                                        <input type="number" name="pineapple_full_dozen_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                        <input type="number" name="pineapple_full_dozen_qty" value="0" min="0" max="99" style="width: 60px;" disabled/>
                                                     </td>
                                                     <td>$80.00</td>
                                                     <td>
-                                                        <input type="number" name="pineapple_cake_qty" value="0" min="0" max="99" style="width: 60px;" />
+                                                        <input type="number" name="pineapple_cake_qty" value="0" min="0" max="99" style="width: 60px;" disabled/>
+                                                    </td>
+                                                    
+                                                </tr>
+
+                                                  <tr class="peach">
+                                                    <td>Peachy Keen</td>
+                                                    <td>$42.00</td>
+                                                    <td>
+                                                        <input type="number" name="peachy_keen_half_dozen_qty" value="0" min="0" max="99" style="width: 60px;" disabled />
+                                                    </td>
+                                                    <td>$80.00</td>
+                                                    <td>
+                                                        <input type="number" name="peachy_keen_full_dozen_qty" value="0" min="0" max="99" style="width: 60px;" disabled />
+                                                    </td>
+                                                    <td>$80.00</td>
+                                                    <td>
+                                                        <input type="number" name="peachy_keen_cake_qty" value="0" min="0" max="99" style="width: 60px;" disabled />
+                                                    </td>
+                                                </tr>
+
+                                                  <tr class="mango">
+                                                    <td>Mango Mantra</td>
+                                                    <td>$42.00</td>
+                                                    <td>
+                                                        <input type="number" name="mango_mantra_half_dozen_qty" value="0" min="0" max="99" style="width: 60px;" disabled />
+                                                    </td>
+                                                    <td>$80.00</td>
+                                                    <td>
+                                                        <input type="number" name="mango_mantra_full_dozen_qty" value="0" min="0" max="99" style="width: 60px;" disabled/>
+                                                    </td>
+                                                    <td>$80.00</td>
+                                                    <td>
+                                                        <input type="number" name="mango_mantra_cake_qty" value="0" min="0" max="99" style="width: 60px;" disabled />
                                                     </td>
                                                 </tr>
                                             </tbody>

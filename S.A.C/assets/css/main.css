@@ -4363,7 +4363,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	background-image: url('/S.A.C/assets/css/images/parchment.png');
+	background-image: url('/assets/css/images/parchment.png');
 }
 
 .nutritional_info .image, 

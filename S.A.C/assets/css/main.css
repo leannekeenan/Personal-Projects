@@ -4096,7 +4096,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		background-size: cover;
 		text-align: center;
 	}
-
+	/* Vanilla Veil*/
 	#main > header#vanilla  {
 	background-image: url('../css/images/vanilla.png');
 	background-position: center 75%;
@@ -4104,6 +4104,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	display: block;
 	}
 
+	/* Cosmic Chocolate*/
 	#main > header#chocolate {
 		background-image: url('../css/images/images/chocolate.png');
 		background-position: center 75%;
@@ -4111,8 +4112,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	display: block;
 	}
 
-	
-
+	/* Cookies & Clouds*/
 	#main > header#cookies {
 		background-image: url('../css/images/cookies.png');
 		background-position: center 20%;
@@ -4120,6 +4120,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	display: block;
 	}
 
+	/* Cinnasphere*/
 	#main > header#cinnamon {
 		background-image: url('../css/images/cinnamon.png');
 		background-position: center 45%;
@@ -4127,6 +4128,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	display: block;
 	}
 
+	/* Peanut Putter Portal*/
 	#main > header#peanutbutter {
 		background-image: url('../css/images/pb cropped.png');
 		background-position: center 50%;
@@ -4134,7 +4136,8 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	display: block;
 	}
 
-	#main > header#spring {
+	/* Strawberry  Starlight*/
+	#main > header#strawberry {
 		background-image: url('../css/images/strawberry.png');
 		background-position: center 80%;
 	position: relative;
@@ -4142,6 +4145,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 
 	}
 
+	/* Pineapple Express*/
 	#main > header#pineapple {
 		background-image: url('../css/images/pineapple\ cropped.png');
 		background-position: center 0%;
@@ -4149,6 +4153,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	display: block;
 	}
 
+	/*Spice Gourdmond*/
 	#main > header#pumpkin {
 		background-image: url('../css/images/pumpkin full.png');
 		background-position: center 10%;
@@ -4156,8 +4161,27 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	display: block;
 	}
 
+	/*Aethereal Apple*/
 	#main > header#apple {
 		background-image: url('../css/images/apple.png');
+		background-position: center 60%;
+	position: relative;
+	display: block;
+
+	}
+
+	/*Aethereal Apple*/
+	#main > header#peach {
+		background-image: url('../css/images/peach\ wide.png');
+		background-position: center 60%;
+	position: relative;
+	display: block;
+
+	}
+
+	/*Aethereal Apple*/
+	#main > header#caramel {
+		background-image: url('../css/images/caramel.png');
 		background-position: center 60%;
 	position: relative;
 	display: block;

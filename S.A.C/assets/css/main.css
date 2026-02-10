@@ -4149,14 +4149,14 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	display: block;
 	}
 
-	#main > header#autumn {
+	#main > header#pumpkin {
 		background-image: url('../css/images/pumpkin full.png');
 		background-position: center 10%;
 	position: relative;
 	display: block;
 	}
 
-	#main > header#winter {
+	#main > header#apple {
 		background-image: url('../css/images/apple.png');
 		background-position: center 60%;
 	position: relative;

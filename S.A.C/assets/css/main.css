@@ -4179,9 +4179,9 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 
 	}
 
-	/*Aethereal Apple*/
+	/*Caramel Cascade*/
 	#main > header#caramel {
-		background-image: url('../css/images/caramel.png');
+		background-image: url('../css/images/caramel\ wide.png');
 		background-position: center 60%;
 	position: relative;
 	display: block;

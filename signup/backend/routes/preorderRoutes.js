@@ -64,6 +64,34 @@ const isTavernOpen = () => {
     };
 };
 
+// --- DEFINE THE MARKET LOCATION FOR ORDER PICKUP ---
+
+const getPickupLocation = () => {
+    const now = new Date();
+    const pstDate = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Los_Angeles',
+        hour: 'numeric',
+        weekday: 'long',
+        hour12: false
+    }).formatToParts(now);
+
+    const day = pstDate.find(p => p.type === 'weekday').value; 
+    const hour = parseInt(pstDate.find(p => p.type === 'hour').value);
+
+    // Location A: Thursdays 2 PM - 8 PM (14:00 - 20:00)
+    if (day === 'Thursday' && hour >= 14 && hour < 20) {
+        return "Bare Bottle Brewing Co. (550 Oak Grove Ave, Menlo Park, CA)";
+    }
+
+    // Location B: Saturdays 9 AM - 1 PM (09:00 - 13:00)
+    if (day === 'Saturday' && hour >= 9 && hour < 13) {
+        return "Foster City Farmers' Market (1010 Metro Center Bvld, Foster City, CA)";
+    }
+
+    // Fallback for Manual Override/Testing
+    return "The Virtual Tavern (Testing Location)";
+};
+
 // --- ROUTES ---
 
 router.get('/stock-level', async (req, res) => {

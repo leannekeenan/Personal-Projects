@@ -19,6 +19,12 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
         const appId = import.meta.env.VITE_SQUARE_APPLICATION_ID;
         const locationId = import.meta.env.VITE_SQUARE_LOCATION_ID;
 
+
+        console.log("DEBUG: App ID being used:", appId);
+        console.log("DEBUG: Location ID being used:", locationId);
+
+        
+
         const payments = window.Square.payments(appId, locationId);
         paymentInstance.current = payments;
 
@@ -44,7 +50,7 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
     };
   }, []);
 
-  const handlePayment = async (e) => {
+ /*const handlePayment = async (e) => {
     e.preventDefault();
     // Guard clause: prevent tokenization if already processing or card not loaded
     if (!cardInstance.current || isProcessing) return;
@@ -60,7 +66,25 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
       console.error("Tokenization failed", e);
     }
   };
+  */
 
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    if (!cardInstance.current || isProcessing) return;
+
+    try {
+      const result = await cardInstance.current.tokenize();
+      if (result.status === 'OK') {
+    onTokenReceived(result.token); // Back to using the real generated token
+    }else {
+        alert(`Validation Error: ${result.errors[0].message}`);
+      }
+    } catch (e) {
+      console.error("Tokenization failed", e);
+    }
+  };
+
+  
   return (
     <div className="payment-box">
       {isError && <p style={{color: 'red'}}>⚠️ Payment portal failed to load. Please refresh.</p>}

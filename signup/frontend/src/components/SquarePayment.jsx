@@ -4,23 +4,29 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
   const paymentInstance = useRef(null);
   const cardInstance = useRef(null);
   const [isError, setIsError] = useState(false);
+  const [isSdkReady, setIsSdkReady] = useState(false);
 
   useEffect(() => {
     const initializeSquare = async () => {
+      // 1. Safety check for the Square SDK
       if (!window.Square) {
-        console.error("Square SDK not found");
+        console.error("Square SDK script not found");
         setIsError(true);
         return;
       }
 
+      // 2. Prevent double-initialization in React Strict Mode
       if (paymentInstance.current) return;
 
       try {
-        // HARD-CODED KEYS: Paste your actual Sandbox strings here
-        const appId = 'sandbox-sq0idb-REPLACE_WITH_YOUR_ACTUAL_APP_ID';
-        const locationId = 'REPLACE_WITH_YOUR_ACTUAL_LOCATION_ID';
+        // 3. Load from .env securely using Vite's system
+        const appId = import.meta.env.VITE_SQUARE_APPLICATION_ID;
+        const locationId = import.meta.env.VITE_SQUARE_LOCATION_ID;
 
-        console.log("Initializing Square with:", appId, locationId);
+        // Verify variables are loaded before proceeding
+        if (!appId || !locationId) {
+          throw new Error("VITE_SQUARE variables not found in .env");
+        }
 
         const payments = window.Square.payments(appId, locationId);
         paymentInstance.current = payments;
@@ -29,6 +35,7 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
         await card.attach('#card-container');
         cardInstance.current = card;
         
+        setIsSdkReady(true);
         setIsError(false);
       } catch (e) {
         console.error("Square Initialization Failed:", e);
@@ -49,40 +56,44 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
 
   const handlePayment = async (e) => {
     e.preventDefault();
-    if (!cardInstance.current || isProcessing) return;
+    
+    // Guard clause: Ensure SDK is ready and no process is already running
+    if (!cardInstance.current || isProcessing || !isSdkReady) return;
 
     try {
       const result = await cardInstance.current.tokenize();
       if (result.status === 'OK') {
-        // SUCCESS: Send real token to backend
+        // Send the secure nonce (token) to your parent component's handler
         onTokenReceived(result.token); 
       } else {
-        const message = result.errors ? result.errors[0].message : "Invalid card data";
-        alert(`Payment Error: ${message}`);
+        const errorMsg = result.errors ? result.errors[0].message : "Invalid card details";
+        alert(`Payment Error: ${errorMsg}`);
       }
     } catch (e) {
       console.error("Tokenization failed", e);
-      alert("System Error: Could not generate payment token.");
+      alert("System failure: Could not generate payment token.");
     }
   };
 
   return (
     <div className="payment-box">
       {isError && (
-        <p style={{ color: 'red', fontWeight: 'bold', margin: '10px 0' }}>
-          ⚠️ Payment Portal Failed to Load. Check console for ID mismatch.
+        <p style={{ color: '#ff4d4d', fontWeight: 'bold', padding: '10px', border: '1px solid red' }}>
+          ⚠️ Payment Portal failed to load. Please verify your .env file and refresh.
         </p>
       )}
       
-      <div id="card-container" style={{ minHeight: '100px', marginBottom: '20px' }}></div>
+      <div id="card-container" style={{ minHeight: '100px', marginBottom: '15px' }}>
+        {!isSdkReady && !isError && <p>Connecting to secure payment vault...</p>}
+      </div>
       
       <button 
         type="button" 
         className={`finalize-button ${isProcessing ? 'loading' : ''}`}
         onClick={handlePayment}
-        disabled={isProcessing || isError}
+        disabled={isProcessing || isError || !isSdkReady}
       >
-        {isProcessing ? "Processing Your Quest..." : "Finalize Your Preorder"}
+        {isProcessing ? "Verifying with the Bank..." : "Finalize Your Preorder"}
       </button>
     </div>
   );

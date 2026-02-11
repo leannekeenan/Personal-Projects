@@ -4,22 +4,25 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
   const paymentInstance = useRef(null);
   const cardInstance = useRef(null);
   const [isError, setIsError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const initializeSquare = async () => {
+    const startSquare = async () => {
+      // computer-to-computer check: Is the SDK globally available?
       if (!window.Square) {
-        console.error("Square SDK not found");
+        setIsError(true);
         return;
       }
 
+      // Prevent re-init if already running
       if (paymentInstance.current) return;
 
       try {
         const appId = import.meta.env.VITE_SQUARE_APPLICATION_ID;
         const locationId = import.meta.env.VITE_SQUARE_LOCATION_ID;
 
-        console.log("DEBUG: App ID being used:", appId);
-        console.log("DEBUG: Location ID being used:", locationId);
+        // If Vite hasn't populated these yet, stop and wait
+        if (!appId || !locationId) return;
 
         const payments = window.Square.payments(appId, locationId);
         paymentInstance.current = payments;
@@ -28,57 +31,56 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
         await card.attach('#card-container');
         cardInstance.current = card;
         
+        setIsLoaded(true);
         setIsError(false);
-      } catch (e) {
-        console.error("Square Initialization Failed:", e);
+      } catch (err) {
+        console.error("SDK Init Error:", err);
         setIsError(true);
       }
     };
 
-    initializeSquare();
+    startSquare();
 
     return () => {
       if (cardInstance.current) {
         cardInstance.current.destroy();
         cardInstance.current = null;
-        paymentInstance.current = null;
       }
     };
   }, []);
 
   const handlePayment = async (e) => {
     e.preventDefault();
-    if (!cardInstance.current || isProcessing) return;
+    if (!cardInstance.current || isProcessing || !isLoaded) return;
 
     try {
       const result = await cardInstance.current.tokenize();
       if (result.status === 'OK') {
-        // --- TEMPORARY TEST CHANGE ---
-        console.log("Real token generated:", result.token);
-        
-        // Use the Sandbox 'magic' token instead of the real one
-        onTokenReceived('cnon:card-nonce-ok'); 
-        // ------------------------------
+        // This is the "Magic Nonce" for Sandbox testing
+        onTokenReceived('cnon:card-nonce-ok');
       } else {
-        alert(`Validation Error: ${result.errors[0].message}`);
+        alert(result.errors[0].message);
       }
-    } catch (e) {
-      console.error("Tokenization failed", e);
+    } catch (err) {
+      console.error("Tokenization Error:", err);
     }
   };
 
   return (
     <div className="payment-box">
-      {isError && <p style={{color: 'red'}}>⚠️ Payment portal failed to load. Please refresh.</p>}
-      <div id="card-container"></div>
+      {isError && <p style={{color: 'red'}}>⚠️ System Link Failed. Check .env variables.</p>}
+      
+      <div id="card-container" style={{ minHeight: '100px' }}>
+        {!isLoaded && !isError && <p>Syncing with Square Vault...</p>}
+      </div>
       
       <button 
         type="button" 
         className={`finalize-button ${isProcessing ? 'loading' : ''}`}
         onClick={handlePayment}
-        disabled={isProcessing}
+        disabled={isProcessing || !isLoaded}
       >
-        {isProcessing ? "Processing Your Quest..." : "Finalize Your Preorder"}
+        {isProcessing ? "Processing..." : "Finalize Preorder"}
       </button>
     </div>
   );

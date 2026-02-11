@@ -57,7 +57,7 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
       const result = await cardInstance.current.tokenize();
       if (result.status === 'OK') {
         // This is the "Magic Nonce" for Sandbox testing
-        onTokenReceived('cnon:card-nonce-ok');
+        onTokenReceived(result.token);
       } else {
         alert(result.errors[0].message);
       }

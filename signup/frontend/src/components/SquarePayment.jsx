@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Added isProcessing to the props
 const SquarePayment = ({ onTokenReceived, isProcessing }) => {
   const paymentInstance = useRef(null);
   const cardInstance = useRef(null);
@@ -10,20 +9,18 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
     const initializeSquare = async () => {
       if (!window.Square) {
         console.error("Square SDK not found");
+        setIsError(true);
         return;
       }
 
       if (paymentInstance.current) return;
 
       try {
-        const appId = import.meta.env.VITE_SQUARE_APPLICATION_ID;
-        const locationId = import.meta.env.VITE_SQUARE_LOCATION_ID;
+        // HARD-CODED KEYS: Paste your actual Sandbox strings here
+        const appId = 'sandbox-sq0idb-REPLACE_WITH_YOUR_ACTUAL_APP_ID';
+        const locationId = 'REPLACE_WITH_YOUR_ACTUAL_LOCATION_ID';
 
-
-        console.log("DEBUG: App ID being used:", appId);
-        console.log("DEBUG: Location ID being used:", locationId);
-
-        
+        console.log("Initializing Square with:", appId, locationId);
 
         const payments = window.Square.payments(appId, locationId);
         paymentInstance.current = payments;
@@ -50,24 +47,6 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
     };
   }, []);
 
- /*const handlePayment = async (e) => {
-    e.preventDefault();
-    // Guard clause: prevent tokenization if already processing or card not loaded
-    if (!cardInstance.current || isProcessing) return;
-
-    try {
-      const result = await cardInstance.current.tokenize();
-      if (result.status === 'OK') {
-        onTokenReceived(result.token); 
-      } else {
-        alert(`Validation Error: ${result.errors[0].message}`);
-      }
-    } catch (e) {
-      console.error("Tokenization failed", e);
-    }
-  };
-  */
-
   const handlePayment = async (e) => {
     e.preventDefault();
     if (!cardInstance.current || isProcessing) return;
@@ -75,29 +54,33 @@ const SquarePayment = ({ onTokenReceived, isProcessing }) => {
     try {
       const result = await cardInstance.current.tokenize();
       if (result.status === 'OK') {
-    onTokenReceived(result.token); // Back to using the real generated token
-    }else {
-        alert(`Validation Error: ${result.errors[0].message}`);
+        // SUCCESS: Send real token to backend
+        onTokenReceived(result.token); 
+      } else {
+        const message = result.errors ? result.errors[0].message : "Invalid card data";
+        alert(`Payment Error: ${message}`);
       }
     } catch (e) {
       console.error("Tokenization failed", e);
+      alert("System Error: Could not generate payment token.");
     }
   };
 
-  
   return (
     <div className="payment-box">
-      {isError && <p style={{color: 'red'}}>⚠️ Payment portal failed to load. Please refresh.</p>}
-      <div id="card-container"></div>
+      {isError && (
+        <p style={{ color: 'red', fontWeight: 'bold', margin: '10px 0' }}>
+          ⚠️ Payment Portal Failed to Load. Check console for ID mismatch.
+        </p>
+      )}
       
-      {/* The button now disables while isProcessing is true, 
-        preventing multiple charges. 
-      */}
+      <div id="card-container" style={{ minHeight: '100px', marginBottom: '20px' }}></div>
+      
       <button 
         type="button" 
         className={`finalize-button ${isProcessing ? 'loading' : ''}`}
         onClick={handlePayment}
-        disabled={isProcessing}
+        disabled={isProcessing || isError}
       >
         {isProcessing ? "Processing Your Quest..." : "Finalize Your Preorder"}
       </button>

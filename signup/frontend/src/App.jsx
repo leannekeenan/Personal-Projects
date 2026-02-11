@@ -75,7 +75,7 @@ function TavernForm({ stockRemaining }) {
     };
 
     try {
-      const response = await fetch('https://localhost:5000/api/preorders', {
+      const response = await fetch('http://localhost:5000/api/preorders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),

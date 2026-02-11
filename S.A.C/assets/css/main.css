@@ -4389,6 +4389,22 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
+.ingredients {
+	margin-top: 1em;
+	font-size: 0.9em;
+	color: #4E4852;
+	display: inline-block;
+	padding: 0.5em 1em;
+	border-radius: 5px;
+	background-color: rgba(78, 72, 82, 0.1);
+	width: 50%;
+	
+}
+
+.ingredients h3 {
+	color: #4E4852;
+}
+
 /* Mobile adjustments so the quest log stays readable */
 @media screen and (max-width: 736px) {
     .nutritional_info {

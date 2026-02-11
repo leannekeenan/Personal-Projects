@@ -14,7 +14,6 @@ const client = new Client({
 
 console.log("✅ Square Client initialized");
 
-// BigInt serialization fix for Square responses
 BigInt.prototype.toJSON = function() { return this.toString() };
 
 // --- EMAIL SETUP ---
@@ -26,7 +25,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Helper: Converts pack sizes into total individual cheesecake units
 const calculateUnits = (items) => {
     let total = 0;
     if (!items) return 0;
@@ -37,6 +35,33 @@ const calculateUnits = (items) => {
                  (Number(sizes.quest) || 0) * 12;
     });
     return total;
+};
+
+// --- THE GATEKEEPER LOGIC ---
+const isTavernOpen = () => {
+    // Allows you to bypass the gate by setting TAVERN_MANUAL_OVERRIDE=true in .env
+    if (process.env.TAVERN_MANUAL_OVERRIDE === 'true') return { open: true };
+
+    const now = new Date();
+    const pstDate = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Los_Angeles',
+        hour: 'numeric',
+        weekday: 'long',
+        hour12: false
+    }).formatToParts(now);
+
+    const day = pstDate.find(p => p.type === 'weekday').value; 
+    const hour = parseInt(pstDate.find(p => p.type === 'hour').value);
+
+    // Opening the gate ONLY on Market Days (Sat-Sun) 9am - 1pm
+    if (['Saturday', 'Sunday'].includes(day)) {
+        if (hour >= 9 && hour < 13) return { open: true };
+    }
+
+    return { 
+        open: false, 
+        msg: `The Tavern only accepts preorders during Market Hours (Sat-Sun, 9am-1pm). Current time: ${day} at ${hour}:00 PST.` 
+    };
 };
 
 // --- ROUTES ---
@@ -59,42 +84,15 @@ router.get('/stock-level', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { sourceId, items, customer_name, customer_email, delivery_time } = req.body;
+    // --- GATEKEEPER CHECK ---
+    const gate = isTavernOpen();
+    if (!gate.open) {
+        return res.status(403).json({ message: gate.msg });
+    }
 
-    // DEBUG: Verifying the token is actually loading from .env
-    console.log("Token check:", process.env.SQUARE_ACCESS_TOKEN ? "Token Found" : "TOKEN MISSING");
+    const { sourceId, items, customer_name, customer_email, delivery_time, phone_number } = req.body;
 
-    
-    // TIME GATE: Custom Schedule
-const now = new Date();
-// Get local time (or adjust for PST specifically if server is in UTC)
-const pstDate = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Los_Angeles',
-    hour: 'numeric',
-    weekday: 'long',
-    hour12: false
-}).formatToParts(now);
-/*
-const day = pstDate.find(p => p.type === 'weekday').value; // e.g., "Thursday"
-const hour = parseInt(pstDate.find(p => p.type === 'hour').value); // e.g., 15
-
-let isOpen = false;
-
-if (day === 'Thursday') {
-    if (hour >= 14 && hour < 20) isOpen = true; // 2 PM - 8 PM
-} else if (['Friday', 'Saturday', 'Sunday'].includes(day)) {
-    if (hour >= 9 && hour < 22) isOpen = true; // 9 AM - 10 PM ------------------------------------------------------------------------------------------------------------------------------- change back to 13 (1pm) asap
-}
-
-if (!isOpen) {
-    return res.status(403).json({ 
-        message: `The tavern is closed! We open Thursdays 2pm-8pm and Fri-Sun 9am-1pm PST. Current server time: ${day} at ${hour}:00` 
-    });
-}
-
-*/
-
-    // CAPACITY CHECK
+    // --- CAPACITY CHECK ---
     const activeOrders = await Preorder.find({ status: 'active' });
     let currentSold = 0;
     activeOrders.forEach(order => { currentSold += calculateUnits(order.items); });
@@ -104,7 +102,7 @@ if (!isOpen) {
         return res.status(400).json({ message: "Out of Provisions for this Journey!" });
     }
 
-    // 3. CALCULATE TOTAL PRICE (Cents-based integer calculation)
+    // --- PRICE CALCULATION ---
     const prices = { traveler: 800, adventurer: 2200, explorer: 4200, quest: 8000 };
     let subtotalCents = 0;
 
@@ -117,9 +115,8 @@ if (!isOpen) {
 
     const taxMultiplier = 1.09875;
     const totalCents = Math.round(subtotalCents * taxMultiplier);
-    console.log(`💰 Charging: ${totalCents} cents ($${(totalCents / 100).toFixed(2)})`);
 
-    // PROCESS SQUARE PAYMENT
+    // --- SQUARE PAYMENT ---
     const response = await client.paymentsApi.createPayment({
         sourceId: sourceId,
         idempotencyKey: crypto.randomBytes(12).toString('hex'),
@@ -129,7 +126,7 @@ if (!isOpen) {
         }
     });
 
-    // SAVE ORDER TO DATABASE
+    // --- SAVE ORDER ---
     const newOrder = new Preorder({ 
         ...req.body, 
         status: 'active',
@@ -137,7 +134,7 @@ if (!isOpen) {
     });
     const savedOrder = await newOrder.save();
 
-    // BUILD EMAIL TABLE
+    // --- BUILD EMAIL CONTENT ---
     let itemsRows = '';
     for (const [flavor, sizes] of Object.entries(savedOrder.items)) {
         const counts = [];
@@ -152,24 +149,54 @@ if (!isOpen) {
         }
     }
 
-    // SEND INSTANT RECEIPT
+    const grandTotalDisplay = (totalCents / 100).toFixed(2);
+
+    // 1. CUSTOMER RECEIPT
     await transporter.sendMail({
         from: `"Sweet Adventures Club" <${process.env.EMAIL_USER}>`,
         to: savedOrder.customer_email,
-        bcc: process.env.EMAIL_USER, 
-        subject: "📜 Your Provision Receipt",
+        subject: "📜 Your Provision Receipt & Collection Decree",
         html: `
             <div style="font-family: serif; border: 2px solid #d4a373; padding: 20px; background-color: #fdf5e6; max-width: 600px; margin: auto;">
                 <h1 style="color: #5D4037; text-align: center;">Greetings, ${savedOrder.customer_name}!</h1>
-                <p>Payment successful. We are preparing the following rations:</p>
-                <table style="width: 100%; border-collapse: collapse; margin: 20px 0; background: white; border-radius: 8px;">
+                <p style="text-align: center; font-weight: bold; color: #8b4513;">⚔️ YOUR RATIONS ARE SECURED FOR NEXT WEEK ⚔️</p>
+                
+                <div style="background: #fff; padding: 15px; border: 1px dashed #d4a373; margin: 20px 0;">
+                    <p style="margin: 0;"><strong>Collection Decree:</strong> This preorder is for pickup <strong>ONE WEEK from today</strong>.</p>
+                </div>
+
+                <p>We are preparing the following for your future journey:</p>
+                <table style="width: 100%; border-collapse: collapse; margin: 10px 0; background: white;">
                     <thead style="background:#f0decc;"><tr><th style="padding:10px;">Item</th><th style="padding:10px;">Quantity</th></tr></thead>
                     <tbody>${itemsRows}</tbody>
                 </table>
-                <p><strong>Arrival Window:</strong> ${savedOrder.delivery_time || 'Next Event'}</p>
+                <p><strong>Total Gold Paid:</strong> $${grandTotalDisplay}</p>
+                <p><strong>Next Saturday Pickup Window:</strong> ${savedOrder.delivery_time}</p>
+                <p style="font-style: italic; text-align: center; margin-top: 20px;">"May your pack be heavy and your heart light on the road until we meet again."</p>
                 <div style="text-align: center; margin-top: 30px;">
                     <a href="https://sweetadventuresclub.netlify.app" style="background-color: #d4a373; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px;">Visit our Virtual Tavern</a>
                 </div>
+            </div>`
+    });
+
+    // 2. MERCHANT ALERT
+    await transporter.sendMail({
+        from: `"Tavern System" <${process.env.EMAIL_USER}>`,
+        to: process.env.EMAIL_USER,
+        subject: `📣 NEW ORDER: ${savedOrder.customer_name}`,
+        html: `
+            <div style="font-family: sans-serif; border: 2px solid #8b4513; padding: 20px; background-color: #fff; max-width: 600px; margin: auto;">
+                <h2 style="color: #8b4513; border-bottom: 2px solid #8b4513;">New Adventurer Incoming!</h2>
+                <p><strong>Name:</strong> ${savedOrder.customer_name}</p>
+                <p><strong>Email:</strong> ${savedOrder.customer_email}</p>
+                <p><strong>Phone:</strong> ${savedOrder.phone_number}</p>
+                <p><strong>Next-Week Pickup Window:</strong> ${savedOrder.delivery_time}</p>
+                <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                    <thead style="background:#eee;"><tr><th style="padding:8px; text-align:left;">Provision</th><th style="padding:8px; text-align:left;">Qty</th></tr></thead>
+                    <tbody>${itemsRows}</tbody>
+                </table>
+                <p><strong>Total Collected:</strong> $${grandTotalDisplay}</p>
+                <p style="font-size: 0.8rem; color: #777;">Square ID: ${savedOrder.paymentId}</p>
             </div>`
     });
 
@@ -210,19 +237,24 @@ cron.schedule('0 20 * * *', async () => {
                 itemsSummary += `<tr><td style="padding:10px; border-bottom:1px solid #eee;"><strong>${order.customer_name}</strong></td><td style="padding:10px; border-bottom:1px solid #eee;">${individualLoot.join('<br>')}</td><td style="padding:10px; border-bottom:1px solid #eee;">${order.delivery_time || 'N/A'}</td></tr>`;
             });
 
-            let bakeListHTML = '';
+            let bakeListHTML = '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff;">';
+            bakeListHTML += '<tr style="background:#d4a373; color:white;"> <th style="padding:10px;">Flavor</th> <th style="padding:10px;">Total Units to Bake</th> </tr>';
             for (const [flavor, count] of Object.entries(flavorTotals)) {
-                bakeListHTML += `<p><strong>${flavor}:</strong> ${count} units</p>`;
+                bakeListHTML += `<tr><td style="padding:10px; border-bottom:1px solid #eee;">${flavor}</td><td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">${count}</td></tr>`;
             }
+            bakeListHTML += '</table>';
 
             await transporter.sendMail({
                 from: `"The Archive" <${process.env.EMAIL_USER}>`,
                 to: process.env.EMAIL_USER,
-                subject: `📜 GRAND LEDGER: Bake Report`,
+                subject: `📜 GRAND LEDGER: Bake Report (${new Date().toLocaleDateString()})`,
                 html: `<div style="font-family: serif; border: 5px solid #d4a373; padding: 20px; background-color: #fdf5e6;">
-                        <h1>⚔️ THE GRAND LEDGER ⚔️</h1>
+                        <h1 style="text-align:center; color:#5D4037;">⚔️ THE GRAND LEDGER ⚔️</h1>
+                        <h2 style="color:#8b4513;">Baking Production List:</h2>
                         ${bakeListHTML}
-                        <h2>GRAND TOTAL: ${grandTotalUnits} UNITS</h2>
+                        <h2 style="text-align:right;">TOTAL UNITS: ${grandTotalUnits}</h2>
+                        <hr />
+                        <h3>Individual Order Details:</h3>
                         <table style="width: 100%; border-collapse: collapse; background: white;">
                             <thead><tr style="background: #f0decc;"><th>Customer</th><th>Details</th><th>Arrival</th></tr></thead>
                             <tbody>${itemsSummary}</tbody>
@@ -238,4 +270,3 @@ cron.schedule('0 20 * * *', async () => {
 });
 
 module.exports = router;
-

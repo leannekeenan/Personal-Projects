@@ -1,7 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Added this
 import '../App.css';
 
 const OrderSuccess = () => {
+  // This defines 'navigate' so the computer knows what the button is talking about
+  const navigate = useNavigate();
+
   return (
     <div className="app-container">
       <div className="parchment-bg">
@@ -24,9 +28,9 @@ const OrderSuccess = () => {
             
             <div style={{ marginTop: '40px' }}>
               <button 
-                onClick={() => window.location.href = '/'} 
+                onClick={() => navigate('/')} 
                 className="order-button"
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: 'pointer', marginTop: '20px' }}
               >
                 Return to the Tavern
               </button>

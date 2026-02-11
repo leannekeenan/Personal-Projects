@@ -4188,6 +4188,15 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 
 	}
 
+		/*Mango Mantra*/
+	#main > header#mango {
+		background-image: url('../css/images/mango.png');
+		background-position: center 60%;
+		position: relative;
+		display: block;
+
+	}
+
 	#main > header.menu {
 		background-image: url('../css/images/library.png');
 		background-position: center 100%;

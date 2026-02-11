@@ -211,7 +211,7 @@ function App() {
   const [stockRemaining, setStockRemaining] = useState(0);
 
   useEffect(() => {
-    axios.get('https://localhost:5000/api/preorders/stock-level')
+    axios.get('http://localhost:5000/api/preorders/stock-level')
       .then(res => setStockRemaining(res.data.remaining))
       .catch(err => console.log("Stock fetch error:", err));
   }, []);

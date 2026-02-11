@@ -67,33 +67,33 @@ function TavernForm({ stockRemaining }) {
   }, [formData.items]);
 
   // 2. Updated handlePayment with Processing state and fetch logic
+
   const handlePayment = async (token) => {
-    setIsProcessing(true); // Start loading
+    setIsProcessing(true);
     const orderData = {
       sourceId: token,
       ...formData 
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/preorders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData),
-      });
+      // Switched from fetch to axios for better error handling and consistency
+      const response = await axios.post('http://localhost:5000/api/preorders', orderData);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log('Success!', data);
+      // Axios puts the response body in .data and check status automatically
+      if (response.status === 200 || response.status === 201) {
+        console.log('Success!', response.data);
         navigate('/order-success');
-      } else {
-        alert(`Adventure Halted: ${data.message || 'Payment failed'}`);
       }
     } catch (err) {
-      console.error('Network error:', err);
-      alert("The connection to the tavern was lost. Please try again.");
+      console.error('Payment Error:', err);
+      
+      // Axios stores the server's error message in err.response.data
+      const serverMessage = err.response?.data?.message || "The connection to the tavern was lost.";
+      const detail = err.response?.data?.error || "";
+      
+      alert(`Adventure Halted: ${serverMessage} ${detail}`);
     } finally {
-      setIsProcessing(false); // Stop loading regardless of outcome
+      setIsProcessing(false);
     }
   };
 

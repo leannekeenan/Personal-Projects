@@ -74,7 +74,7 @@ const pstDate = new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
     hour12: false
 }).formatToParts(now);
-
+/*
 const day = pstDate.find(p => p.type === 'weekday').value; // e.g., "Thursday"
 const hour = parseInt(pstDate.find(p => p.type === 'hour').value); // e.g., 15
 
@@ -91,6 +91,8 @@ if (!isOpen) {
         message: `The tavern is closed! We open Thursdays 2pm-8pm and Fri-Sun 9am-1pm PST. Current server time: ${day} at ${hour}:00` 
     });
 }
+
+*/
 
     // CAPACITY CHECK
     const activeOrders = await Preorder.find({ status: 'active' });

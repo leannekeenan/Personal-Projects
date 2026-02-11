@@ -9,7 +9,7 @@ const crypto = require('crypto');
 // --- SQUARE SETUP ---
 const client = new Client({
     accessToken: process.env.SQUARE_ACCESS_TOKEN,
-    environment: Environment.Production
+    environment: Environment.Sandbox
 });
 
 console.log("✅ Square Client initialized");

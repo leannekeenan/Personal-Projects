@@ -4401,6 +4401,12 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	
 }
 
+@media screen and (max-width: 768px) {
+	.ingredients {
+		width: 90%;
+	}
+}
+
 .ingredients h3 {
 	color: #4E4852;
 }

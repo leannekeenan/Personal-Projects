@@ -20,8 +20,6 @@ const PRODUCTS = [
 
 function TavernForm({ stockRemaining }) {
   const navigate = useNavigate();
-  
-  // 1. Added isProcessing state
   const [isProcessing, setIsProcessing] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -66,142 +64,146 @@ function TavernForm({ stockRemaining }) {
     };
   }, [formData.items]);
 
-  // 2. Updated handlePayment with Processing state and fetch logic
-
   const handlePayment = async (token) => {
     setIsProcessing(true);
+    
+    // Corrected Data Payload
     const orderData = {
       sourceId: token,
-      ...formData 
+      // VITE requires import.meta.env
+      locationId: import.meta.env.VITE_SQUARE_LOCATION_ID, 
+      customer_name: formData.customer_name,
+      customer_email: formData.customer_email,
+      phone_number: formData.phone_number,
+      delivery_time: formData.delivery_time,
+      amount: Math.round(parseFloat(totals.total) * 100), // Convert to cents
+      items: formData.items
     };
 
     try {
-      // Switched from fetch to axios for better error handling and consistency
       const response = await axios.post('http://localhost:5000/api/preorders', orderData);
-
-      // Axios puts the response body in .data and check status automatically
       if (response.status === 200 || response.status === 201) {
-        console.log('Success!', response.data);
         navigate('/order-success');
       }
     } catch (err) {
       console.error('Payment Error:', err);
-      
-      // Axios stores the server's error message in err.response.data
       const serverMessage = err.response?.data?.message || "The connection to the tavern was lost.";
-      const detail = err.response?.data?.error || "";
-      
-      alert(`Adventure Halted: ${serverMessage} ${detail}`);
+      alert(`Adventure Halted: ${serverMessage}`);
     } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <div className="order-container">
-      <header className="adventure-header">
-        <img src={logo} alt="Logo" className="logo"/>
-        <h1 className="app-title">Sweet Adventures Club Preorder Form</h1>
-      </header>
-      
-      <div className="stock-section">
-         <p className="sold-out-msg">⚔️ Only {stockRemaining} left for preorder!</p>
-         <div className="stock-bar-container">
-            <div className="stock-bar-fill" style={{ width: `${(stockRemaining / 42) * 100}%` }}></div>
-         </div>
-      </div>
-
-      <div className="mission-statement">
-        <p>Life is more than the daily grind. It is a quest. Discover your flavor and explore our ever-rising treasures as each journey is uniquely crafted for your journey.</p>
-      </div>
-
-      <div className="quest-steps">
-        <h3>PREORDERING INSTRUCTIONS</h3>
-        <ol>
-          <li>Select your Pack from the menu below.</li>
-          <li>Enter Adventurer details.</li>
-          <li>Commit your order to the folding lands.</li>
-          <li>Prepare for your arrival in our common room.</li>
-          <li>Enjoy your quest and amazing hand-crafted cookies!</li>
-        </ol>
-      </div>
-
-      <form onSubmit={(e) => e.preventDefault()}>
-        <h2 className="section-title">PROVISION PACK OPTIONS</h2>
+    <div className="app-container">
+      <div className="order-container">
+        <header className="adventure-header">
+          <img src={logo} alt="Logo" className="logo"/>
+          <h1 className="app-title">Sweet Adventures Club Preorder Form</h1>
+        </header>
         
-        <ul className="pack-legend">
-          <li><strong>Traveler's Pack</strong> Individual (1) Indulgence ($8)</li>
-          <li><strong>Adventurer's Pack</strong> Pack of (3) Road Ready Rations ($22)</li>
-          <li><strong>Explorers' Pack</strong> Pack of (6) Decadent Delights ($42)</li>
-          <li><strong>Quest Pack</strong> 1 Dozen (12) Legendary Luxuries ($80)</li>
-        </ul>
+        <div className="stock-section">
+           <p className="sold-out-msg">⚔️ Only {stockRemaining} left for preorder!</p>
+           <div className="stock-bar-container">
+              <div className="stock-bar-fill" style={{ width: `${(stockRemaining / 42) * 100}%` }}></div>
+           </div>
+        </div>
 
-        <div className="table-wrapper">
-          <table className="ordering-table">
-            <thead>
-              <tr>
-                <th>Flavor</th>
-                <th>Traveler (1)</th>
-                <th>Adventurer (3)</th>
-                <th>Explorer (6)</th>
-                <th>Quest (12)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {PRODUCTS.map(product => (
-                <tr key={product.id}>
-                  <td className="flavor-name">{product.name}</td>
-                  <td><input type="number" min="0" value={formData.items[product.id].traveler} onChange={(e) => handleQtyChange(product.id, 'traveler', e.target.value)} /></td>
-                  <td><input type="number" min="0" value={formData.items[product.id].adventurer} onChange={(e) => handleQtyChange(product.id, 'adventurer', e.target.value)} /></td>
-                  <td><input type="number" min="0" value={formData.items[product.id].explorer} onChange={(e) => handleQtyChange(product.id, 'explorer', e.target.value)} /></td>
-                  <td><input type="number" min="0" value={formData.items[product.id].quest} onChange={(e) => handleQtyChange(product.id, 'quest', e.target.value)} /></td>
+        <div className="mission-statement">
+          <p>Life is more than the daily grind. It is a quest. Discover your flavor and explore our ever-rising treasures as each journey is uniquely crafted for your journey.</p>
+        </div>
+
+        <div className="quest-steps">
+          <h3>PREORDERING INSTRUCTIONS</h3>
+          <ol>
+            <li><strong>Choose Your Bounty:</strong> <span>Select how many cheesecakes you want and pick your flavors.</span></li>
+            <li><strong>Identify the Emissary:</strong> <span>Enter your name and info so we know who is coming to claim the goods.</span></li>
+            <li><strong>Place Your Deposit:</strong> <span>Send a payment to our treasury to lock in your order.</span></li>
+            <li><strong>Confirm the Quest:</strong> <span>Hit the "Finalize Preorder" button to send your order straight to our gastromancers.</span></li>
+            <li><strong>The Waiting Period:</strong> <span>Our bakers need time to work their magic. Your order will be ready for pickup in 1 week.</span></li>
+            <li><strong>Claim Your Reward:</strong> <span>Visit us at the Market Tavern to grab your cheesecake and enjoy!</span></li>
+          </ol>
+        </div>
+
+        <form onSubmit={(e) => e.preventDefault()}>
+          <h2 className="section-title">PROVISION PACK OPTIONS</h2>
+          <ul className="pack-legend">
+            <li><strong>Traveler's Pack</strong> Individual (1) Indulgence ($8)</li>
+            <li><strong>Adventurer's Pack</strong> Pack of (3) Road Ready Rations ($22)</li>
+            <li><strong>Explorers' Pack</strong> Pack of (6) Decadent Delights ($42)</li>
+            <li><strong>Quest Pack</strong> 1 Dozen (12) Legendary Luxuries ($80)</li>
+          </ul>
+
+          <div className="table-wrapper">
+            <table className="ordering-table">
+              <thead>
+                <tr>
+                  <th>Flavor</th>
+                  <th>Traveler (1)</th>
+                  <th>Adventurer (3)</th>
+                  <th>Explorer (6)</th>
+                  <th>Quest (12)</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <h2 className="section-title">ADVENTURER DETAILS</h2>
-        <div className="delivery-details">
-          <input type="text" placeholder="Adventurer Name" required value={formData.customer_name} onChange={e => setFormData({...formData, customer_name: e.target.value})} />
-          <input type="email" placeholder="Adventurer Email Address" required value={formData.customer_email} onChange={e => setFormData({...formData, customer_email: e.target.value})} />
-          <input type="tel" placeholder="Mobile Frequency (Phone Number)" required value={formData.phone_number} onChange={e => setFormData({...formData, phone_number: e.target.value})} />
-          <select required value={formData.delivery_time} onChange={e => setFormData({...formData, delivery_time: e.target.value})}>
-            <option value="">Select Your Arrival Window</option>
-            <option value="9AM-10AM">9AM - 10AM</option>
-            <option value="10AM-11AM">10AM - 11AM</option>
-            <option value="11AM-12PM">11AM - 12PM</option>
-            <option value="12PM-1PM">12PM - 1PM</option>
-          </select>
-        </div>
-
-        <div className="payment-container">
-          <div className="total-display">
-            <div className="summary-line">
-              <span>Subtotal: </span>
-              <span>${totals.subtotal}</span>
-            </div>
-            <div className="summary-line">
-              <span>Loot Tax (9.875%): </span>
-              <span>${totals.tax}</span>
-            </div>
-            <hr />
-            <h3 className="grand-total-text">Quest Total: ${totals.total}</h3>
+              </thead>
+              <tbody>
+                {PRODUCTS.map(product => (
+                  <tr key={product.id}>
+                    <td className="flavor-name">{product.name}</td>
+                    <td><input type="number" min="0" value={formData.items[product.id].traveler} onChange={(e) => handleQtyChange(product.id, 'traveler', e.target.value)} /></td>
+                    <td><input type="number" min="0" value={formData.items[product.id].adventurer} onChange={(e) => handleQtyChange(product.id, 'adventurer', e.target.value)} /></td>
+                    <td><input type="number" min="0" value={formData.items[product.id].explorer} onChange={(e) => handleQtyChange(product.id, 'explorer', e.target.value)} /></td>
+                    <td><input type="number" min="0" value={formData.items[product.id].quest} onChange={(e) => handleQtyChange(product.id, 'quest', e.target.value)} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          <div id="payment-form-container">
-            {/* 3. Added isProcessing prop to SquarePayment */}
-            <SquarePayment 
-              key="stable-square-field" 
-              onTokenReceived={handlePayment} 
-              isProcessing={isProcessing}
-            />
+          <h2 className="section-title">ADVENTURER DETAILS</h2>
+          <div className="delivery-details">
+            <input type="text" placeholder="Adventurer Name" required value={formData.customer_name} onChange={e => setFormData({...formData, customer_name: e.target.value})} />
+            <input type="email" placeholder="Adventurer Email Address" required value={formData.customer_email} onChange={e => setFormData({...formData, customer_email: e.target.value})} />
+            <input type="tel" placeholder="Mobile Frequency (Phone Number)" required value={formData.phone_number} onChange={e => setFormData({...formData, phone_number: e.target.value})} />
+            <select required value={formData.delivery_time} onChange={e => setFormData({...formData, delivery_time: e.target.value})}>
+              <option value="">Select Your Arrival Window</option>
+              <option value="9AM-10AM">9AM - 10AM</option>
+              <option value="10AM-11AM">10AM - 11AM</option>
+              <option value="11AM-12PM">11AM - 12PM</option>
+              <option value="12PM-1PM">12PM - 1PM</option>
+            </select>
           </div>
-        </div>
-      </form>
 
-      <footer>
-        <p>Thank you for letting Sweet Adventures Club craft your next journey!</p>
+          <div className="payment-container">
+            <div className="total-display">
+              <div className="summary-line"><span>Subtotal: </span><span>${totals.subtotal}</span></div>
+              <div className="summary-line"><span>Loot Tax (9.875%): </span><span>${totals.tax}</span></div>
+              <hr />
+              <h3 className="grand-total-text"><span>Quest Total: </span><span>${totals.total}</span></h3>
+            </div>
+
+            <div id="payment-form-container">
+              <SquarePayment 
+                key="stable-square-field" 
+                onTokenReceived={handlePayment} 
+                isProcessing={isProcessing}
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <footer className="footer">
+        <ul className="icons">
+          {/* Ensure FontAwesome 4.7 is linked in index.html */}
+          <li><a href="https://x.com/arealsweetclub" className="fa fa-twitter" aria-hidden="true"></a></li>
+          <li><a href="https://www.facebook.com/sweetadventuresclub/" className="fa fa-facebook" aria-hidden="true"></a></li>
+          <li><a href="https://www.instagram.com/sweet_adventures_club/" className="fa fa-instagram" aria-hidden="true"></a></li>
+          <li><a href="mailto:sweetadventuresclub@gmail.com" className="fa fa-envelope" aria-hidden="true"></a></li>
+          <li><a href="https://www.yelp.com/biz/sweet-adventures-club-menlo-park" className="fa fa-yelp" aria-hidden="true"></a></li>
+        </ul>
+        <ul className="copyright">
+          <li>Sweet Adventures Club</li><li>LLC. 2025</li>
+        </ul>
       </footer>
     </div>
   );

@@ -12,12 +12,20 @@
 }
 
 body {
-  background-color: var(--cream-bg);
+  background-image: url('./assets/parchment.png');
   color: var(--text-main);
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   max-width: 900px;
   margin: 0 auto;
 }

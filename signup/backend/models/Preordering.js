@@ -18,7 +18,11 @@ const PreorderingSchema = new mongoose.Schema({
     spice_gourdmand: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
     aethereal_apple: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
     strawberry_starlight: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
-    pineapple_express: { traveler: Number, adventurer: Number, explorer: Number, quest: Number }
+    pineapple_express: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    peachy_keen: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    mango_mantra: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    caramel_cascade: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
+    druid_dirtcake: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
   },
 
   // Pick up Location - Top Level Field

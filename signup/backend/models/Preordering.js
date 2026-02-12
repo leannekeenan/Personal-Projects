@@ -22,7 +22,7 @@ const PreorderingSchema = new mongoose.Schema({
   },
 
   // Pick up Location - Top Level Field
-  pickup_location: { type: String, default: "TBD" },
+  pickup_location: { type: String, default: "Sweet Adventures Club, 104 Gilbert Ave, Menlo Park, CA" },
   
   // Status should be 'active' by default to work with your Cron Job logic
   status: { type: String, default: 'active' }, 

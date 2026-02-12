@@ -155,11 +155,18 @@ router.post('/', async (req, res) => {
     });
 
     // --- SAVE ORDER ---
+    // 1. First, call your function to get the string
+const currentMarket = getPickupLocation(); 
+
+    // 2. Then, tell the database to use that string
     const newOrder = new Preorder({ 
         ...req.body, 
         status: 'active',
+        pickup_location: currentMarket, // <--- This overrides the "TBD" default
         paymentId: response.result.payment.id 
     });
+
+
     const savedOrder = await newOrder.save();
 
     // --- BUILD EMAIL CONTENT ---

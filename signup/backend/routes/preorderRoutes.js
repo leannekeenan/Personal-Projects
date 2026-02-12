@@ -89,7 +89,7 @@ const getPickupLocation = () => {
     }
 
     // Fallback for Manual Override/Testing
-    return "The Virtual Tavern (Testing Location)";
+    return "Sweet Adventures Club, 107 Gilbert Ave, Menlo Park, CA";
 };
 
 // --- ROUTES ---

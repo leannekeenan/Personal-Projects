@@ -8,7 +8,7 @@ const PreorderingSchema = new mongoose.Schema({
   delivery_time: { type: String, required: true },
   special_instructions: { type: String },
 
-  // Order Items (Matches your HTML input names)
+  // Order Items
   items: {
     vanilla_veil: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
     cosmic_chocolate: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
@@ -20,8 +20,13 @@ const PreorderingSchema = new mongoose.Schema({
     strawberry_starlight: { traveler: Number, adventurer: Number, explorer: Number, quest: Number },
     pineapple_express: { traveler: Number, adventurer: Number, explorer: Number, quest: Number }
   },
+
+  // Pick up Location - Top Level Field
+  pickup_location: { type: String, default: "TBD" },
   
-  status: { type: String, default: 'New Order' },
+  // Status should be 'active' by default to work with your Cron Job logic
+  status: { type: String, default: 'active' }, 
+  
   createdAt: { type: Date, default: Date.now }
 });
 

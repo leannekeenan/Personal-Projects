@@ -89,7 +89,7 @@ const getPickupLocation = () => {
     }
 
     // Fallback for Manual Override/Testing
-    return "Sweet Adventures Club, 107 Gilbert Ave, Menlo Park, CA";
+    return "Sweet Adventures Club, 104 Gilbert Ave, Menlo Park, CA";
 };
 
 // --- ROUTES ---

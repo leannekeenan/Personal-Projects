@@ -34,4 +34,4 @@ const PreorderingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Preordering', PreorderingSchema, 'orders');
+const Preorder = mongoose.model('Preorder', PreorderingSchema, 'orders');

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Preorder = require('../../models/Preordering'); 
 const nodemailer = require('nodemailer');
 
-module.exports.handler = schedule('0 20 * * *', async (event) => {
+module.exports.handler = schedule('0 6 * * *', async (event) => {
     try {
         if (mongoose.connection.readyState !== 1) {
             await mongoose.connect(process.env.MONGODB_URI);

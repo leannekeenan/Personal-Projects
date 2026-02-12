@@ -11,6 +11,14 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  position: relative
+};
+
 body {
   background-image: url('./assets/parchment.png');
   color: var(--text-main);
@@ -20,6 +28,7 @@ body {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
+  margin-top: 6vw;
 }
 
 form {

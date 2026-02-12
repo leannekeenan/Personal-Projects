@@ -200,6 +200,7 @@ router.post('/', async (req, res) => {
                 </table>
                 <p><strong>Total Gold Paid:</strong> $${grandTotalDisplay}</p>
                 <p><strong>Next Saturday Pickup Window:</strong> ${savedOrder.delivery_time}</p>
+                <p><strong>Pickup Location:</strong> ${savedOrder.pickup_location}</p>
                 <p style="font-style: italic; text-align: center; margin-top: 20px;">"May your pack be heavy and your heart light on the road until we meet again."</p>
                 <div style="text-align: center; margin-top: 30px;">
                     <a href="https://sweetadventuresclub.netlify.app" style="background-color: #d4a373; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px;">Visit our Virtual Tavern</a>
@@ -219,6 +220,7 @@ router.post('/', async (req, res) => {
                 <p><strong>Email:</strong> ${savedOrder.customer_email}</p>
                 <p><strong>Phone:</strong> ${savedOrder.phone_number}</p>
                 <p><strong>Next-Week Pickup Window:</strong> ${savedOrder.delivery_time}</p>
+                <p><strong>Pickup Location:</strong> ${savedOrder.pickup_location}</p>
                 <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
                     <thead style="background:#eee;"><tr><th style="padding:8px; text-align:left;">Provision</th><th style="padding:8px; text-align:left;">Qty</th></tr></thead>
                     <tbody>${itemsRows}</tbody>
@@ -262,7 +264,13 @@ cron.schedule('0 20 * * *', async () => {
                         grandTotalUnits += units;
                     }
                 });
-                itemsSummary += `<tr><td style="padding:10px; border-bottom:1px solid #eee;"><strong>${order.customer_name}</strong></td><td style="padding:10px; border-bottom:1px solid #eee;">${individualLoot.join('<br>')}</td><td style="padding:10px; border-bottom:1px solid #eee;">${order.delivery_time || 'N/A'}</td></tr>`;
+                itemsSummary += `<tr>
+                <td style="padding:10px; border-bottom:1px solid #eee;"><strong>${order.customer_name}</strong></td>
+                <td style="padding:10px; border-bottom:1px solid #eee;">${individualLoot.join('<br>')}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee;">${order.delivery_time || 'N/A'}</td>
+                <td style="padding:10px; border-bottom:1px solid #eee;">${order.pickup_location}</td>
+                </tr>`;
+                
             });
 
             let bakeListHTML = '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff;">';

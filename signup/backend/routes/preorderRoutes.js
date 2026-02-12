@@ -248,68 +248,6 @@ const currentMarket = getPickupLocation();
   }
 });
 
-// --- THE 8:00 PM CUMULATIVE REPORT ---
-cron.schedule('0 20 * * *', async () => {
-    try {
-        const todaysOrders = await Preorder.find({ status: 'active' });
-        if (todaysOrders.length > 0) {
-            let itemsSummary = '';
-            let flavorTotals = {}; 
-            let grandTotalUnits = 0;
 
-            todaysOrders.forEach(order => {
-                let individualLoot = [];
-                Object.entries(order.items).forEach(([flavor, sizes]) => {
-                    const fName = flavor.replace(/_/g, ' ').toUpperCase();
-                    const units = (Number(sizes.traveler) || 0) * 1 + 
-                                  (Number(sizes.adventurer) || 0) * 3 + 
-                                  (Number(sizes.explorer) || 0) * 6 + 
-                                  (Number(sizes.quest) || 0) * 12;
-                    if (units > 0) {
-                        individualLoot.push(`${units} units of ${fName}`);
-                        flavorTotals[fName] = (flavorTotals[fName] || 0) + units;
-                        grandTotalUnits += units;
-                    }
-                });
-                itemsSummary += `<tr>
-                <td style="padding:10px; border-bottom:1px solid #eee;"><strong>${order.customer_name}</strong></td>
-                <td style="padding:10px; border-bottom:1px solid #eee;">${individualLoot.join('<br>')}</td>
-                <td style="padding:10px; border-bottom:1px solid #eee;">${order.delivery_time || 'N/A'}</td>
-                <td style="padding:10px; border-bottom:1px solid #eee;">${order.pickup_location}</td>
-                </tr>`;
-                
-            });
-
-            let bakeListHTML = '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff;">';
-            bakeListHTML += '<tr style="background:#d4a373; color:white;"> <th style="padding:10px;">Flavor</th> <th style="padding:10px;">Total Units to Bake</th> </tr>';
-            for (const [flavor, count] of Object.entries(flavorTotals)) {
-                bakeListHTML += `<tr><td style="padding:10px; border-bottom:1px solid #eee;">${flavor}</td><td style="padding:10px; border-bottom:1px solid #eee; text-align:center;">${count}</td></tr>`;
-            }
-            bakeListHTML += '</table>';
-
-            await transporter.sendMail({
-                from: `"The Archive" <${process.env.EMAIL_USER}>`,
-                to: process.env.EMAIL_USER,
-                subject: `📜 GRAND LEDGER: Bake Report (${new Date().toLocaleDateString()})`,
-                html: `<div style="font-family: serif; border: 5px solid #d4a373; padding: 20px; background-color: #fdf5e6;">
-                        <h1 style="text-align:center; color:#5D4037;">⚔️ THE GRAND LEDGER ⚔️</h1>
-                        <h2 style="color:#8b4513;">Baking Production List:</h2>
-                        ${bakeListHTML}
-                        <h2 style="text-align:right;">TOTAL UNITS: ${grandTotalUnits}</h2>
-                        <hr />
-                        <h3>Individual Order Details:</h3>
-                        <table style="width: 100%; border-collapse: collapse; background: white;">
-                            <thead><tr style="background: #f0decc;"><th>Customer</th><th>Details</th><th>Arrival</th></tr></thead>
-                            <tbody>${itemsSummary}</tbody>
-                        </table>
-                      </div>`
-            });
-
-            await Preorder.updateMany({ status: 'active' }, { $set: { status: 'completed' } });
-        }
-    } catch (err) {
-        console.error("The 8PM ledger failed:", err);
-    }
-});
 
 module.exports = router;

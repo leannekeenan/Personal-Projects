@@ -4532,3 +4532,113 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	body.is-mobile.landing #footer {
 		background-color: var(--chocolate)
 	}
+
+	/*Flavor Effects*/
+
+	.sac-effect-card {
+  position: relative;
+  margin: 2.5em auto;
+  max-width: 480px;
+  background: linear-gradient(160deg, #2a1505 0%, #1a0c02 100%);
+  border: 1px solid #8B6914;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px #3d2200,
+    0 6px 28px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(201, 168, 76, 0.1);
+}
+
+/* Outer gold rule — top */
+.sac-effect-card::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #C9A84C 30%, #C9A84C 70%, transparent);
+}
+
+/* Outer gold rule — bottom */
+.sac-effect-card::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #C9A84C 30%, #C9A84C 70%, transparent);
+}
+
+/* ---- Header ---- */
+.sac-effect-header {
+  padding: 0.6em 1.2em 0.4em;
+  text-align: center;
+  border-bottom: 1px solid rgba(139, 105, 20, 0.35);
+}
+
+.sac-effect-label {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 0.68em;
+  letter-spacing: 0.25em;
+  color: #C9A84C;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* ---- Body ---- */
+.sac-effect-body {
+  display: flex;
+  align-items: center;
+  gap: 1.1em;
+  padding: 1.2em 1.4em;
+}
+
+.sac-effect-icon {
+  font-size: 2.6em;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(201, 168, 76, 0.3));
+}
+
+.sac-effect-text {
+  flex: 1;
+}
+
+.sac-effect-flavor {
+  margin: 0 0 0.1em;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 0.8em;
+  color: #8B6914;
+  letter-spacing: 0.05em;
+}
+
+.sac-effect-name {
+  margin: 0 0 0.35em;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 1.25em;
+  font-weight: bold;
+  color: #C9A84C;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgba(201, 168, 76, 0.25);
+}
+
+.sac-effect-desc {
+  margin: 0;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 0.9em;
+  color: #F5EDD6;
+  line-height: 1.5;
+}
+
+/* ---- Footer ---- */
+.sac-effect-footer {
+  padding: 0.5em 1.2em 0.7em;
+  text-align: center;
+  border-top: 1px solid rgba(139, 105, 20, 0.35);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 0.67em;
+  color: rgba(139, 105, 20, 0.75);
+  letter-spacing: 0.08em;
+}

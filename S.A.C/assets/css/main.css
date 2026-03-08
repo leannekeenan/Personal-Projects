@@ -4112,7 +4112,7 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 
 	/* Cosmic Chocolate*/
 	#main > header#chocolate {
-		background-image: url('../css/images/images/chocolate.png');
+		background-image: url('../css/images/chocolate.png');
 		background-position: center 75%;
 	position: relative;
 	display: block;
@@ -4248,6 +4248,11 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 	position: relative;
 	top: 20%;
 	display: block;
+	}
+
+	#main > header#quest {
+		background-image: url('../css/images/great\ hall.png');
+		background-position: center 100%;
 	}
 
 		#main > header h2 {

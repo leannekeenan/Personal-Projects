@@ -3661,7 +3661,13 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 					outline: 0;
 					text-decoration: none;
 					text-transform: uppercase;
-					color: var(--chocolate)
+					color: var(--chocolate);
+					display: flex;
+				}
+
+				#menu ul > li > a svg, #menu ul > li > a img {
+					display: block;
+					padding-right: 5px
 				}
 
 					@media screen and (max-width: 736px) {

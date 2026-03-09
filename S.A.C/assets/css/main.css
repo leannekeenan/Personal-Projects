@@ -4255,6 +4255,38 @@ input[type="date"]:valid::-webkit-datetime-edit-year-field {
 		background-position: center 100%;
 	}
 
+	.guildmaster-image-col {
+		
+		float: left;
+  		margin-right: 15px; /* Adds space between the image and the text */
+  		margin-bottom: 15px; /* Adds space below the image */
+	}
+
+	.guildmaster-image-col img, .guildmaster-image-col div {
+		max-width: 300px;
+		height: auto;
+		border-radius: 10px;
+		text-align: center;
+	}
+
+	.guildmaster-lore {
+	display: flex;
+flex-direction: column;
+		flex-wrap: nowrap;
+	}
+
+	@media (max-width:786px) {
+		.guildmaster-layout {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		
+	}
+
+	
+
 		#main > header h2 {
 			font-size: 1.75em;
 			margin: 0 0 0.5em 0;

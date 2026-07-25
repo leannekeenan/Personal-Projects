@@ -5053,6 +5053,10 @@ input, select, textarea {
     ul.benefits li {
         display: flex;
         align-items: center;
+		padding: 0.5rem 0;
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: var(--text-color);
     }
 
     ul.benefits li:not(:last-child)::after {

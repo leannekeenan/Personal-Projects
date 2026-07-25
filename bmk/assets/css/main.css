@@ -20,7 +20,7 @@ section, summary, time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
-	font-family: "Cinzel", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: "Cinzel", serif;
 }
 
 article, aside, details, figcaption, figure,
@@ -157,7 +157,7 @@ input, select, textarea {
 	}
 
 	body, input, select, textarea {
-		font-family: "Cinzel", "Helvetica Neue", Helvetica, Arial, sans-serif;;
+		font-family: "Cinzel", serif;;
 		font-size: 1rem;
 		font-weight: 300;
 		line-height: 1.65;
@@ -251,7 +251,7 @@ input, select, textarea {
 
 	code {
 		border-radius: 4px;
-		font-family: "Cinzel", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		font-family: "Cinzel", serif;
 		font-size: 0.9em;
 		margin: 0 0.25rem;
 		padding: 0.25rem 0.325rem;
@@ -259,7 +259,7 @@ input, select, textarea {
 
 	pre {
 		-webkit-overflow-scrolling: touch;
-		font-family: "Cinzel", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		font-family: "Cinzel", serif;
 		font-size: 0.9em;
 		margin: 0 0 2rem 0;
 	}
@@ -2428,7 +2428,7 @@ input, select, textarea {
 				text-rendering: auto;
 				line-height: 1;
 				text-transform: none !important;
-				font-family: "Cinzel", "Helvetica Neue", Helvetica, Arial, sans-serif;
+				font-family: "Cinzel", serif;
 				font-weight: 900;
 			}
 
@@ -2570,7 +2570,7 @@ input, select, textarea {
 			text-rendering: auto;
 			line-height: 1;
 			text-transform: none !important;
-			font-family: "Cinzel", "Helvetica Neue", Helvetica, Arial, sans-serif;
+			font-family: "Cinzel", serif;
 			font-weight: 400;
 			color: #ffffff;
 		}
@@ -2588,7 +2588,7 @@ input, select, textarea {
 		}
 
 		.icon.brands:before {
-			font-family: "Cinzel", "Helvetica Neue", Helvetica, Arial, sans-serif;
+			font-family: "Cinzel", serif;
 		}
 
 		.icon.style2:before {
@@ -6871,7 +6871,7 @@ input, select, textarea {
 				text-rendering: auto;
 				line-height: 1;
 				text-transform: none !important;
-				font-family: "Cinzel", "Helvetica Neue", Helvetica, Arial, sans-serif;
+				font-family: "Cinzel", serif;
 				font-weight: 900;
 			}
 

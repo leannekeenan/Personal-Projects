@@ -4923,7 +4923,7 @@ input, select, textarea {
     }
 
         .spotlight.style1 .image:hover {
-            box-shadow: 0 20px 40px -10px rgba(0, 6, 177, 0.5);
+            box-shadow: 0 20px 40px -10px rgba(177, 86, 0, 1);
         }
 
         .spotlight.style1 .image img {
@@ -5066,14 +5066,15 @@ input, select, textarea {
         align-items: center;
 		padding: 0.5rem 0;
 		font-size: 1rem;
-		font-weight: 600;
-		color: var(--text-color);
+		font-weight: 500;
+		color: inherit;
+		
     }
 
     ul.benefits li:not(:last-child)::after {
         content: "ᨒ";
         margin-left: 1.5rem;
-        color: inherit;
+        color: rgba(22, 184, 243, 1);
     }
 
     @media screen and (max-width: 1200px) {

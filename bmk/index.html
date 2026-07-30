@@ -261,7 +261,11 @@ character. Hover over each bottle to learn more about the flavor.</p>
 					<section class="wrapper style1 align-center contact">
 						<div class="inner medium">
 							<h2>Get in touch</h2>
-							<form method="post" action="#">
+							<form id="contact-form" name="contact" method="post" data-netlify="true" netlify-honeypot="bot-field">
+								<input type="hidden" name="form-name" value="contact" />
+								<p style="display:none;">
+									<label>Don't fill this out if you're human: <input name="bot-field" /></label>
+								</p>
 								<div class="fields">
 									<div class="field half">
 										<label for="name">Name</label>
@@ -281,6 +285,10 @@ character. Hover over each bottle to learn more about the flavor.</p>
 								</ul>
 							</form>
 
+							<div id="contact-success" style="display:none;">
+								<h3>Thank you!</h3>
+								<p>Your message has been received — we'll get back to you soon.</p>
+							</div>
 						</div>
 					</section>
 
@@ -308,6 +316,7 @@ character. Hover over each bottle to learn more about the flavor.</p>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script src="assets/js/contact-form.js"></script>
 
 	</body>
 </html>

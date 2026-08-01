@@ -8703,5 +8703,13 @@ input, select, textarea {
 
 	footer {
 		background-color: rgba(22, 184, 243, 0.7);
-		color: #ffffff
+		color: #ffffff;
+		font-family: "Cinzel", sans-serif;
+	}
+
+	footer p {
+		font-size: 1rem;
+		line-height: 1.5;
+		margin: 0 0 1rem 0;
+		
 	}

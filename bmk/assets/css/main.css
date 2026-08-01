@@ -28,12 +28,9 @@ h1, h2, h3, h4, h5, h6, button{
 	font-family: "Cinzel", serif;
 }
 
-p, textarea, input, select {
-	font-family: "Cinzel", serif;
-	font-size: 1rem;
-	font-weight: 300;
-	line-height: 1.65;
-	font-family: "", serif;
+p, textarea, input, select, li, a, span, label {
+	font-family: "Sen", sans-serif;
+  	font-optical-sizing: auto;
 }
 
 article, aside, details, figcaption, figure,

@@ -2197,9 +2197,9 @@ input, select, textarea {
 	input[type="button"],
 	button,
 	.button {
-		background-color: #FFFFFF;
+		background-color: #a45a52;
 		box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
-		color: #000000 !important;
+		color: #FFFFFF !important;
 		font-weight: 700;
 		
 	}
@@ -2210,7 +2210,7 @@ input, select, textarea {
 		button:hover,
 		.button:hover {
 			box-shadow: inset 0 0 0 1px rgba(164, 90, 82, 0.6);
-			background-color: rgba(164, 90, 82, 1);
+			background-color: #c29b0c;
 			color: #FFFFFF !important;
 		}
 
@@ -4933,7 +4933,7 @@ input, select, textarea {
     }
 
         .spotlight.style1 .image:hover {
-            box-shadow: 0 20px 40px -10px rgba(177, 86, 0, 1);
+            box-shadow: 0 20px 40px -10px #c29b0c;
         }
 
         .spotlight.style1 .image img {
@@ -7762,6 +7762,7 @@ input, select, textarea {
 			padding: 2.1875rem 2.1875rem 0.1875rem 2.1875rem ;
 			width: 33.33333%;
 		}
+		
 
 			.items.style1.medium > *:nth-child(-n + 3) {
 				border-top-width: 0;
@@ -8699,6 +8700,10 @@ input, select, textarea {
 
 			#wrapper.divided > .invert:first-child {
 				box-shadow: none !important;
+			}
+
+			#wrapper > section.wrapper.style1.align-center.contact > div > div:nth-child(2) {
+				margin-bottom: 2rem;
 			}
 
 	footer {

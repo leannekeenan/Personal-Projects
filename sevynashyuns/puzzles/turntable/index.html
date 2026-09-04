@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Turntable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cinzel+Decorative:wght@700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stone-0:#100e0b;
+    --stone-1:#1c1712;
+    --stone-2:#2a231b;
+    --stone-3:#3a2f23;
+    --brass:#b8823f;
+    --brass-light:#e0ac5c;
+    --amber:#f0b862;
+    --parchment:#e4d4b0;
+    --parchment-dim:#a89878;
+    --rust:#9e3a2e;
+    --verd:#6b8f5a;
+    --shadow: 0 10px 30px rgba(0,0,0,.55);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--stone-0);}
+  body{
+    font-family:'Spectral', serif;
+    color:var(--parchment);
+    background:
+      radial-gradient(ellipse at 50% -10%, #2a2118 0%, transparent 60%),
+      repeating-linear-gradient(0deg, #100e0b 0 2px, #131007 2px 4px),
+      var(--stone-0);
+    min-height:100vh;
+    padding:28px 16px 60px;
+  }
+  .wrap{max-width:1220px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:22px;position:relative;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:.35em;
+    font-size:11px;
+    color:var(--brass-light);
+    text-transform:uppercase;
+    opacity:.85;
+  }
+  h1{
+    font-family:'Cinzel Decorative', 'Cinzel', serif;
+    font-weight:700;
+    font-size:clamp(34px,5vw,54px);
+    margin:6px 0 10px;
+    color:var(--amber);
+    text-shadow:0 0 26px rgba(240,184,98,.25), 0 2px 0 #000;
+    letter-spacing:.02em;
+  }
+  .flavor{
+    max-width:680px;margin:0 auto;
+    font-style:italic;color:var(--parchment-dim);
+    font-size:15px;line-height:1.6;
+    border-top:1px solid var(--stone-3);
+    border-bottom:1px solid var(--stone-3);
+    padding:12px 8px;
+  }
+
+  .stage{
+    display:grid;
+    grid-template-columns:minmax(320px,560px) 1fr;
+    gap:26px;
+    margin-top:26px;
+    align-items:start;
+  }
+  @media(max-width:900px){ .stage{grid-template-columns:1fr;} }
+
+  .mapcard{
+    background:linear-gradient(180deg,var(--stone-2),var(--stone-1));
+    border:1px solid var(--stone-3);
+    border-radius:6px;
+    box-shadow:var(--shadow);
+    padding:14px;
+    position:relative;
+  }
+  .mapcard .cardlabel{
+    font-family:'Cinzel',serif;font-size:12px;letter-spacing:.2em;
+    color:var(--brass-light);text-transform:uppercase;margin-bottom:8px;text-align:center;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  svg{display:block;width:100%;height:auto;touch-action:none;}
+
+  .legend{
+    display:flex;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--parchment-dim);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .swatch{width:11px;height:11px;border-radius:2px;display:inline-block;}
+
+  .panels{display:flex;flex-direction:column;gap:16px;}
+  .panel{
+    background:linear-gradient(180deg,var(--stone-2),var(--stone-1));
+    border:1px solid var(--stone-3);
+    border-radius:6px;
+    box-shadow:var(--shadow);
+    padding:16px 18px;
+  }
+  .panel h2{
+    font-family:'Cinzel',serif;font-size:15px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--brass-light);margin:0 0 4px;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;
+  }
+  .panel .sub{font-size:12px;color:var(--parchment-dim);margin-bottom:12px;}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+  .row:last-child{margin-bottom:0;}
+
+  button{
+    font-family:'Cinzel',serif;font-size:12.5px;letter-spacing:.06em;
+    background:linear-gradient(180deg,var(--brass-light),var(--brass));
+    color:#221a10;border:none;border-radius:4px;
+    padding:9px 14px;cursor:pointer;font-weight:700;
+    box-shadow:0 2px 0 #6b4a1f, 0 4px 10px rgba(0,0,0,.4);
+    transition:transform .08s ease, filter .15s ease;
+  }
+  button:hover:not(:disabled){filter:brightness(1.08);}
+  button:active:not(:disabled){transform:translateY(2px);box-shadow:0 0 0 #6b4a1f;}
+  button:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.4);}
+  button.secondary{
+    background:transparent;color:var(--parchment-dim);
+    border:1px solid var(--stone-3);box-shadow:none;
+  }
+  button.danger{background:linear-gradient(180deg,#c1584a,var(--rust));color:#fff;box-shadow:0 2px 0 #5c1c15;}
+  button.go{background:linear-gradient(180deg,#9fce8b,var(--verd));box-shadow:0 2px 0 #3c5231;}
+  button.stopbtn{background:linear-gradient(180deg,#e08575,var(--rust));color:#fff;box-shadow:0 2px 0 #5c1c15;}
+  button.tiny{padding:4px 8px;font-size:11px;}
+
+  input[type=number]{
+    width:52px;background:var(--stone-0);border:1px solid var(--stone-3);
+    color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:13px;
+    border-radius:4px;padding:6px 6px;text-align:center;
+  }
+  input[type=text]{
+    background:var(--stone-0);border:1px solid var(--stone-3);
+    color:var(--parchment);font-family:'Spectral',serif;font-size:13px;
+    border-radius:4px;padding:7px 9px;flex:1;min-width:110px;
+  }
+  label.small{font-size:11px;color:var(--parchment-dim);font-family:'JetBrains Mono',monospace;}
+
+  .statline{
+    font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--parchment);
+    display:flex;justify-content:space-between;margin-bottom:6px;
+  }
+  .statline b{color:var(--amber);}
+
+  .bar{height:10px;border-radius:5px;background:var(--stone-0);overflow:hidden;border:1px solid var(--stone-3);margin-bottom:10px;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--rust),var(--brass-light));transition:width .4s ease;}
+
+  .status-pill{
+    font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 9px;border-radius:20px;
+    letter-spacing:.05em;
+  }
+  .pill-active{background:rgba(158,58,46,.18);color:#e08575;border:1px solid var(--rust);}
+  .pill-held{background:rgba(107,143,90,.18);color:#9fce8b;border:1px solid var(--verd);}
+  .pill-stopped{background:rgba(168,152,120,.15);color:var(--parchment-dim);border:1px solid var(--stone-3);}
+
+  #log{
+    font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.65;
+    max-height:220px;overflow-y:auto;color:var(--parchment-dim);
+    background:var(--stone-0);border:1px solid var(--stone-3);border-radius:4px;
+    padding:10px 12px;
+  }
+  #log .r{color:var(--brass-light);}
+  #log .ok{color:#9fce8b;}
+  #log .bad{color:#e08575;}
+  #log div{margin-bottom:4px;}
+
+  #encResult{
+    margin-top:10px;font-size:13px;color:var(--parchment);
+    background:var(--stone-0);border:1px dashed var(--stone-3);
+    border-radius:4px;padding:10px 12px;min-height:20px;
+  }
+
+  /* ---------- SVG animation ---------- */
+  .ring-outer{ animation: spin-ccw 6s linear infinite; transform-origin:300px 300px; }
+  .ring-middle{ animation: spin-cw 12s linear infinite; transform-origin:300px 300px; }
+  .ring-inner{ animation: spin-ccw 18s linear infinite; transform-origin:300px 300px; }
+  .rings-paused .ring-outer,
+  .rings-paused .ring-middle,
+  .rings-paused .ring-inner{ animation-play-state: paused; }
+  @keyframes spin-cw{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+  @keyframes spin-ccw{ from{transform:rotate(0deg);} to{transform:rotate(-360deg);} }
+
+  .plate{ animation: plate-cycle 3s ease-in-out infinite alternate; }
+  .rings-paused .plate{ animation-play-state: paused; }
+  @keyframes plate-cycle{ from{transform:translateY(0);} to{transform:translateY(46px);} }
+
+  .ring-hit{ cursor:crosshair; }
+  .ring-hit:hover{ filter:brightness(1.35); }
+
+  .token{ cursor:grab; }
+  .token.dragging{ cursor:grabbing; }
+  .token .ring-marker{ stroke:#171310; stroke-width:2; }
+  .token.selected .ring-marker{ stroke:#fff; stroke-width:3; filter:drop-shadow(0 0 5px rgba(255,255,255,.6)); }
+  .token text{ font-family:'JetBrains Mono',monospace; font-size:9px; fill:#171310; text-anchor:middle; pointer-events:none; }
+
+  /* ---------- roster ---------- */
+  .roster{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+  .prow{
+    display:flex;align-items:center;gap:8px;padding:7px 9px;
+    background:var(--stone-0);border:1px solid var(--stone-3);border-radius:4px;
+    cursor:pointer; font-size:13px;
+  }
+  .prow.selected{border-color:var(--amber);box-shadow:0 0 0 1px var(--amber) inset;}
+  .prow .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;border:1.5px solid #171310;}
+  .prow .pname{flex:1;font-weight:600;}
+  .prow .pring{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--parchment-dim);}
+  .prow .solved-icons{display:flex;gap:3px;font-family:'JetBrains Mono',monospace;font-size:10px;}
+  .solved-icons span{width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;border:1px solid var(--stone-3);color:var(--parchment-dim);}
+  .solved-icons span.done{background:rgba(107,143,90,.3);border-color:var(--verd);color:#9fce8b;}
+  .prow .rm{color:var(--rust);font-size:16px;line-height:1;padding:2px 6px;flex-shrink:0;}
+  .prow .rm:hover{color:#e08575;}
+
+  .emptyMsg{font-size:12px;color:var(--parchment-dim);font-style:italic;padding:6px 2px;}
+
+  footer{
+    text-align:center;margin-top:34px;font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--stone-3);letter-spacing:.15em;text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>The Turntable</h1>
+    <p class="flavor">You hear the grinding of stone against stone as well as the groaning of heavy equipment as a steel panel rises and falls ahead of you. Each time the panel opens you can see a circular chamber, a large set of gears in its center, with portions of the floor around it spinning both clockwise and counterclockwise. Beyond the gears you can see another door on the opposite side of this chamber, a steel panel rising and falling in front of it as the gears turn.</p>
+  </header>
+
+  <div class="stage">
+
+    <!-- MAP -->
+    <div class="mapcard">
+      <div class="cardlabel">
+        <span>Chamber Layout &nbsp;·&nbsp; 45-ft. Radius</span>
+        <span id="runPill" class="status-pill pill-active">Running</span>
+      </div>
+      <svg id="map" viewBox="0 0 600 600" class="rings-paused" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="floorGrad" cx="50%" cy="50%" r="65%">
+            <stop offset="0%" stop-color="#3a3226"/>
+            <stop offset="100%" stop-color="#241f18"/>
+          </radialGradient>
+          <pattern id="grid" width="31" height="31" patternUnits="userSpaceOnUse">
+            <path d="M31 0H0V31" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="1"/>
+          </pattern>
+          <pattern id="stoneWall" width="26" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(3)">
+            <rect width="26" height="18" fill="#443a2c"/>
+            <rect width="24" height="16" x="1" y="1" fill="#5a4c39" stroke="#2a2318" stroke-width="1"/>
+          </pattern>
+        </defs>
+
+        <circle cx="300" cy="300" r="295" fill="url(#stoneWall)" stroke="#171310" stroke-width="4"/>
+        <rect x="272" y="0" width="56" height="70" fill="#171310"/>
+        <rect x="272" y="530" width="56" height="70" fill="#171310"/>
+
+        <circle cx="300" cy="300" r="255" fill="url(#floorGrad)" stroke="#171310" stroke-width="3"/>
+        <circle cx="300" cy="300" r="255" fill="url(#grid)"/>
+
+        <!-- OUTER RING (4) -->
+        <g class="ring-outer" id="ringOuterG">
+          <circle cx="300" cy="300" r="220" fill="none" stroke="#5a3e22" stroke-opacity=".35" stroke-width="68" class="ring-hit" data-ring="outer"/>
+          <g id="outerTicks" stroke="#e0ac5c" stroke-opacity=".55" stroke-width="2"></g>
+        </g>
+
+        <!-- MIDDLE RING (3) -->
+        <g class="ring-middle" id="ringMiddleG">
+          <circle cx="300" cy="300" r="160" fill="none" stroke="#3d5c33" stroke-opacity=".30" stroke-width="60" class="ring-hit" data-ring="middle"/>
+          <g id="middleTicks" stroke="#9fce8b" stroke-opacity=".55" stroke-width="2"></g>
+        </g>
+
+        <!-- INNER RING (2) -->
+        <g class="ring-inner" id="ringInnerG">
+          <circle cx="300" cy="300" r="90" fill="none" stroke="#5c3d55" stroke-opacity=".30" stroke-width="42" class="ring-hit" data-ring="inner"/>
+          <g id="innerTicks" stroke="#c98ac0" stroke-opacity=".55" stroke-width="2"></g>
+        </g>
+
+        <!-- CENTER GEAR HUB (1) -->
+        <g id="hub" transform="translate(300,300)">
+          <circle r="46" fill="#2a2318" stroke="#171310" stroke-width="3"/>
+          <g id="hubGear" fill="none" stroke="var(--brass-light)" stroke-width="3">
+            <circle r="30"/>
+            <circle r="9" fill="#171310"/>
+          </g>
+          <g id="hubTeeth"></g>
+        </g>
+
+        <rect class="plate" x="272" y="-46" width="56" height="46" fill="#6d6355" stroke="#171310" stroke-width="2"/>
+        <rect class="plate" x="272" y="554" width="56" height="46" fill="#6d6355" stroke="#171310" stroke-width="2"/>
+        <text x="300" y="34" text-anchor="middle" font-family="Cinzel" font-size="13" fill="#e4d4b0" opacity=".8"></text>
+        <text x="300" y="586" text-anchor="middle" font-family="Cinzel" font-size="13" fill="#e4d4b0" opacity=".8"></text>
+
+        <!-- player tokens render here -->
+        <g id="tokensLayer"></g>
+      </svg>
+
+      <div class="legend">
+        <span><i class="swatch" style="background:#5a3e22"></i>Outer — CCW / 6s</span>
+        <span><i class="swatch" style="background:#3d5c33"></i>Middle — CW / 12s</span>
+        <span><i class="swatch" style="background:#5c3d55"></i>Inner — CCW / 18s</span>
+      </div>
+      <p style="text-align:center;font-size:11px;color:var(--parchment-dim);margin-top:8px;">Select a player below, then click a ring to place them — or drag their token directly.</p>
+    </div>
+
+    <!-- PANELS -->
+    <div class="panels">
+
+      <!-- MASTER CONTROL -->
+      <div class="panel">
+        <h2>Puzzle Control <span class="status-pill" id="motionPill">Gears turning</span></h2>
+        <div class="sub">Start or stop the whole chamber — useful for setup, or freezing the scene mid-narration. Rounds are 6 seconds each, matching the outer ring.</div>
+        <div class="row">
+          <button class="go" id="startBtn">▶ Start</button>
+          <button class="stopbtn" id="stopBtn">■ Stop</button>
+          <button id="advanceBtn">⟳ Advance Round</button>
+          <button class="secondary" id="resetBtn">Reset Chamber</button>
+        </div>
+      </div>
+
+      <!-- PLAYERS -->
+      <div class="panel">
+        <h2>Players</h2>
+        <div class="sub">Add each party member as a token, then place and move them on the chamber map.</div>
+        <div class="row">
+          <input type="text" id="playerName" placeholder="Character name…" maxlength="18">
+          <button id="addPlayerBtn">+ Add Player</button>
+        </div>
+        <div class="roster" id="roster">
+          <div class="emptyMsg" id="rosterEmpty">No players yet — add one above.</div>
+        </div>
+      </div>
+
+      <!-- CROSS THE RINGS -->
+      <div class="panel">
+        <h2>Cross the Rings</h2>
+        <div class="sub">This is <b>not</b> a win condition — it's how a player fights their way inward toward the gears. Success carries them one ring further in (outer → middle → inner → the central gears). Failure leaves them in place, still at the mercy of the ring's rotation. Reaching the gears is what lets them attempt to hold or destroy the mechanism below — the party still has to stop the gears <i>and</i> pick a door lock to actually escape. Selected player: <b id="selPlayerLabel" style="color:var(--amber)">none</b></div>
+        <div class="row">
+          <label class="small">CHECK MOD</label>
+          <input type="number" id="checkMod" value="5">
+        </div>
+        <div class="row">
+          <button id="solveOuterBtn">Cross Outer Ring — DC 15</button>
+        </div>
+        <div class="row">
+          <button id="solveMiddleBtn">Cross Middle Ring — DC 15</button>
+        </div>
+        <div class="row">
+          <button id="solveInnerBtn">Cross Inner Ring — DC 15</button>
+        </div>
+      </div>
+
+      <!-- ESCAPE -->
+      <div class="panel">
+        <h2>Escape <span class="status-pill" id="escapePill">0 / 0 escaped</span></h2>
+        <div class="sub">The real win condition. A door's lock can only be picked once the gears are held or destroyed (see Door Locks below). Once picked, the escape route opens and the entire party escapes together. The puzzle is solved immediately when the lock is successfully picked.</div>
+        <div id="escapeBanner" style="display:none;font-family:'Cinzel',serif;letter-spacing:.08em;color:#9fce8b;text-align:center;padding:8px;border:1px solid var(--verd);border-radius:4px;background:rgba(107,143,90,.12);">The party has escaped the Turntable!</div>
+      </div>
+
+      <!-- GEARS -->
+      <div class="panel">
+        <h2>Central Gears <span id="gearAcPill" class="status-pill pill-active">AC 12</span></h2>
+        <div class="sub">100 HP. Enter the player's real d20 rolls instead of having the tool roll for them. Hold with a DC 25 Strength (Athletics) check, repeated each round it must stay stopped. Failure: 3d6 bludgeoning (roll it at the table).</div>
+        <div class="statline"><span>Gear HP</span><b id="gearHpLabel">100 / 100</b></div>
+        <div class="bar"><div class="bar-fill" id="gearBar" style="width:100%"></div></div>
+
+        <div class="row">
+          <label class="small">D20 ROLL</label>
+          <input type="number" id="atkRoll" min="1" max="20" placeholder="d20">
+          <label class="small">ATK MOD</label>
+          <input type="number" id="atkMod" value="6">
+          <button id="attackBtn">⚔ Attack Gears</button>
+        </div>
+        <div class="row">
+          <label class="small">DAMAGE ROLL</label>
+          <input type="number" id="damageRoll" min="0" placeholder="damage">
+          <span class="small" style="flex:1;min-width:160px;">Enter the player's actual damage roll after a hit.</span>
+        </div>
+        <div class="row">
+          <label class="small">STR D20</label>
+          <input type="number" id="strRoll" min="1" max="20" placeholder="d20">
+          <label class="small">STR MOD</label>
+          <input type="number" id="strMod" value="5">
+          <button id="holdBtn">✊ Hold Gears (DC 25)</button>
+        </div>
+      </div>
+
+      <!-- DOORS -->
+      <div class="panel">
+        <h2>Door Locks <span class="status-pill" id="platePill">Plates cycling</span></h2>
+        <div class="sub">DC 18 Dexterity (Thieves' Tools), attempted by the selected player. Impossible while the steel plates are moving — the gears must be held or destroyed first. <b>One successful lock pick opens the escape route for the entire party.</b></div>
+        <div class="row">
+          <label class="small">D20 ROLL</label>
+          <input type="number" id="dexRoll" value="10" min="1" max="20">
+          <label class="small">DEX MOD</label>
+          <input type="number" id="dexMod" value="7">
+          <button id="pickBtn">🔓 Pick Lock (DC 18)</button>
+        </div>
+      </div>
+
+      <!-- ENCOUNTER -->
+      <div class="panel">
+        <h2>Variant Encounter</h2>
+        <div class="sub">Roll 1d6 on the optional encounter table.</div>
+        <button id="encBtn">🎲 Roll Encounter</button>
+        <div id="encResult">—</div>
+      </div>
+
+      <!-- LOG -->
+      <div class="panel">
+        <h2>Event Log</h2>
+        <div id="log"><div class="r">The chamber awaits. Add players, place them, then Start the gears.</div></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const CX = 300, CY = 300;
+  const RING_R = { outer: 220, middle: 160, inner: 90 };
+  const RING_GROUPS = {
+    outer: document.getElementById('ringOuterG'),
+    middle: document.getElementById('ringMiddleG'),
+    inner: document.getElementById('ringInnerG')
+  };
+  const COLORS = ['#f0b862','#8fb0e0','#e08575','#9fce8b','#c98ac0','#e6c86e','#7fd0c9','#d99a5b'];
+
+  const state = {
+    running: true,
+    gearHP: 100,
+    gearMaxHP: 100,
+    gearsDestroyed: false,
+    gearsHeldThisRound: false,
+    players: [],       // {id,name,color,ring,angle,solved:{outer,middle,inner}}
+    selectedId: null,
+    nextColor: 0
+  };
+
+  const svg = document.getElementById('map');
+  const logEl = document.getElementById('log');
+  const motionPill = document.getElementById('motionPill');
+  const runPill = document.getElementById('runPill');
+  const platePill = document.getElementById('platePill');
+  const gearHpLabel = document.getElementById('gearHpLabel');
+  const gearBar = document.getElementById('gearBar');
+  const pickBtn = document.getElementById('pickBtn');
+  const tokensLayer = document.getElementById('tokensLayer');
+  const roster = document.getElementById('roster');
+  const rosterEmpty = document.getElementById('rosterEmpty');
+  const selPlayerLabel = document.getElementById('selPlayerLabel');
+
+  function log(msg, cls){
+    const d = document.createElement('div');
+    d.innerHTML = '<span class="r">[R'+state.round+']</span> ' + msg;
+    if(cls) d.classList.add(cls);
+    logEl.prepend(d);
+  }
+  function rollDie(sides){ return 1 + Math.floor(Math.random()*sides); }
+  function rollDice(n, sides){
+    let rolls = [], total = 0;
+    for(let i=0;i<n;i++){ const r = rollDie(sides); rolls.push(r); total += r; }
+    return { total, rolls };
+  }
+  function parseDice(str){
+    const m = str.match(/(\d+)d(\d+)/);
+    return { n: parseInt(m[1]), sides: parseInt(m[2]) };
+  }
+
+  // ---------- decorative ticks ----------
+  function drawTicks(containerId, radius, count, len){
+    const g = document.getElementById(containerId);
+    let html = '';
+    for(let i=0;i<count;i++){
+      const a = (i/count) * Math.PI * 2;
+      const x1 = radius*Math.sin(a), y1 = -radius*Math.cos(a);
+      const x2 = (radius-len)*Math.sin(a), y2 = -(radius-len)*Math.cos(a);
+      html += '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" transform="translate(300,300)"/>';
+    }
+    g.innerHTML = html;
+  }
+  drawTicks('outerTicks', 220, 24, 16);
+  drawTicks('middleTicks', 160, 18, 14);
+  drawTicks('innerTicks', 90, 12, 10);
+  (function drawHubTeeth(){
+    const g = document.getElementById('hubTeeth');
+    let html = '';
+    for(let i=0;i<10;i++){
+      const a = (i/10)*Math.PI*2;
+      const x1 = 30*Math.sin(a), y1 = -30*Math.cos(a);
+      const x2 = 42*Math.sin(a), y2 = -42*Math.cos(a);
+      html += '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="var(--brass-light)" stroke-width="4"/>';
+    }
+    g.innerHTML = html;
+  })();
+
+  // ---------- geometry helpers ----------
+  function svgPointFromEvent(e){
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  function ringFromDistance(dist){
+    // boundaries roughly midway between ring radii
+    if(dist >= 190) return 'outer';
+    if(dist >= 125) return 'middle';
+    if(dist >= 46) return 'inner';
+    return 'inner';
+  }
+  function normalizeAngle(angle){
+    return (angle % 360 + 360) % 360;
+  }
+
+  function getRingVisualRotation(ring){
+    if(!RING_GROUPS[ring]) return 0;
+    const transform = getComputedStyle(RING_GROUPS[ring]).transform;
+    if(!transform || transform === 'none') return 0;
+    const match = transform.match(/matrix\(([^)]+)\)/);
+    if(!match) return 0;
+    const values = match[1].split(',').map(Number);
+    if(values.length < 4) return 0;
+    return Math.atan2(values[1], values[0]) * 180 / Math.PI;
+  }
+
+  function worldAngleForPlayer(p){
+    return normalizeAngle(p.angle + getRingVisualRotation(p.ring));
+  }
+
+  function localAngleFromWorld(ring, worldAngle){
+    return normalizeAngle(worldAngle - getRingVisualRotation(ring));
+  }
+
+  function posForPlayer(p){
+    if(p.ring === 'center') return { x: CX, y: CY };
+    const r = RING_R[p.ring];
+    const rad = worldAngleForPlayer(p) * Math.PI/180;
+    return { x: CX + r*Math.sin(rad), y: CY - r*Math.cos(rad) };
+  }
+  const NEXT_RING = { outer:'middle', middle:'inner', inner:'center' };
+
+  // ---------- players ----------
+  function addPlayer(name){
+    const id = 'p' + Date.now() + Math.floor(Math.random()*1000);
+    const color = COLORS[state.nextColor % COLORS.length]; state.nextColor++;
+    const p = { id, name, color, ring:null, angle:0, escaped:false, solved:{outer:false,middle:false,inner:false} };
+    state.players.push(p);
+    state.selectedId = id;
+    log('<b style="color:'+color+'">'+name+'</b> joins the party at the chamber threshold.');
+    renderAll();
+  }
+
+  function removePlayer(id){
+    const p = state.players.find(pp=>pp.id===id);
+    state.players = state.players.filter(pp=>pp.id!==id);
+    if(state.selectedId === id) state.selectedId = state.players.length ? state.players[0].id : null;
+    if(p) log(p.name+' leaves the chamber.');
+    renderAll();
+  }
+
+  function selectPlayer(id){
+    state.selectedId = id;
+    renderAll();
+  }
+
+  function getSelected(){
+    return state.players.find(p=>p.id===state.selectedId) || null;
+  }
+
+  function placeSelected(ring, angle){
+    const p = getSelected();
+    if(!p){ log('Select a player first.', 'bad'); return; }
+    p.ring = ring;
+    p.angle = localAngleFromWorld(ring, angle);
+    log('<b style="color:'+p.color+'">'+p.name+'</b> steps onto the <b>'+ring+'</b> ring.');
+    renderAll();
+  }
+
+  // ---------- rendering ----------
+  function renderRoster(){
+    roster.querySelectorAll('.prow').forEach(el=>el.remove());
+    rosterEmpty.style.display = state.players.length ? 'none' : 'block';
+    state.players.forEach(p=>{
+      const row = document.createElement('div');
+      row.className = 'prow' + (p.id===state.selectedId ? ' selected':'');
+      const icons = ['outer','middle','inner'].map(r=>{
+        const done = p.solved[r];
+        const letter = r[0].toUpperCase();
+        return '<span class="'+(done?'done':'')+'" title="'+r+'">'+letter+'</span>';
+      }).join('');
+      const ringLabel = p.escaped ? 'escaped' : (p.ring||'—');
+      row.innerHTML =
+        '<span class="dot" style="background:'+p.color+'"></span>'+
+        '<span class="pname">'+p.name+'</span>'+
+        '<span class="pring" style="'+(p.escaped?'color:#9fce8b;':'')+'">'+ringLabel+'</span>'+
+        '<span class="solved-icons">'+icons+'</span>'+
+        '<span class="rm" data-rm="'+p.id+'">×</span>';
+      row.addEventListener('click', (e)=>{
+        if(e.target.dataset.rm){ removePlayer(e.target.dataset.rm); return; }
+        selectPlayer(p.id);
+      });
+      roster.appendChild(row);
+    });
+    selPlayerLabel.textContent = getSelected() ? getSelected().name : 'none';
+    refreshEscapeUI();
+  }
+
+  function refreshEscapeUI(){
+    const total = state.players.length;
+    const escaped = state.players.filter(p=>p.escaped).length;
+    document.getElementById('escapePill').textContent = escaped+' / '+total+' escaped';
+    const banner = document.getElementById('escapeBanner');
+    banner.style.display = (total>0 && escaped===total) ? 'block' : 'none';
+  }
+
+  function renderTokens(){
+    tokensLayer.innerHTML = '';
+    state.players.forEach(p=>{
+      if(!p.ring || p.escaped) return;
+      const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+      g.setAttribute('class','token'+(p.id===state.selectedId?' selected':''));
+      g.dataset.id = p.id;
+      const initials = p.name.slice(0,2).toUpperCase();
+      g.innerHTML =
+        '<polygon class="ring-marker" points="0,-15 13,0 0,15 -13,0" fill="'+p.color+'"/>'+
+        '<text y="4">'+initials+'</text>';
+      g.addEventListener('pointerdown', onTokenPointerDown);
+      tokensLayer.appendChild(g);
+    });
+    updateTokenTransforms();
+  }
+
+  function updateTokenTransforms(){
+    tokensLayer.querySelectorAll('.token').forEach(g=>{
+      const p = state.players.find(pp=>pp.id===g.dataset.id);
+      if(!p) return;
+      const {x,y} = posForPlayer(p);
+      g.setAttribute('transform','translate('+x+','+y+')');
+      g.classList.toggle('selected', p.id===state.selectedId);
+    });
+  }
+
+  function animateTokens(){
+    updateTokenTransforms();
+    requestAnimationFrame(animateTokens);
+  }
+  animateTokens();
+
+  function renderAll(){
+    renderRoster();
+    renderTokens();
+    refreshSolveButtons();
+  }
+
+  // ---------- ring click-to-place ----------
+  document.querySelectorAll('.ring-hit').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      const loc = svgPointFromEvent(e);
+      const dx = loc.x - CX, dy = loc.y - CY;
+      const angle = (Math.atan2(dx, -dy) * 180/Math.PI + 360) % 360;
+      placeSelected(el.dataset.ring, angle);
+    });
+  });
+
+  // ---------- drag tokens ----------
+  let dragging = null;
+  let moved = false;
+  function onTokenPointerDown(e){
+    e.preventDefault();
+    e.stopPropagation();
+    const id = e.currentTarget.dataset.id;
+    selectPlayer(id);
+    dragging = id;
+    moved = false;
+    const el = tokensLayer.querySelector('[data-id="'+id+'"]');
+    if(el) el.classList.add('dragging');
+    // Pointer capture on SVG child elements isn't reliably supported across
+    // browsers, so we track the drag with document-level listeners instead.
+  }
+  function onPointerMove(e){
+    if(!dragging) return;
+    moved = true;
+    const p = state.players.find(pp=>pp.id===dragging);
+    if(!p) return;
+    const loc = svgPointFromEvent(e);
+    const dx = loc.x - CX, dy = loc.y - CY;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    const worldAngle = (Math.atan2(dx, -dy) * 180/Math.PI + 360) % 360;
+    const newRing = ringFromDistance(dist);
+    p.ring = newRing;
+    p.angle = localAngleFromWorld(newRing, worldAngle);
+    updateTokenTransforms();
+  }
+  function endDrag(){
+    if(!dragging) return;
+    const p = state.players.find(pp=>pp.id===dragging);
+    if(p && moved) log('<b style="color:'+p.color+'">'+p.name+'</b> settles onto the <b>'+p.ring+'</b> ring.');
+    dragging = null;
+    moved = false;
+    renderAll();
+  }
+  document.addEventListener('pointermove', onPointerMove);
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+
+  // ---------- add / remove player UI ----------
+  document.getElementById('addPlayerBtn').addEventListener('click', ()=>{
+    const input = document.getElementById('playerName');
+    const name = input.value.trim();
+    if(!name){ log('Enter a name before adding a player.', 'bad'); return; }
+    addPlayer(name);
+    input.value = '';
+  });
+  document.getElementById('playerName').addEventListener('keydown', (e)=>{
+    if(e.key==='Enter') document.getElementById('addPlayerBtn').click();
+  });
+
+  // ---------- start / stop ----------
+  function refreshMotionUI(){
+    const stoppedByControl = !state.running;
+    const paused = stoppedByControl || state.gearsDestroyed || state.gearsHeldThisRound;
+    svg.classList.toggle('rings-paused', paused);
+
+    if(stoppedByControl){
+      runPill.textContent = 'Stopped'; runPill.className='status-pill pill-stopped';
+      motionPill.textContent = 'Puzzle stopped'; motionPill.className='status-pill pill-stopped';
+      platePill.textContent = 'Plates stopped'; platePill.className='status-pill pill-stopped';
+    } else if(state.gearsDestroyed){
+      runPill.textContent = 'Running'; runPill.className='status-pill pill-active';
+      motionPill.textContent = 'Gears destroyed'; motionPill.className='status-pill pill-held';
+      platePill.textContent = 'Plates stopped'; platePill.className='status-pill pill-held';
+    } else if(state.gearsHeldThisRound){
+      runPill.textContent = 'Running'; runPill.className='status-pill pill-active';
+      motionPill.textContent = 'Gears held'; motionPill.className='status-pill pill-held';
+      platePill.textContent = 'Plates stopped'; platePill.className='status-pill pill-held';
+    } else {
+      runPill.textContent = 'Running'; runPill.className='status-pill pill-active';
+      motionPill.textContent = 'Gears turning'; motionPill.className='status-pill pill-active';
+      platePill.textContent = 'Plates cycling'; platePill.className='status-pill pill-active';
+    }
+    pickBtn.disabled = !(state.gearsDestroyed || state.gearsHeldThisRound);
+    document.getElementById('advanceBtn').disabled = !state.running;
+  }
+  document.getElementById('startBtn').addEventListener('click', ()=>{
+    if(state.running) return;
+    state.running = true; log('The mechanism shudders and <b>starts</b> again.', 'ok'); refreshMotionUI();
+  });
+  document.getElementById('stopBtn').addEventListener('click', ()=>{
+    if(!state.running) return;
+    state.running = false; log('You <b>halt</b> the chamber — every ring freezes in place.', 'bad'); refreshMotionUI();
+  });
+
+  function refreshGearUI(){
+    gearHpLabel.textContent = Math.max(state.gearHP,0) + ' / ' + state.gearMaxHP;
+    gearBar.style.width = Math.max(state.gearHP,0)/state.gearMaxHP*100 + '%';
+  }
+
+  // ---------- round advancement ----------
+  document.getElementById('advanceBtn').addEventListener('click', ()=>{
+    if(!state.running){ log('The puzzle is stopped — press Start to resume the round clock.', 'bad'); return; }
+    state.round += 1;
+    state.elapsed += 6;
+    roundNum.textContent = state.round;
+    elapsedNum.textContent = state.elapsed + 's';
+
+    if(!state.gearsDestroyed) state.gearsHeldThisRound = false;
+
+    const active = !state.gearsDestroyed && !state.gearsHeldThisRound;
+    if(active){
+      state.players.forEach(p=>{
+        if(p.escaped || !p.ring || p.ring === 'center') return;
+        if(p.solved[p.ring]){
+          log('<b style="color:'+p.color+'">'+p.name+'</b> holds steady on the '+p.ring+' ring — footing secured.');
+          return;
+        }
+        if(p.ring === 'outer'){
+          log('<b style="color:'+p.color+'">'+p.name+'</b> rides the outer ring as it completes its rotation.');
+        } else if(p.ring === 'middle'){
+          log('<b style="color:'+p.color+'">'+p.name+'</b> is swept around by the middle ring.', 'bad');
+        } else if(p.ring === 'inner'){
+          log('<b style="color:'+p.color+'">'+p.name+'</b> is carried around by the inner ring.');
+        }
+      });
+    } else if(state.players.some(p=>p.ring)){
+      log('The gears are held fast — the floor does not move this round.', 'ok');
+    }
+    renderTokens();
+    refreshMotionUI();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    state.round = 0; state.elapsed = 0;
+    state.gearHP = 100; state.gearsDestroyed = false; state.gearsHeldThisRound = false;
+    state.running = true;
+    state.players = []; state.selectedId = null; state.nextColor = 0;
+    roundNum.textContent = 0; elapsedNum.textContent = '0s';
+    refreshGearUI(); refreshMotionUI(); renderAll();
+    document.getElementById('atkRoll').value = '';
+    document.getElementById('damageRoll').value = '';
+    document.getElementById('strRoll').value = '';
+    logEl.innerHTML = '<div class="r">The chamber resets. Gears grind back to life.</div>';
+    document.getElementById('encResult').textContent = '—';
+  });
+
+  // ---------- attack gears ----------
+  document.getElementById('attackBtn').addEventListener('click', ()=>{
+    if(state.gearsDestroyed){ log('The gears are already a heap of broken cogs.'); return; }
+
+    const roll = parseInt(document.getElementById('atkRoll').value);
+    const mod = parseInt(document.getElementById('atkMod').value)||0;
+
+    if(!Number.isInteger(roll) || roll < 1 || roll > 20){
+      log("Enter the player's actual d20 attack roll (1–20) before attacking the gears.", 'bad');
+      return;
+    }
+
+    const total = roll + mod;
+    const hit = total >= 12;
+
+    if(hit){
+      const dmg = parseInt(document.getElementById('damageRoll').value);
+      if(!Number.isInteger(dmg) || dmg < 0){
+        log("The attack hits. Enter the player's actual damage roll before applying damage.", 'bad');
+        return;
+      }
+
+      state.gearHP -= dmg;
+      log('Attack roll <b>'+total+'</b> (d20 '+roll+'+'+mod+') hits AC 12 — <b>'+dmg+'</b> damage dealt to the gears.', 'ok');
+      document.getElementById('damageRoll').value = '';
+
+      if(state.gearHP <= 0){
+        state.gearHP = 0; state.gearsDestroyed = true;
+        log('<b>The central gears shatter and grind to a halt for good.</b> The plates stop moving.', 'ok');
+      }
+    } else {
+      log('Attack roll <b>'+total+'</b> (d20 '+roll+'+'+mod+') fails to bite against AC 12.', 'bad');
+    }
+
+    refreshGearUI(); refreshMotionUI();
+  });
+
+  // ---------- hold gears ----------
+  document.getElementById('holdBtn').addEventListener('click', ()=>{
+    if(state.gearsDestroyed){ log('No need — the gears are already destroyed.'); return; }
+
+    const roll = parseInt(document.getElementById('strRoll').value);
+    const mod = parseInt(document.getElementById('strMod').value)||0;
+
+    if(!Number.isInteger(roll) || roll < 1 || roll > 20){
+      log("Enter the player's actual Strength/Athletics d20 roll (1–20) before attempting to hold the gears.", 'bad');
+      return;
+    }
+
+    const total = roll + mod;
+    const success = total >= 25;
+
+    if(success){
+      state.gearsHeldThisRound = true;
+      log('Athletics check <b>'+total+'</b> (d20 '+roll+'+'+mod+') vs DC 25 — <b>the gears grind to a halt</b> this round.', 'ok');
+    } else {
+      log('Athletics check <b>'+total+'</b> (d20 '+roll+'+'+mod+') vs DC 25 — failed. The gears lurch forward, dealing <b>3d6 bludgeoning damage</b>. Roll it at the table and apply it to the character.', 'bad');
+    }
+
+    refreshMotionUI();
+  });
+
+  // ---------- pick lock ----------
+  pickBtn.addEventListener('click', ()=>{
+    if(!(state.gearsHeldThisRound || state.gearsDestroyed)){
+      log('The steel plates are still cycling — the locks cannot be reached.', 'bad');
+      return;
+    }
+    const p = getSelected();
+    if(!p){ log('Select the player attempting the lock first.', 'bad'); return; }
+    if(p.escaped){ log(p.name+' has already escaped.'); return; }
+    const mod = parseInt(document.getElementById('dexMod').value)||0;
+    const rollInput = document.getElementById('dexRoll');
+    const roll = parseInt(rollInput.value);
+    if(!Number.isInteger(roll) || roll < 1 || roll > 20){
+      log("Enter the player's actual d20 roll (1–20) before attempting the lock.", 'bad');
+      rollInput.focus();
+      return;
+    }
+    const total = roll + mod;
+    const success = total >= 18;
+    if(success){
+      state.players.forEach(player => {
+        player.escaped = true;
+      });
+      log('<b style="color:'+p.color+'">'+p.name+'</b> — Thieves\' Tools check <b>'+total+'</b> (d20 '+roll+'+'+mod+') vs DC 18 — <b>the lock springs open! The entire party escapes the Turntable.</b>', 'ok');
+      renderAll();
+    } else {
+      log('<b style="color:'+p.color+'">'+p.name+'</b> — Thieves\' Tools check <b>'+total+'</b> (d20 '+roll+'+'+mod+') vs DC 18 — the lock resists.', 'bad');
+    }
+  });
+
+  // ---------- cross ring challenges ----------
+  function attemptSolve(ring, label){
+    const p = getSelected();
+    if(!p){ log('Select a player first.', 'bad'); return; }
+    if(p.ring !== ring){ log(p.name+' is not standing on the '+ring+' ring.', 'bad'); return; }
+    if(p.solved[ring]){ log(p.name+' has already crossed the '+ring+' ring.'); return; }
+    const mod = parseInt(document.getElementById('checkMod').value)||0;
+    const roll = rollDie(20);
+    const total = roll + mod;
+    const success = total >= 15;
+    if(success){
+      p.solved[ring] = true;
+      const dest = NEXT_RING[ring];
+      p.ring = dest;
+      if(dest !== 'center'){
+        log('<b style="color:'+p.color+'">'+p.name+'</b> — '+label+' check <b>'+total+'</b> (d20 '+roll+'+'+mod+') vs DC 15 — <b>makes it across</b> onto the '+dest+' ring.', 'ok');
+      } else {
+        log('<b style="color:'+p.color+'">'+p.name+'</b> — '+label+' check <b>'+total+'</b> (d20 '+roll+'+'+mod+') vs DC 15 — <b>reaches the central gears.</b> Now they can try to hold or destroy the mechanism.', 'ok');
+      }
+    } else {
+      log('<b style="color:'+p.color+'">'+p.name+'</b> — '+label+' check <b>'+total+'</b> (d20 '+roll+'+'+mod+') vs DC 15 — footing fails, the ring keeps its grip.', 'bad');
+    }
+    renderAll();
+  }
+  document.getElementById('solveOuterBtn').addEventListener('click', ()=>attemptSolve('outer','Acrobatics'));
+  document.getElementById('solveMiddleBtn').addEventListener('click', ()=>attemptSolve('middle','Athletics'));
+  document.getElementById('solveInnerBtn').addEventListener('click', ()=>attemptSolve('inner','Perception'));
+
+  function refreshSolveButtons(){
+    const p = getSelected();
+    document.getElementById('solveOuterBtn').disabled = !p || p.ring!=='outer' || p.solved.outer;
+    document.getElementById('solveMiddleBtn').disabled = !p || p.ring!=='middle' || p.solved.middle;
+    document.getElementById('solveInnerBtn').disabled = !p || p.ring!=='inner' || p.solved.inner;
+  }
+
+  // ---------- encounter table ----------
+  const ENCOUNTERS = {
+    1: '2d4 goblins tinkering with the gears, trying to make them move even faster.',
+    2: 'A flesh golem chained to the gears, charged with their safe-keeping.',
+    3: 'A group of 2d4 modrons connected to the gears — they resent being attacked or kept from their duty.',
+    4: 'A roper suspended from the chamber\'s 50-ft. ceiling.',
+    5: 'The room\'s circumference shifts 10 ft. closer each round — infiltrators are ground into the central gears after five rounds unless the gears are halted or destroyed.',
+    6: 'A satyr named Carl offers to slow the gears if the party answers his riddle correctly.'
+  };
+  document.getElementById('encBtn').addEventListener('click', ()=>{
+    const roll = rollDie(6);
+    document.getElementById('encResult').innerHTML = '<b style="color:var(--amber)">d6 = '+roll+'</b> — '+ENCOUNTERS[roll];
+    log('Rolled on the variant encounter table: <b>'+roll+'</b>.');
+  });
+
+  refreshGearUI();
+  refreshMotionUI();
+  renderAll();
+})();
+</script>
+</body>
+</html>

@@ -2,72 +2,233 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+body {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+}
+
+.container {
+    background-color: hsl(185, 41%, 84%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+}
+
+.header h1 {
+    font-size: 24px;
+    letter-spacing: 8px;
+    text-align: center;
+    text-transform: uppercase;
+    color: hsl(183, 100%, 15%);
+    opacity: 0.8;
+}
+
+.calculator {
+    display: flex;
+    gap: 32px;
+    width: 100%;
+    max-width: 920px;
+    padding: 32px;
+    background-color: #fff;
+    border-radius: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- left side ---------- */
+.tip-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 8px 8px 8px 16px;
+}
+
+h2 {
     font-size: 16px;
+    color: hsl(186, 14%, 43%);
 }
 
-.background {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.foreground {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* label on the left, error message on the right, input below */
+.bill-amount,
+.number-of-people {
     display: grid;
-    place-items: center;
-    background-color: #C5E4E7;
-    height: auto;
-    width: 75%;
-    max-width: 650px;
-    padding:2rem 0 1.5rem 0
-}   
-
-h1 {
-    display: flex;
-    justify-content: center;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    position: relative;
-    top: 0%;
-    left: 0;
-    transform: translate(0, -50%);
-    letter-spacing: 5px;
+    row-gap: 8px;
 }
 
-.content {
-    display: flex;
-    background-color: #FFFFFF;
-    padding: 1rem;
-    border-radius: 10px;
+.bill-amount input,
+.number-of-people input {
+    grid-column: 1 / -1;
 }
 
-.tip-options div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 10px;
+#bill-error,
+#error-message {
+    font-size: 14px;
+    color: hsl(13, 70%, 55%);
 }
 
 input {
-    text-align: right;
-    width: 90%;
-}
-
-.tip-options button, .tip-options input {
-    width: 50px;
-    height: 21px;
-    font-size: .75rem;
-}
-
-.reset-button {
-    background-color: #26C2AE;
-    color: #FFFFFF;
-    border: none;
     width: 100%;
-    height: 20px;
+    height: 48px;
+    border: none;
     border-radius: 5px;
+    background-color: hsl(189, 41%, 97%);
+    color: hsl(183, 100%, 15%);
+    font-family: inherit;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: right;
+    padding: 0 16px;
+    cursor: pointer;
+}
+
+input::placeholder {
+    color: hsl(184, 14%, 56%);
+}
+
+input:focus {
+    outline: 2px solid hsl(172, 67%, 45%);
+}
+
+input.error,
+input.error:focus {
+    outline: 2px solid hsl(13, 70%, 55%);
+}
+
+/* icons: adjust paths to wherever your svg files are */
+#bill-amount {
+    background-image: url('images/icon-dollar.svg');
+    background-repeat: no-repeat;
+    background-position: left 16px center;
+}
+
+#number-of-people {
+    background-image: url('images/icon-person.svg');
+    background-repeat: no-repeat;
+    background-position: left 16px center;
+}
+
+/* hide the spinner arrows on the custom tip input */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+/* ---------- tip buttons ---------- */
+.tip-selections h2 {
+    margin-bottom: 16px;
+}
+
+/* each of your two wrapper divs becomes a row of 3 equal items */
+.tip-options > div {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.tip-options > div > * {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    border: none;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tip-options button {
+    background-color: hsl(183, 100%, 15%);
+    color: #fff;
+}
+
+.tip-options button:hover,
+.tip-options button.active {
+    background-color: hsl(172, 67%, 45%);
+    color: hsl(183, 100%, 15%);
+}
+
+.tip-options input {
+    padding: 0 12px;
+    font-size: 24px;
+}
+
+/* ---------- right side ---------- */
+.tip-calculation {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 40px 32px 32px;
+    background-color: hsl(183, 100%, 15%);
+    border-radius: 15px;
+}
+
+.tip-amount,
+.total-amount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tip-calculation h2 {
+    font-size: 16px;
+    color: #fff;
+}
+
+.tip-calculation h2 span {
+    display: block;
+    font-size: 13px;
+    color: hsl(184, 14%, 56%);
+}
+
+.tip-calculation h3 {
+    font-size: 40px;
+    color: hsl(172, 67%, 45%);
+}
+
+#reset-button {
+    width: 100%;
+    height: 48px;
+    margin-top: auto;
+    border: none;
+    border-radius: 5px;
+    background-color: hsl(172, 67%, 45%);
+    color: hsl(183, 100%, 15%);
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#reset-button:hover {
+    background-color: hsl(172, 67%, 75%);
+}
+
+/* ---------- mobile ---------- */
+@media (max-width: 700px) {
+    .calculator {
+        flex-direction: column;
+        padding: 24px;
+    }
+
+    .tip-details {
+        padding: 0;
+    }
+
+    .tip-calculation h3 {
+        font-size: 32px;
+    }
 }

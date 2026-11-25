@@ -14,35 +14,52 @@ const totalAmountPerPerson = document.getElementById('total-per-person');
 
 const resetButton = document.getElementById('reset-button');
 
-let errorMessage = document.getElementById('error-message');
+const billError = document.getElementById('bill-error');
+const peopleError = document.getElementById('error-message');
 
 
+// Shows or clears the "Can't be zero" message and red outline for one input
+function setError(input, messageEl, show) {
+    messageEl.textContent = show ? "Can't be zero" : '';
+    input.classList.toggle('error', show);
+}
 
 function calculate() {
-  const bill = parseFloat(billAmount.value);
-  const people = parseInt(numberOfPeople.value);
+    const bill = parseFloat(billAmount.value);
+    const people = parseInt(numberOfPeople.value);
 
-  //if there is no bill or bill is less than 0 or there are no people or people is less than zero or no tip is selected...
-    if(!bill || bill <=0 || !people || people <= 0 || !selectedTip) {
-        //...the tip amount per person and the total ampunt per person shows $0.00
+    const billEmpty = billAmount.value.trim() === '';
+    const peopleEmpty = numberOfPeople.value.trim() === '';
+
+    // A field shows an error if:
+    // - something was typed in it and it isn't above 0, OR
+    // - it's empty but a tip has already been chosen
+    const billInvalid = (!billEmpty && !(bill > 0)) || (billEmpty && selectedTip > 0);
+    const peopleInvalid = (!peopleEmpty && !(people > 0)) || (peopleEmpty && selectedTip > 0);
+
+    setError(billAmount, billError, billInvalid);
+    setError(numberOfPeople, peopleError, peopleInvalid);
+
+    // If anything is missing or zero, show $0.00 and stop
+    if (!bill || bill <= 0 || !people || people <= 0 || !selectedTip) {
         tipAmountPerPerson.textContent = '$0.00';
         totalAmountPerPerson.textContent = '$0.00';
         return;
     }
-    //the value of tipPerPerson equates to the value of the bill times the selected tip value which is divided by 100 to get the percentage. This value is then divided by the number of people to get the tip amount per person
+
+    // Tip per person = (bill * tip%) / number of people
     const tipPerPerson = (bill * (selectedTip / 100)) / people;
-    //The totalPerPerson value is calculated by dividing the bill by the value of the number of people plus the tipPerPerson.
+    // Total per person = bill split evenly + tip per person
     const totalPerPerson = bill / people + tipPerPerson;
 
-    //tipAmountPerPerson and totalAmountPerPerson will both be rounded to the second decimal place.
+    // Round both to 2 decimal places for display
     tipAmountPerPerson.textContent = `$${tipPerPerson.toFixed(2)}`;
     totalAmountPerPerson.textContent = `$${totalPerPerson.toFixed(2)}`;
-
 }
 
 tipButtons.forEach(button => {
     button.addEventListener('click', () => {
-        //when a tip button is clicked, the selectedTip value is set to the value of the data-tip attribute of the button that was clicked.
+        // Set selectedTip to the data-tip value of the clicked button
         selectedTip = parseInt(button.dataset.tip);
         customTip.value = ''; // Clear custom tip input when a button is clicked
 
@@ -53,7 +70,7 @@ tipButtons.forEach(button => {
 });
 
 customTip.addEventListener('input', () => {
-    selectedTip = parseFloat(customTip.value) || 0; // Set selectedTip to the custom tip value or 0 if empty
+    selectedTip = parseFloat(customTip.value) || 0; // Custom value, or 0 if empty
     tipButtons.forEach(btn => btn.classList.remove('active'));
     calculate();
 });
@@ -67,11 +84,5 @@ resetButton.addEventListener('click', () => {
     customTip.value = '';
     numberOfPeople.value = '';
     tipButtons.forEach(btn => btn.classList.remove('active'));
-    calculate();
+    calculate(); // also clears the error messages, since selectedTip is 0 and the fields are empty
 });
-
-if(!bill || !numberOfPeople || !selectedTip || bill <= 0 || numberOfPeople <= 0 || selectedTip <= 0) {
-    errorMessage.textContent = 'Please enter valid values for all fields.';
-} else {
-    errorMessage.textContent = '';
-}
